@@ -1,0 +1,5 @@
+name: AuthMeVelocity
+author: xQuickGlare
+version: ${project.version}
+main: com.glyart.authmevelocity.spigot.AuthMeVelocityPlugin
+depend: [AuthMe]
