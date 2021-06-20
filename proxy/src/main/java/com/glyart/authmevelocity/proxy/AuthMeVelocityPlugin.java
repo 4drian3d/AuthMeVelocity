@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-@Plugin(id = "authmevelocity", name = "AuthMeVelocity", version = "1.0.0", url = "https://github.com/Glyart/AuthMeVelocity", description = "This plugin adds the support for AuthMeReloaded to Velocity.", authors = {"xQuickGlare"})
 @Getter
 public class AuthMeVelocityPlugin {
 
