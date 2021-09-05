@@ -5,15 +5,15 @@
     <parent>
         <artifactId>parent</artifactId>
         <groupId>com.glyart.authmevelocity</groupId>
-        <version>1.0.1</version>
+        <version>1.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>spigot</artifactId>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
     </properties>
 
     <repositories>
@@ -27,7 +27,7 @@
             <url>https://repo.codemc.org/repository/maven-public/</url>
         </repository>
     </repositories>
-    
+
     <dependencies>
         <dependency>
             <groupId>io.papermc.paper</groupId>
@@ -35,7 +35,6 @@
             <version>1.17.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>fr.xephi</groupId>
             <artifactId>authme</artifactId>
@@ -43,5 +42,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    
 </project>

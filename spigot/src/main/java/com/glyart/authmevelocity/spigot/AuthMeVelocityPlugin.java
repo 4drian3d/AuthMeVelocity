@@ -12,21 +12,20 @@ public class AuthMeVelocityPlugin extends JavaPlugin {
     public void onEnable() {
         getServer().getMessenger().registerOutgoingPluginChannel(this, "authmevelocity:main");
         getServer().getPluginManager().registerEvents(new AuthMeListener(this), this);
-        
+
         getLogger().info("AuthMeVelocity enabled.");
     }
 
     @Override
     public void onDisable() {
-        
+
     }
-    
+
     public void sendLoginToProxy(Player player) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("LOGIN");
         out.writeUTF(player.getUniqueId().toString());
-        
+
         player.sendPluginMessage(this, "authmevelocity:main", out.toByteArray());
     }
-    
 }
