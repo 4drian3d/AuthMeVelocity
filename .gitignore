@@ -1,3 +1,19 @@
-.idea
-target
-*.iml
+  
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Visual Studio Code 
+
+.settings/
+.classpath
+.factorypath
+.project
+.vscode/ 
