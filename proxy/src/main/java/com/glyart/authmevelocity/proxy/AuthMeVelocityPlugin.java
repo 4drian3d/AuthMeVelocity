@@ -12,16 +12,15 @@ import org.slf4j.Logger;
 
 import de.leonhard.storage.Yaml;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 public class AuthMeVelocityPlugin {
-    public final ProxyServer server;
+    private final ProxyServer server;
     private final Logger logger;
-    static Yaml config = new Yaml("config", "plugins/AuthmeVelocity");
+    private static Yaml config = new Yaml("config", "plugins/AuthmeVelocity");
 
     public final List<UUID> loggedPlayers = Collections.synchronizedList(new ArrayList<>());
 
@@ -32,12 +31,12 @@ public class AuthMeVelocityPlugin {
     }
 
     @Subscribe
-    public void onProxyInitialize(ProxyInitializeEvent event) throws IOException {
+    public void onProxyInitialize(ProxyInitializeEvent event) {
         server.getChannelRegistrar().register(new LegacyChannelIdentifier("authmevelocity:main"), MinecraftChannelIdentifier.create("authmevelocity", "main"));
-        server.getEventManager().register(this, new ProxyListener(this));
+        server.getEventManager().register(this, new ProxyListener(this, server));
         AuthMeConfig.defaultConfig();
-        logger.info("AuthMeVelocity enabled.");
-        logger.info("AuthServers:" + config.getList("authservers"));
+        logger.info("AuthMeVelocity enabled");
+        logger.info("AuthServers: " + config.getList("authservers"));
     }
 
     public static Yaml getConfig(){

@@ -6,7 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class AuthMeListener implements Listener {
-
     private final AuthMeVelocityPlugin plugin;
 
     public AuthMeListener(AuthMeVelocityPlugin plugin) {
@@ -17,5 +16,4 @@ public class AuthMeListener implements Listener {
     public void onLogin(LoginEvent event) {
         plugin.sendLoginToProxy(event.getPlayer());
     }
-
 }

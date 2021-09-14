@@ -17,36 +17,27 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class ProxyListener {
-
     private final AuthMeVelocityPlugin plugin;
     private final ProxyServer server;
 
-    public ProxyListener(AuthMeVelocityPlugin plugin) {
+    public ProxyListener(AuthMeVelocityPlugin plugin, ProxyServer server) {
         this.plugin = plugin;
-        server = plugin.server;
+        this.server = server;
     }
 
     @Subscribe
     public void onPluginMessage(final PluginMessageEvent event) {
-        if (!(event.getSource() instanceof ServerConnection)) {
-            return;
-        }
+        if (!(event.getSource() instanceof ServerConnection)) return;
 
-        if (!event.getIdentifier().getId().equals("authmevelocity:main")) {
-            return;
-        }
+        if (!event.getIdentifier().getId().equals("authmevelocity:main")) return;
 
         ByteArrayDataInput input = event.dataAsDataStream();
         String sChannel = input.readUTF();
-        if (!sChannel.equals("LOGIN")) {
-            return;
-        }
+        if (!sChannel.equals("LOGIN")) return;
 
         String user = input.readUTF();
         Optional<Player> player = server.getPlayer(UUID.fromString(user));
-        if (!player.isPresent()) {
-            return;
-        }
+        if (!player.isPresent()) return;
 
         plugin.loggedPlayers.add(player.get().getUniqueId());
     }
@@ -58,22 +49,17 @@ public class ProxyListener {
 
     @Subscribe
     public void onCommandExecute(final CommandExecuteEvent event) {
-        if (!(event.getCommandSource() instanceof Player))
-            return;
+        if (!(event.getCommandSource() instanceof Player player)) return;
 
-        final var player = (Player) event.getCommandSource();
-        if (plugin.loggedPlayers.contains(player.getUniqueId()))
-            return;
+        if (plugin.loggedPlayers.contains(player.getUniqueId())) return;
 
         Optional<ServerConnection> server = player.getCurrentServer();
-        boolean isAuthServer =
-            server.isPresent() &&
+        boolean isAuthServer = server.isPresent() &&
             AuthMeVelocityPlugin.getConfig().getList("authservers").contains(server.get().getServerInfo().getName());
 
         if (isAuthServer) {
             event.setResult(CommandExecuteEvent.CommandResult.forwardToServer());
-        }
-        else {
+        } else {
             event.setResult(CommandExecuteEvent.CommandResult.denied());
         }
     }
@@ -81,8 +67,7 @@ public class ProxyListener {
     @Subscribe
     public void onPlayerChat(final PlayerChatEvent event) {
         Player player = event.getPlayer();
-        if (plugin.loggedPlayers.contains(player.getUniqueId()))
-            return;
+        if (plugin.loggedPlayers.contains(player.getUniqueId())) return;
 
         Optional<ServerConnection> server = player.getCurrentServer();
         if (server.isPresent() && AuthMeVelocityPlugin.getConfig().getList("authservers").contains(server.get().getServerInfo().getName())) {
@@ -95,8 +80,7 @@ public class ProxyListener {
     @Subscribe
     public void onServerPreConnect(ServerPreConnectEvent event) {
         Player player = event.getPlayer();
-        if (plugin.loggedPlayers.contains(player.getUniqueId()))
-            return;
+        if (plugin.loggedPlayers.contains(player.getUniqueId())) return;
 
         Optional<RegisteredServer> server = event.getResult().getServer();
         if (server.isPresent() && AuthMeVelocityPlugin.getConfig().getList("authservers").contains(server.get().getServerInfo().getName())) {
