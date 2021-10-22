@@ -41,10 +41,13 @@ public class ProxyListener {
         if (!player.isPresent()) return;
 
         Player loggedPlayer = player.get();
-        plugin.loggedPlayers.add(loggedPlayer.getUniqueId());
+        UUID playerUUID = loggedPlayer.getUniqueId();
+        if (!plugin.loggedPlayers.contains(playerUUID)){
+            plugin.loggedPlayers.add(playerUUID);
 
-        RegisteredServer loginServer = player.get().getCurrentServer().get().getServer();
-        server.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
+            RegisteredServer loginServer = player.get().getCurrentServer().get().getServer();
+            server.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
+        }
     }
 
     @Subscribe

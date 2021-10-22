@@ -20,6 +20,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>codemc-snapshots</id>
+            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -34,6 +38,12 @@
             <artifactId>SimplixStorage</artifactId>
             <version>3.2.3</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.games647</groupId>
+            <artifactId>fastlogin.velocity</artifactId>
+            <version>1.11-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

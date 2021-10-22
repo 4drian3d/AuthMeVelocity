@@ -1,6 +1,7 @@
 package com.glyart.authmevelocity.proxy;
 
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
+import com.glyart.authmevelocity.proxy.listener.FastLoginListener;
 import com.glyart.authmevelocity.proxy.listener.ProxyListener;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
@@ -34,6 +35,7 @@ public class AuthMeVelocityPlugin {
     public void onProxyInitialize(ProxyInitializeEvent event) {
         server.getChannelRegistrar().register(new LegacyChannelIdentifier("authmevelocity:main"), MinecraftChannelIdentifier.create("authmevelocity", "main"));
         server.getEventManager().register(this, new ProxyListener(this, server));
+        server.getEventManager().register(this, new FastLoginListener(this, server));
         AuthMeConfig.defaultConfig();
         logger.info("AuthMeVelocity enabled");
         logger.info("AuthServers: " + config.getList("authservers"));
