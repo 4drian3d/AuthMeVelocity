@@ -1,6 +1,7 @@
 package com.glyart.authmevelocity.proxy.listener;
 
 import com.glyart.authmevelocity.proxy.AuthMeVelocityPlugin;
+import com.glyart.authmevelocity.proxy.event.ProxyLoginEvent;
 import com.google.common.io.ByteArrayDataInput;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
@@ -39,7 +40,11 @@ public class ProxyListener {
         Optional<Player> player = server.getPlayer(UUID.fromString(user));
         if (!player.isPresent()) return;
 
-        plugin.loggedPlayers.add(player.get().getUniqueId());
+        Player loggedPlayer = player.get();
+        plugin.loggedPlayers.add(loggedPlayer.getUniqueId());
+
+        RegisteredServer loginServer = player.get().getCurrentServer().get().getServer();
+        server.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
     }
 
     @Subscribe
@@ -66,7 +71,7 @@ public class ProxyListener {
 
     @Subscribe
     public void onPlayerChat(final PlayerChatEvent event) {
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
         if (plugin.loggedPlayers.contains(player.getUniqueId())) return;
 
         Optional<ServerConnection> server = player.getCurrentServer();
@@ -79,7 +84,7 @@ public class ProxyListener {
 
     @Subscribe
     public void onServerPreConnect(ServerPreConnectEvent event) {
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
         if (plugin.loggedPlayers.contains(player.getUniqueId())) return;
 
         Optional<RegisteredServer> server = event.getResult().getServer();
