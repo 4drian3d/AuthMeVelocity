@@ -19,23 +19,25 @@ import java.util.List;
 import java.util.UUID;
 
 public class AuthMeVelocityPlugin {
-    private final ProxyServer server;
+    private static ProxyServer proxy;
     private final Logger logger;
     private static Yaml config = new Yaml("config", "plugins/AuthmeVelocity");
 
-    public final List<UUID> loggedPlayers = Collections.synchronizedList(new ArrayList<>());
+    protected static final List<UUID> loggedPlayers = Collections.synchronizedList(new ArrayList<>());
 
     @Inject
     public AuthMeVelocityPlugin(ProxyServer server, Logger logger) {
-        this.server = server;
+        proxy = server;
         this.logger = logger;
     }
 
     @Subscribe
     public void onProxyInitialize(ProxyInitializeEvent event) {
-        server.getChannelRegistrar().register(new LegacyChannelIdentifier("authmevelocity:main"), MinecraftChannelIdentifier.create("authmevelocity", "main"));
-        server.getEventManager().register(this, new ProxyListener(this, server));
-        server.getEventManager().register(this, new FastLoginListener(this, server));
+        proxy.getChannelRegistrar().register(
+            new LegacyChannelIdentifier("authmevelocity:main"),
+            MinecraftChannelIdentifier.create("authmevelocity", "main"));
+        proxy.getEventManager().register(this, new ProxyListener(proxy));
+        proxy.getEventManager().register(this, new FastLoginListener(proxy));
         AuthMeConfig.defaultConfig();
         logger.info("AuthMeVelocity enabled");
         logger.info("AuthServers: " + config.getList("authservers"));
@@ -43,5 +45,9 @@ public class AuthMeVelocityPlugin {
 
     public static Yaml getConfig(){
         return config;
+    }
+
+    protected static ProxyServer getProxy(){
+        return proxy;
     }
 }
