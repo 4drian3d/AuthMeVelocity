@@ -36,11 +36,14 @@ public class AuthMeVelocityPlugin {
         proxy.getChannelRegistrar().register(
             new LegacyChannelIdentifier("authmevelocity:main"),
             MinecraftChannelIdentifier.create("authmevelocity", "main"));
-        proxy.getEventManager().register(this, new ProxyListener(proxy));
+        proxy.getEventManager().register(this, new ProxyListener(proxy, logger));
         proxy.getEventManager().register(this, new FastLoginListener(proxy));
         AuthMeConfig.defaultConfig();
-        logger.info("AuthMeVelocity enabled");
+        logger.info("-- AuthMeVelocity enabled --");
         logger.info("AuthServers: " + config.getList("authservers"));
+        if(config.getBoolean("teleport.send-to-server-after-login")){
+            logger.info("LobbyServers: " + config.getList("teleport.servers"));
+        }
     }
 
     public static Yaml getConfig(){

@@ -17,14 +17,21 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
+import org.slf4j.Logger;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public class ProxyListener {
     private final ProxyServer server;
+    private final Logger logger;
 
-    public ProxyListener(ProxyServer server) {
+    public ProxyListener(ProxyServer server, Logger logger) {
         this.server = server;
+        this.logger = logger;
     }
 
     @Subscribe
@@ -47,6 +54,29 @@ public class ProxyListener {
 
             RegisteredServer loginServer = loggedPlayer.getCurrentServer().get().getServer();
             server.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
+            if(AuthMeVelocityPlugin.getConfig().getBoolean("teleport.send-to-server-after-login")){
+                Random rm = new Random();
+                List<String> serverList = AuthMeVelocityPlugin.getConfig().getStringList("teleport.servers");
+                String randomServer = serverList.get(rm.nextInt(serverList.size()));
+                Optional<RegisteredServer> optionalServer = server.getServer(randomServer);
+                if(optionalServer.isPresent()){
+                    RegisteredServer serverToSend = optionalServer.get();
+                    try{
+                        if(!loggedPlayer.createConnectionRequest(serverToSend).connect().get().isSuccessful()){
+                            logger.info("Unable to connect the player {} to the server {}",
+                                loggedPlayer.getUsername(),
+                                serverToSend.getServerInfo().getName());
+                        }
+                    } catch (InterruptedException | ExecutionException exception){
+                        logger.info("Unable to connect the player {} to the server {}. Error: {}",
+                            loggedPlayer.getUsername(),
+                            serverToSend.getServerInfo().getName(),
+                            exception);
+                    }
+                } else{
+                    logger.info("The server {} does not exist", randomServer);
+                }
+            }
         }
     }
 
