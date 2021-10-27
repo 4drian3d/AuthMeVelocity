@@ -9,6 +9,11 @@
     <packaging>pom</packaging>
     <version>1.1.0</version>
 
+    <properties>
+        <maven.compiler.source>16</maven.compiler.source>
+        <maven.compiler.target>16</maven.compiler.target>
+    </properties>
+
     <pluginRepositories>
         <pluginRepository>
             <id>apache.snapshots</id>
@@ -36,7 +41,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0-SNAPSHOT</version>
+                <version>3.3.1-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
