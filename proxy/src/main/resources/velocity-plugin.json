@@ -5,6 +5,11 @@
   "url":"https://github.com/4drian3d/AuthMeVelocity",
   "description":"This plugin adds the support for AuthMeReloaded to Velocity.",
   "authors":["xQuickGlare"],
-  "dependencies":[],
+  "dependencies":[
+    {
+      "id":"fastlogin",
+      "optional":true
+    }
+  ],
   "main":"com.glyart.authmevelocity.proxy.AuthMeVelocityPlugin"
 }

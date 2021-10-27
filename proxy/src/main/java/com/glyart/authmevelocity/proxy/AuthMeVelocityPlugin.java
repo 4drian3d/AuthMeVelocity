@@ -37,7 +37,9 @@ public class AuthMeVelocityPlugin {
             new LegacyChannelIdentifier("authmevelocity:main"),
             MinecraftChannelIdentifier.create("authmevelocity", "main"));
         proxy.getEventManager().register(this, new ProxyListener(proxy, logger));
-        proxy.getEventManager().register(this, new FastLoginListener(proxy));
+        if(proxy.getPluginManager().getPlugin("fastlogin").isPresent()){
+            proxy.getEventManager().register(this, new FastLoginListener(proxy));
+        }
         AuthMeConfig.defaultConfig();
         logger.info("-- AuthMeVelocity enabled --");
         logger.info("AuthServers: " + config.getList("authservers"));
