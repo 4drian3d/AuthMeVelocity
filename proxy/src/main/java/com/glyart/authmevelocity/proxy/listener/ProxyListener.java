@@ -11,7 +11,7 @@ import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
-//import com.velocitypowered.api.event.player.TabCompleteEvent;
+import com.velocitypowered.api.event.player.TabCompleteEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
@@ -127,23 +127,11 @@ public class ProxyListener {
         event.setResult(ServerPreConnectEvent.ServerResult.denied());
     }
 
-    /*
-    "You have the opportunity to modify the response sent to the remote player."
-    In theory... it could be modified, but the respective methods do not exist.
-    I hope that the other event works for <1.12 even though this one should work.
-    */
-
-    /*@Subscribe
+    @Subscribe
     public void onTabComplete(TabCompleteEvent event){
         Player player = event.getPlayer();
-        if (plugin.loggedPlayers.contains(player.getUniqueId())) return;
-        event.setTabComplete();?
-    }*/
-
-    @Subscribe
-    public void onTabComplete(PlayerAvailableCommandsEvent event){
-        if (!AuthmeVelocityAPI.isLogged(event.getPlayer())) {
-            event.getRootNode().getChildren().iterator().remove();
+        if (!AuthmeVelocityAPI.isLogged(player)){
+            event.getSuggestions().clear();
         }
     }
 }
