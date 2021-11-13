@@ -1,7 +1,7 @@
 package com.glyart.authmevelocity.proxy.listener;
 
-import com.glyart.authmevelocity.proxy.AuthMeVelocityPlugin;
 import com.glyart.authmevelocity.proxy.AuthmeVelocityAPI;
+import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.event.ProxyLoginEvent;
 import com.google.common.io.ByteArrayDataInput;
 import com.velocitypowered.api.event.Subscribe;
@@ -25,39 +25,41 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 public class ProxyListener {
-    private final ProxyServer server;
+    private final ProxyServer proxy;
     private final Logger logger;
+    private final Random rm;
+    private AuthMeConfig.Config config;
 
-    public ProxyListener(ProxyServer server, Logger logger) {
-        this.server = server;
+    public ProxyListener(ProxyServer proxy, Logger logger) {
+        this.proxy = proxy;
         this.logger = logger;
+        this.rm = new Random();
+        this.config = AuthMeConfig.getConfig();
     }
 
     @Subscribe
     public void onPluginMessage(final PluginMessageEvent event) {
-        if (!(event.getSource() instanceof ServerConnection)) return;
-
-        if (!event.getIdentifier().getId().equals("authmevelocity:main")) return;
+        if (!(event.getSource() instanceof ServerConnection) || !event.getIdentifier().getId().equals("authmevelocity:main"))
+             return;
 
         ByteArrayDataInput input = event.dataAsDataStream();
         String sChannel = input.readUTF();
         if (!sChannel.equals("LOGIN")) return;
 
         String user = input.readUTF();
-        Optional<Player> optionalPlayer = server.getPlayer(UUID.fromString(user));
+        Optional<Player> optionalPlayer = proxy.getPlayer(UUID.fromString(user));
         if (!optionalPlayer.isPresent()) return;
 
         Player loggedPlayer = optionalPlayer.get();
         if (!AuthmeVelocityAPI.isLogged(loggedPlayer)){
             AuthmeVelocityAPI.addPlayer(loggedPlayer);
 
-            RegisteredServer loginServer = loggedPlayer.getCurrentServer().get().getServer();
-            server.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
-            if(AuthMeVelocityPlugin.getConfig().getBoolean("teleport.send-to-server-after-login")){
-                Random rm = new Random();
-                List<String> serverList = AuthMeVelocityPlugin.getConfig().getStringList("teleport.servers");
+            RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElseThrow().getServer();
+            proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
+            if(config.sendToServer()){
+                List<String> serverList = config.getTeleportServers();
                 String randomServer = serverList.get(rm.nextInt(serverList.size()));
-                Optional<RegisteredServer> optionalServer = server.getServer(randomServer);
+                Optional<RegisteredServer> optionalServer = proxy.getServer(randomServer);
                 if(optionalServer.isPresent()){
                     RegisteredServer serverToSend = optionalServer.get();
                     try{
@@ -92,7 +94,7 @@ public class ProxyListener {
 
         Optional<ServerConnection> server = player.getCurrentServer();
         boolean isAuthServer = server.isPresent() &&
-            AuthMeVelocityPlugin.getConfig().getList("authservers").contains(server.get().getServerInfo().getName());
+            config.getAuthServers().contains(server.get().getServerInfo().getName());
 
         if (isAuthServer) {
             event.setResult(CommandExecuteEvent.CommandResult.forwardToServer());
@@ -107,7 +109,7 @@ public class ProxyListener {
         if (AuthmeVelocityAPI.isLogged(player)) return;
 
         Optional<ServerConnection> server = player.getCurrentServer();
-        if (server.isPresent() && AuthMeVelocityPlugin.getConfig().getList("authservers").contains(server.get().getServerInfo().getName())) {
+        if (server.isPresent() && config.getAuthServers().contains(server.get().getServerInfo().getName())) {
             return;
         }
 
@@ -119,7 +121,7 @@ public class ProxyListener {
         if (AuthmeVelocityAPI.isLogged(event.getPlayer())) return;
 
         Optional<RegisteredServer> server = event.getResult().getServer();
-        if (server.isPresent() && AuthMeVelocityPlugin.getConfig().getList("authservers").contains(server.get().getServerInfo().getName())) {
+        if (server.isPresent() && config.getAuthServers().contains(server.get().getServerInfo().getName())) {
             return;
         }
 

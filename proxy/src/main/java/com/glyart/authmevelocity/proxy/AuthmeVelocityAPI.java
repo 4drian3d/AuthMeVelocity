@@ -48,4 +48,6 @@ public class AuthmeVelocityAPI {
             .filter(predicate)
             .forEach(player -> AuthMeVelocityPlugin.loggedPlayers.remove(player.getUniqueId()));
     }
+
+    private AuthmeVelocityAPI(){}
 }
