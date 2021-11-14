@@ -45,8 +45,8 @@ public class AuthMeVelocityPlugin {
         logger.info("-- AuthMeVelocity enabled --");
         var config = AuthMeConfig.getConfig();
         logger.info("AuthServers: {}", config.getAuthServers());
-        if(config.sendToServer()){
-            logger.info("LobbyServers: {}", config.getTeleportServers());
+        if(config.getToServerOptions().sendToServer()){
+            logger.info("LobbyServers: {}", config.getToServerOptions().getTeleportServers());
         }
     }
 

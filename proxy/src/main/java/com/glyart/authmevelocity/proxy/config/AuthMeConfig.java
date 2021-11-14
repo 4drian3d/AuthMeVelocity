@@ -9,20 +9,20 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
-import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 public class AuthMeConfig {
     public static void loadConfig(@NotNull Path path, @NotNull Logger logger){
-        File configFile = new File(path.toFile(), "config.yml");
-        final YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
+        File configFile = new File(path.toFile(), "config.conf");
+        final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
             .defaultOptions(opts -> opts.shouldCopyDefaults(true))
             .file(configFile)
             .build();
 
         try {
-            CommentedConfigurationNode node = loader.load();
+            final CommentedConfigurationNode node = loader.load();
             config = node.get(Config.class);
             node.set(Config.class, config);
             loader.save(node);
@@ -30,34 +30,46 @@ public class AuthMeConfig {
             logger.error("Could not load configuration: {}", exception.getMessage());
         }
     }
+
     @ConfigSerializable
     public static class Config {
 
-        @Comment("List of authservers")
+        @Comment("List of login/registration servers")
         private Set<String> authservers = Set.of(
             "auth1",
             "auth2"
         );
 
-        @Comment("Send each player to another server on login?")
+        private ServerOnLogin send = new ServerOnLogin();
+
+        public Set<String> getAuthServers(){
+            return this.authservers;
+        }
+
+        public ServerOnLogin getToServerOptions(){
+            return this.send;
+        }
+    }
+    @ConfigSerializable
+    public static class ServerOnLogin {
+        @Comment("Send logged in players to another server?")
         private boolean sendToServerOnLogin = false;
 
-        @Comment("List of teleport to servers")
+        @Comment("""
+        List of servers to send
+        One of these servers will be chosen at random
+        """)
         private List<String> teleportServers = List.of(
             "lobby1",
             "lobby2"
         );
 
-        public Set<String> getAuthServers(){
-            return authservers;
-        }
-
         public boolean sendToServer(){
-            return sendToServerOnLogin;
+            return this.sendToServerOnLogin;
         }
 
         public List<String> getTeleportServers(){
-            return teleportServers;
+            return this.teleportServers;
         }
     }
     private static Config config;

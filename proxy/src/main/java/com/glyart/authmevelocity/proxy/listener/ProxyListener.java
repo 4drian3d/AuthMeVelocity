@@ -54,8 +54,8 @@ public class ProxyListener {
         if (AuthmeVelocityAPI.addPlayer(loggedPlayer)){
             RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElseThrow().getServer();
             proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
-            if(config.sendToServer()){
-                List<String> serverList = config.getTeleportServers();
+            if(config.getToServerOptions().sendToServer()){
+                List<String> serverList = config.getToServerOptions().getTeleportServers();
                 String randomServer = serverList.get(rm.nextInt(serverList.size()));
                 Optional<RegisteredServer> optionalServer = proxy.getServer(randomServer);
                 optionalServer.ifPresentOrElse(serverToSend -> {

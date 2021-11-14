@@ -40,7 +40,7 @@
         </dependency>
         <dependency>
             <groupId>org.spongepowered</groupId>
-            <artifactId>configurate-yaml</artifactId>
+            <artifactId>configurate-hocon</artifactId>
             <version>4.1.2</version>
         </dependency>
         <dependency>
