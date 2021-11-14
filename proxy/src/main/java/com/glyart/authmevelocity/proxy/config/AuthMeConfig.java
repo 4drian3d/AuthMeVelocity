@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
@@ -13,7 +14,7 @@ import org.spongepowered.configurate.objectmapping.meta.Comment;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 public class AuthMeConfig {
-    public static void loadConfig(Path path, Logger logger){
+    public static void loadConfig(@NotNull Path path, @NotNull Logger logger){
         File configFile = new File(path.toFile(), "config.yml");
         final YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
             .defaultOptions(opts -> opts.shouldCopyDefaults(true))

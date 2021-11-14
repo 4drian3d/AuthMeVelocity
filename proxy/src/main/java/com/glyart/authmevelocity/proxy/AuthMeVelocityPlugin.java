@@ -18,15 +18,17 @@ import java.util.Set;
 import java.util.UUID;
 
 public class AuthMeVelocityPlugin {
-    private static ProxyServer proxy;
+    private final ProxyServer proxy;
     private final Logger logger;
     private final Path pluginDirectory;
+    private static AuthMeVelocityPlugin plugin;
 
     protected static final Set<UUID> loggedPlayers = Collections.synchronizedSet(new HashSet<UUID>());
 
     @Inject
-    public AuthMeVelocityPlugin(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
-        proxy = server;
+    public AuthMeVelocityPlugin(ProxyServer proxy, Logger logger, @DataDirectory Path dataDirectory) {
+        plugin = this;
+        this.proxy = proxy;
         this.logger = logger;
         this.pluginDirectory = dataDirectory;
     }
@@ -48,7 +50,11 @@ public class AuthMeVelocityPlugin {
         }
     }
 
-    protected static ProxyServer getProxy(){
+    protected ProxyServer getProxy(){
         return proxy;
+    }
+
+    public static AuthMeVelocityPlugin getInstance(){
+        return plugin;
     }
 }

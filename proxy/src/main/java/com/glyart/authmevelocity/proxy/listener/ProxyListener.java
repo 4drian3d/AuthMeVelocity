@@ -51,17 +51,14 @@ public class ProxyListener {
         if (!optionalPlayer.isPresent()) return;
 
         Player loggedPlayer = optionalPlayer.get();
-        if (!AuthmeVelocityAPI.isLogged(loggedPlayer)){
-            AuthmeVelocityAPI.addPlayer(loggedPlayer);
-
+        if (AuthmeVelocityAPI.addPlayer(loggedPlayer)){
             RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElseThrow().getServer();
             proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
             if(config.sendToServer()){
                 List<String> serverList = config.getTeleportServers();
                 String randomServer = serverList.get(rm.nextInt(serverList.size()));
                 Optional<RegisteredServer> optionalServer = proxy.getServer(randomServer);
-                if(optionalServer.isPresent()){
-                    RegisteredServer serverToSend = optionalServer.get();
+                optionalServer.ifPresentOrElse(serverToSend -> {
                     try{
                         if(!loggedPlayer.createConnectionRequest(serverToSend).connect().get().isSuccessful()){
                             logger.info("Unable to connect the player {} to the server {}",
@@ -74,9 +71,7 @@ public class ProxyListener {
                             serverToSend.getServerInfo().getName(),
                             exception);
                     }
-                } else{
-                    logger.info("The server {} does not exist", randomServer);
-                }
+                }, () -> logger.info("The server {} does not exist", randomServer));
             }
         }
     }
@@ -88,15 +83,12 @@ public class ProxyListener {
 
     @Subscribe
     public void onCommandExecute(final CommandExecuteEvent event) {
-        if (!(event.getCommandSource() instanceof Player player)) return;
-
-        if (AuthmeVelocityAPI.isLogged(player)) return;
+        if (!(event.getCommandSource() instanceof Player player) || AuthmeVelocityAPI.isLogged(player))
+            return;
 
         Optional<ServerConnection> server = player.getCurrentServer();
-        boolean isAuthServer = server.isPresent() &&
-            config.getAuthServers().contains(server.get().getServerInfo().getName());
 
-        if (isAuthServer) {
+        if (server.isPresent() && config.getAuthServers().contains(server.get().getServerInfo().getName())) {
             event.setResult(CommandExecuteEvent.CommandResult.forwardToServer());
         } else {
             event.setResult(CommandExecuteEvent.CommandResult.denied());
@@ -130,7 +122,7 @@ public class ProxyListener {
 
     @Subscribe
     public void onTabComplete(TabCompleteEvent event){
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
         if (!AuthmeVelocityAPI.isLogged(player)){
             event.getSuggestions().clear();
         }

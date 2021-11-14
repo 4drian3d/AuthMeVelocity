@@ -16,8 +16,6 @@ public class FastLoginListener {
     @Subscribe
     public void onAutoLogin(VelocityFastLoginAutoLoginEvent event){
         Optional<Player> autoLoginPlayer = server.getPlayer(event.getProfile().getName());
-        if(autoLoginPlayer.isPresent()){
-            AuthmeVelocityAPI.addPlayer(autoLoginPlayer.get());
-        }
+        autoLoginPlayer.ifPresent(AuthmeVelocityAPI::addPlayer);
     }
 }
