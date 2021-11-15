@@ -9,6 +9,8 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
@@ -36,7 +38,7 @@ public class AuthMeVelocityPlugin {
     @Subscribe
     public void onProxyInitialize(ProxyInitializeEvent event) {
         AuthMeConfig.loadConfig(pluginDirectory, logger);
-        var config = AuthMeConfig.getConfig();
+        @NotNull var config = AuthMeConfig.getConfig();
 
         proxy.getChannelRegistrar().register(
             MinecraftChannelIdentifier.create("authmevelocity", "main"));

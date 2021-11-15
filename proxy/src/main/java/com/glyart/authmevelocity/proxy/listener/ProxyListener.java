@@ -2,6 +2,7 @@ package com.glyart.authmevelocity.proxy.listener;
 
 import com.glyart.authmevelocity.proxy.AuthmeVelocityAPI;
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
+import com.glyart.authmevelocity.proxy.event.PreSendOnLoginEvent;
 import com.glyart.authmevelocity.proxy.event.ProxyLoginEvent;
 import com.google.common.io.ByteArrayDataInput;
 import com.velocitypowered.api.event.EventTask;
@@ -17,13 +18,13 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 public class ProxyListener {
     private final ProxyServer proxy;
@@ -31,7 +32,7 @@ public class ProxyListener {
     private final Random rm;
     private AuthMeConfig.Config config;
 
-    public ProxyListener(ProxyServer proxy, Logger logger, AuthMeConfig.Config config) {
+    public ProxyListener(@NotNull ProxyServer proxy, @NotNull Logger logger, @NotNull AuthMeConfig.Config config) {
         this.proxy = proxy;
         this.logger = logger;
         this.rm = new Random();
@@ -49,31 +50,34 @@ public class ProxyListener {
 
         String user = input.readUTF();
         Optional<Player> optionalPlayer = proxy.getPlayer(UUID.fromString(user));
-        if (!optionalPlayer.isPresent()) return;
+        if (optionalPlayer.isEmpty()) return;
 
         Player loggedPlayer = optionalPlayer.get();
         if (AuthmeVelocityAPI.addPlayer(loggedPlayer)){
-            RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElseThrow().getServer();
-            proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
-            if(config.getToServerOptions().sendToServer()){
-                List<String> serverList = config.getToServerOptions().getTeleportServers();
-                String randomServer = serverList.get(rm.nextInt(serverList.size()));
-                Optional<RegisteredServer> optionalServer = proxy.getServer(randomServer);
-                optionalServer.ifPresentOrElse(serverToSend -> {
-                    try{
-                        if(!loggedPlayer.createConnectionRequest(serverToSend).connect().get().isSuccessful()){
-                            logger.info("Unable to connect the player {} to the server {}",
-                                loggedPlayer.getUsername(),
-                                serverToSend.getServerInfo().getName());
-                        }
-                    } catch (InterruptedException | ExecutionException exception){
-                        logger.info("Unable to connect the player {} to the server {}. Error: {}",
-                            loggedPlayer.getUsername(),
-                            serverToSend.getServerInfo().getName(),
-                            exception);
+            createServerConnectionRequest(loggedPlayer, config, proxy, logger);
+        }
+    }
+
+    private void createServerConnectionRequest(Player loggedPlayer, AuthMeConfig.Config config, ProxyServer proxy, Logger logger){
+        final RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElseThrow().getServer();
+        proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
+        if(config.getToServerOptions().sendToServer()){
+            final List<String> serverList = config.getToServerOptions().getTeleportServers();
+            final String randomServer = serverList.get(rm.nextInt(serverList.size()));
+            Optional<RegisteredServer> optionalServer = proxy.getServer(randomServer);
+            optionalServer.ifPresentOrElse(serverToSend -> 
+                proxy.getEventManager().fire(new PreSendOnLoginEvent(loggedPlayer, loginServer, serverToSend)).thenAccept(preSendEvent -> {
+                    if(preSendEvent.getResult().isAllowed()){
+                        loggedPlayer.createConnectionRequest(serverToSend).connect().thenAccept(result -> {
+                            if(!result.isSuccessful()) {
+                                logger.info("Unable to connect the player {} to the server {}",
+                                    loggedPlayer.getUsername(),
+                                    serverToSend.getServerInfo().getName());
+                            }
+                        });
                     }
-                }, () -> logger.info("The server {} does not exist", randomServer));
-            }
+                })
+            , () -> logger.info("The server {} does not exist", randomServer));
         }
     }
 
