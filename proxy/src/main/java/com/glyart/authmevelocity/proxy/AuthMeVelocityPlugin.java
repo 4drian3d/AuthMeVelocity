@@ -6,28 +6,31 @@ import com.glyart.authmevelocity.proxy.listener.ProxyListener;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import org.slf4j.Logger;
 
-import de.leonhard.storage.Yaml;
-
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 public class AuthMeVelocityPlugin {
-    private static ProxyServer proxy;
+    private final ProxyServer proxy;
     private final Logger logger;
-    private static Yaml config = new Yaml("config", "plugins/AuthmeVelocity");
+    private final Path pluginDirectory;
+    private static AuthMeVelocityPlugin plugin;
 
     protected static final Set<UUID> loggedPlayers = Collections.synchronizedSet(new HashSet<UUID>());
 
     @Inject
-    public AuthMeVelocityPlugin(ProxyServer server, Logger logger) {
-        proxy = server;
+    public AuthMeVelocityPlugin(ProxyServer proxy, Logger logger, @DataDirectory Path dataDirectory) {
+        plugin = this;
+        this.proxy = proxy;
         this.logger = logger;
+        this.pluginDirectory = dataDirectory;
     }
 
     @Subscribe
@@ -38,19 +41,20 @@ public class AuthMeVelocityPlugin {
         if(proxy.getPluginManager().getPlugin("fastlogin").isPresent()){
             proxy.getEventManager().register(this, new FastLoginListener(proxy));
         }
-        AuthMeConfig.defaultConfig();
+        AuthMeConfig.loadConfig(pluginDirectory, logger);
         logger.info("-- AuthMeVelocity enabled --");
-        logger.info("AuthServers: " + config.getList("authservers"));
-        if(config.getBoolean("teleport.send-to-server-after-login")){
-            logger.info("LobbyServers: " + config.getList("teleport.servers"));
+        var config = AuthMeConfig.getConfig();
+        logger.info("AuthServers: {}", config.getAuthServers());
+        if(config.getToServerOptions().sendToServer()){
+            logger.info("LobbyServers: {}", config.getToServerOptions().getTeleportServers());
         }
     }
 
-    public static Yaml getConfig(){
-        return config;
+    protected ProxyServer getProxy(){
+        return proxy;
     }
 
-    protected static ProxyServer getProxy(){
-        return proxy;
+    public static AuthMeVelocityPlugin getInstance(){
+        return plugin;
     }
 }

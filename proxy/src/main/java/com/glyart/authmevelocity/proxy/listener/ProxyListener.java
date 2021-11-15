@@ -1,9 +1,10 @@
 package com.glyart.authmevelocity.proxy.listener;
 
-import com.glyart.authmevelocity.proxy.AuthMeVelocityPlugin;
 import com.glyart.authmevelocity.proxy.AuthmeVelocityAPI;
+import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.event.ProxyLoginEvent;
 import com.google.common.io.ByteArrayDataInput;
+import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
@@ -25,41 +26,40 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 public class ProxyListener {
-    private final ProxyServer server;
+    private final ProxyServer proxy;
     private final Logger logger;
+    private final Random rm;
+    private AuthMeConfig.Config config;
 
-    public ProxyListener(ProxyServer server, Logger logger) {
-        this.server = server;
+    public ProxyListener(ProxyServer proxy, Logger logger) {
+        this.proxy = proxy;
         this.logger = logger;
+        this.rm = new Random();
+        this.config = AuthMeConfig.getConfig();
     }
 
     @Subscribe
     public void onPluginMessage(final PluginMessageEvent event) {
-        if (!(event.getSource() instanceof ServerConnection)) return;
-
-        if (!event.getIdentifier().getId().equals("authmevelocity:main")) return;
+        if (!(event.getSource() instanceof ServerConnection) || !event.getIdentifier().getId().equals("authmevelocity:main"))
+             return;
 
         ByteArrayDataInput input = event.dataAsDataStream();
         String sChannel = input.readUTF();
         if (!sChannel.equals("LOGIN")) return;
 
         String user = input.readUTF();
-        Optional<Player> optionalPlayer = server.getPlayer(UUID.fromString(user));
+        Optional<Player> optionalPlayer = proxy.getPlayer(UUID.fromString(user));
         if (!optionalPlayer.isPresent()) return;
 
         Player loggedPlayer = optionalPlayer.get();
-        if (!AuthmeVelocityAPI.isLogged(loggedPlayer)){
-            AuthmeVelocityAPI.addPlayer(loggedPlayer);
-
-            RegisteredServer loginServer = loggedPlayer.getCurrentServer().get().getServer();
-            server.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
-            if(AuthMeVelocityPlugin.getConfig().getBoolean("teleport.send-to-server-after-login")){
-                Random rm = new Random();
-                List<String> serverList = AuthMeVelocityPlugin.getConfig().getStringList("teleport.servers");
+        if (AuthmeVelocityAPI.addPlayer(loggedPlayer)){
+            RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElseThrow().getServer();
+            proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
+            if(config.getToServerOptions().sendToServer()){
+                List<String> serverList = config.getToServerOptions().getTeleportServers();
                 String randomServer = serverList.get(rm.nextInt(serverList.size()));
-                Optional<RegisteredServer> optionalServer = server.getServer(randomServer);
-                if(optionalServer.isPresent()){
-                    RegisteredServer serverToSend = optionalServer.get();
+                Optional<RegisteredServer> optionalServer = proxy.getServer(randomServer);
+                optionalServer.ifPresentOrElse(serverToSend -> {
                     try{
                         if(!loggedPlayer.createConnectionRequest(serverToSend).connect().get().isSuccessful()){
                             logger.info("Unable to connect the player {} to the server {}",
@@ -72,9 +72,7 @@ public class ProxyListener {
                             serverToSend.getServerInfo().getName(),
                             exception);
                     }
-                } else{
-                    logger.info("The server {} does not exist", randomServer);
-                }
+                }, () -> logger.info("The server {} does not exist", randomServer));
             }
         }
     }
@@ -86,15 +84,12 @@ public class ProxyListener {
 
     @Subscribe
     public void onCommandExecute(final CommandExecuteEvent event) {
-        if (!(event.getCommandSource() instanceof Player player)) return;
-
-        if (AuthmeVelocityAPI.isLogged(player)) return;
+        if (!(event.getCommandSource() instanceof Player player) || AuthmeVelocityAPI.isLogged(player))
+            return;
 
         Optional<ServerConnection> server = player.getCurrentServer();
-        boolean isAuthServer = server.isPresent() &&
-            AuthMeVelocityPlugin.getConfig().getList("authservers").contains(server.get().getServerInfo().getName());
 
-        if (isAuthServer) {
+        if (server.isPresent() && config.getAuthServers().contains(server.get().getServerInfo().getName())) {
             event.setResult(CommandExecuteEvent.CommandResult.forwardToServer());
         } else {
             event.setResult(CommandExecuteEvent.CommandResult.denied());
@@ -107,7 +102,7 @@ public class ProxyListener {
         if (AuthmeVelocityAPI.isLogged(player)) return;
 
         Optional<ServerConnection> server = player.getCurrentServer();
-        if (server.isPresent() && AuthMeVelocityPlugin.getConfig().getList("authservers").contains(server.get().getServerInfo().getName())) {
+        if (server.isPresent() && config.getAuthServers().contains(server.get().getServerInfo().getName())) {
             return;
         }
 
@@ -119,7 +114,7 @@ public class ProxyListener {
         if (AuthmeVelocityAPI.isLogged(event.getPlayer())) return;
 
         Optional<RegisteredServer> server = event.getResult().getServer();
-        if (server.isPresent() && AuthMeVelocityPlugin.getConfig().getList("authservers").contains(server.get().getServerInfo().getName())) {
+        if (server.isPresent() && config.getAuthServers().contains(server.get().getServerInfo().getName())) {
             return;
         }
 
@@ -127,10 +122,11 @@ public class ProxyListener {
     }
 
     @Subscribe
-    public void onTabComplete(TabCompleteEvent event){
-        Player player = event.getPlayer();
+    public EventTask onTabComplete(TabCompleteEvent event){
+        final Player player = event.getPlayer();
         if (!AuthmeVelocityAPI.isLogged(player)){
-            event.getSuggestions().clear();
+            return EventTask.async(() -> event.getSuggestions().clear());
         }
+        return null;
     }
 }
