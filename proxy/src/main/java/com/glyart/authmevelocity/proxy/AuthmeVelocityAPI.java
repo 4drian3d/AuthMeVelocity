@@ -7,6 +7,9 @@ import com.velocitypowered.api.proxy.Player;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * APi provided to interact with logged players
+ */
 public class AuthmeVelocityAPI {
     /**
      * Check if the player is logged in or not
