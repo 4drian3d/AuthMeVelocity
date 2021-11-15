@@ -10,8 +10,8 @@ public class PreSendLoginEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();
     private boolean isCancelled;
 
-    public PreSendLoginEvent(@NotNull Player player) {
-        super(player);
+    public PreSendLoginEvent(@NotNull final Player player, boolean async) {
+        super(player, async);
     }
 
     @Override

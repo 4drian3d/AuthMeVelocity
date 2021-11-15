@@ -31,12 +31,11 @@ public class AuthmeVelocityAPI {
     /**
      * Removes a player from the list of logged-in players
      * @param player the unlogged player
+     * @return if the player was succesfully removed
      */
-    public static void removePlayer(@NotNull Player player){
+    public static boolean removePlayer(@NotNull Player player){
         final UUID playerUUID = player.getUniqueId();
-        if(AuthmeVelocityAPI.isLogged(player)){
-            AuthMeVelocityPlugin.loggedPlayers.remove(playerUUID);
-        }
+        return AuthMeVelocityPlugin.loggedPlayers.remove(playerUUID);
     }
 
     /**

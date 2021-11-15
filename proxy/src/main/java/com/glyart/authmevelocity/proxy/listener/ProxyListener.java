@@ -4,6 +4,7 @@ import com.glyart.authmevelocity.proxy.AuthmeVelocityAPI;
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.event.ProxyLoginEvent;
 import com.google.common.io.ByteArrayDataInput;
+import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
@@ -121,10 +122,11 @@ public class ProxyListener {
     }
 
     @Subscribe
-    public void onTabComplete(TabCompleteEvent event){
+    public EventTask onTabComplete(TabCompleteEvent event){
         final Player player = event.getPlayer();
         if (!AuthmeVelocityAPI.isLogged(player)){
-            event.getSuggestions().clear();
+            return EventTask.async(() -> event.getSuggestions().clear());
         }
+        return null;
     }
 }

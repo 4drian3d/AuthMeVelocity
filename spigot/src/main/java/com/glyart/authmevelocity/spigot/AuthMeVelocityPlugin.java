@@ -5,17 +5,18 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public class AuthMeVelocityPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
-        getServer().getMessenger().registerOutgoingPluginChannel(this, "authmevelocity:main");
-        getServer().getPluginManager().registerEvents(new AuthMeListener(this), this);
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "authmevelocity:main");
+        this.getServer().getPluginManager().registerEvents(new AuthMeListener(this), this);
 
-        getLogger().info("AuthMeVelocity enabled.");
+        this.getLogger().info("AuthMeVelocity enabled.");
     }
 
-    public void sendLoginToProxy(Player player) {
+    public void sendLoginToProxy(@NotNull final Player player) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("LOGIN");
         out.writeUTF(player.getUniqueId().toString());
