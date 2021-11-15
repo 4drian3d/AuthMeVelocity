@@ -53,7 +53,7 @@ public class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
     public RegisteredServer getSendServer(){
         return this.serverToSend;
     }
-    
+
     /**
      * Get the result of the event
      */
