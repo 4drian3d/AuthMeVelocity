@@ -14,10 +14,20 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 public class AuthMeConfig {
+    private static final String HEADER = """
+        AuthmeVelocity Proxy
+
+        Original Developer: xQuickGlare
+        Actual Developer: 4drian3d
+        """;
+    private static final HoconConfigurationLoader.Builder configBuilder = HoconConfigurationLoader.builder()
+        .defaultOptions(opts -> opts
+            .shouldCopyDefaults(true)
+            .header(HEADER)
+        );
     public static void loadConfig(@NotNull Path path, @NotNull Logger logger){
         File configFile = new File(path.toFile(), "config.conf");
-        final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
-            .defaultOptions(opts -> opts.shouldCopyDefaults(true))
+        final HoconConfigurationLoader loader = configBuilder
             .file(configFile)
             .build();
 
