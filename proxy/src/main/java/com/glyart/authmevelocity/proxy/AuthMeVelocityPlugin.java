@@ -35,15 +35,16 @@ public class AuthMeVelocityPlugin {
 
     @Subscribe
     public void onProxyInitialize(ProxyInitializeEvent event) {
+        AuthMeConfig.loadConfig(pluginDirectory, logger);
+        var config = AuthMeConfig.getConfig();
+
         proxy.getChannelRegistrar().register(
             MinecraftChannelIdentifier.create("authmevelocity", "main"));
-        proxy.getEventManager().register(this, new ProxyListener(proxy, logger));
-        if(proxy.getPluginManager().getPlugin("fastlogin").isPresent()){
-            proxy.getEventManager().register(this, new FastLoginListener(proxy));
-        }
-        AuthMeConfig.loadConfig(pluginDirectory, logger);
+        proxy.getEventManager().register(this, new ProxyListener(proxy, logger, config));
+        proxy.getPluginManager().getPlugin("fastlogin").ifPresent(fastlogin ->
+            proxy.getEventManager().register(this, new FastLoginListener(proxy)));
+
         logger.info("-- AuthMeVelocity enabled --");
-        var config = AuthMeConfig.getConfig();
         logger.info("AuthServers: {}", config.getAuthServers());
         if(config.getToServerOptions().sendToServer()){
             logger.info("LobbyServers: {}", config.getToServerOptions().getTeleportServers());

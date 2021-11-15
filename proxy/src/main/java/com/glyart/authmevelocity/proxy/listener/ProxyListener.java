@@ -31,11 +31,11 @@ public class ProxyListener {
     private final Random rm;
     private AuthMeConfig.Config config;
 
-    public ProxyListener(ProxyServer proxy, Logger logger) {
+    public ProxyListener(ProxyServer proxy, Logger logger, AuthMeConfig.Config config) {
         this.proxy = proxy;
         this.logger = logger;
         this.rm = new Random();
-        this.config = AuthMeConfig.getConfig();
+        this.config = config;
     }
 
     @Subscribe
