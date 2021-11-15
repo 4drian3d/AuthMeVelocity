@@ -54,7 +54,7 @@ public class AuthMeVelocityPlugin {
     }
 
     protected ProxyServer getProxy(){
-        return proxy;
+        return this.proxy;
     }
 
     public static AuthMeVelocityPlugin getInstance(){
