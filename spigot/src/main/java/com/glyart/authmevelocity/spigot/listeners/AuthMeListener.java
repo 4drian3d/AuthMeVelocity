@@ -18,9 +18,9 @@ public class AuthMeListener implements Listener {
     }
 
     @EventHandler
-    public void onLogin(LoginEvent event) {
+    public void onLogin(final LoginEvent event) {
         final Player player = event.getPlayer();
-        PreSendLoginEvent preSendLoginEvent = new PreSendLoginEvent(player, false);
+        PreSendLoginEvent preSendLoginEvent = new PreSendLoginEvent(player);
         Bukkit.getPluginManager().callEvent(preSendLoginEvent);
         if(!preSendLoginEvent.isCancelled()){
             plugin.sendLoginToProxy(player);

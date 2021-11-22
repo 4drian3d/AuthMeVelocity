@@ -5,6 +5,7 @@ import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.event.PreSendOnLoginEvent;
 import com.glyart.authmevelocity.proxy.event.ProxyLoginEvent;
 import com.google.common.io.ByteArrayDataInput;
+import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
@@ -24,7 +25,6 @@ import org.slf4j.Logger;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.UUID;
 
 public class ProxyListener {
     private final ProxyServer proxy;
@@ -40,35 +40,39 @@ public class ProxyListener {
     }
 
     @Subscribe
-    public void onPluginMessage(final PluginMessageEvent event) {
-        if (!(event.getSource() instanceof ServerConnection) || !event.getIdentifier().getId().equals("authmevelocity:main"))
-             return;
+    public void onPluginMessage(final PluginMessageEvent event, Continuation continuation) {
+        if (!(event.getSource() instanceof ServerConnection connection) || !event.getIdentifier().getId().equals("authmevelocity:main")){
+            continuation.resume();
+            return;
+        }
 
         ByteArrayDataInput input = event.dataAsDataStream();
-        String sChannel = input.readUTF();
-        if (!sChannel.equals("LOGIN")) return;
+        final String sChannel = input.readUTF();
+        if (!sChannel.equals("LOGIN")) {
+            continuation.resume();
+            return;
+        }
 
-        String user = input.readUTF();
-        Optional<Player> optionalPlayer = proxy.getPlayer(UUID.fromString(user));
-        if (optionalPlayer.isEmpty()) return;
-
-        Player loggedPlayer = optionalPlayer.get();
+        event.setResult(PluginMessageEvent.ForwardResult.handled());
+        //TODO: Test this
+        final Player loggedPlayer = connection.getPlayer();
         if (AuthmeVelocityAPI.addPlayer(loggedPlayer)){
-            createServerConnectionRequest(loggedPlayer, config, proxy, logger);
+            createServerConnectionRequest(loggedPlayer, config, proxy, logger, connection);
+            continuation.resume();
         }
     }
 
-    private void createServerConnectionRequest(Player loggedPlayer, AuthMeConfig.Config config, ProxyServer proxy, Logger logger){
-        final RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElseThrow().getServer();
+    private void createServerConnectionRequest(Player loggedPlayer, AuthMeConfig.Config config, ProxyServer proxy, Logger logger, ServerConnection connection){
+        final RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElse(connection).getServer();
         proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer, loginServer));
         if(config.getToServerOptions().sendToServer()){
             final List<String> serverList = config.getToServerOptions().getTeleportServers();
             final String randomServer = serverList.get(rm.nextInt(serverList.size()));
             Optional<RegisteredServer> optionalServer = proxy.getServer(randomServer);
-            optionalServer.ifPresentOrElse(serverToSend -> 
-                proxy.getEventManager().fire(new PreSendOnLoginEvent(loggedPlayer, loginServer, serverToSend)).thenAccept(preSendEvent -> {
+            optionalServer.ifPresentOrElse(serverToSend ->
+                proxy.getEventManager().fire(new PreSendOnLoginEvent(loggedPlayer, loginServer, serverToSend)).thenAcceptAsync(preSendEvent -> {
                     if(preSendEvent.getResult().isAllowed()){
-                        loggedPlayer.createConnectionRequest(serverToSend).connect().thenAccept(result -> {
+                        loggedPlayer.createConnectionRequest(serverToSend).connect().thenAcceptAsync(result -> {
                             if(!result.isSuccessful()) {
                                 logger.info("Unable to connect the player {} to the server {}",
                                     loggedPlayer.getUsername(),
@@ -101,12 +105,16 @@ public class ProxyListener {
     }
 
     @Subscribe
-    public void onPlayerChat(final PlayerChatEvent event) {
+    public void onPlayerChat(final PlayerChatEvent event, Continuation continuation) {
         final Player player = event.getPlayer();
-        if (AuthmeVelocityAPI.isLogged(player)) return;
+        if (AuthmeVelocityAPI.isLogged(player)) {
+            continuation.resume();
+            return;
+        }
 
         Optional<ServerConnection> server = player.getCurrentServer();
         if (server.isPresent() && config.getAuthServers().contains(server.get().getServerInfo().getName())) {
+            continuation.resume();
             return;
         }
 
@@ -127,8 +135,7 @@ public class ProxyListener {
 
     @Subscribe
     public EventTask onTabComplete(TabCompleteEvent event){
-        final Player player = event.getPlayer();
-        if (!AuthmeVelocityAPI.isLogged(player)){
+        if (!AuthmeVelocityAPI.isLogged(event.getPlayer())){
             return EventTask.async(() -> event.getSuggestions().clear());
         }
         return null;

@@ -12,8 +12,8 @@ This plugin adds the support for [Velocity](https://velocitypowered.com/) to [Au
 3. Put the jar that ends with "-spigot" in the Spigot servers that contains AuthMe
 4. Start the Velocity proxy and set up the config.yml with the auth servers
 
-# Plugin API
+## Plugin API
 Check the plugin API [here](https://github.com/4drian3d/AuthMeVelocity/wiki/Plugin-API)
 
-# Configuration
+## Configuration
 Check the plugin configuration [here](https://github.com/4drian3d/AuthMeVelocity/wiki/Configuration)

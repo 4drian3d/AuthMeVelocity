@@ -1,6 +1,5 @@
 package com.glyart.authmevelocity.proxy.config;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
@@ -26,9 +25,9 @@ public class AuthMeConfig {
             .header(HEADER)
         );
     public static void loadConfig(@NotNull Path path, @NotNull Logger logger){
-        File configFile = new File(path.toFile(), "config.conf");
+        Path configPath = path.resolve("config.conf");
         final HoconConfigurationLoader loader = configBuilder
-            .file(configFile)
+            .path(configPath)
             .build();
 
         try {

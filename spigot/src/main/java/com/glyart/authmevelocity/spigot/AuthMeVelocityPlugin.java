@@ -19,7 +19,6 @@ public class AuthMeVelocityPlugin extends JavaPlugin {
     public void sendLoginToProxy(@NotNull final Player player) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("LOGIN");
-        out.writeUTF(player.getUniqueId().toString());
 
         player.sendPluginMessage(this, "authmevelocity:main", out.toByteArray());
     }
