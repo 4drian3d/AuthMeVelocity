@@ -2,6 +2,7 @@ package com.glyart.authmevelocity.proxy;
 
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.listener.FastLoginListener;
+import com.glyart.authmevelocity.proxy.listener.PluginMessageListener;
 import com.glyart.authmevelocity.proxy.listener.ProxyListener;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
@@ -42,7 +43,8 @@ public class AuthMeVelocityPlugin {
 
         proxy.getChannelRegistrar().register(
             MinecraftChannelIdentifier.create("authmevelocity", "main"));
-        proxy.getEventManager().register(this, new ProxyListener(proxy, logger, config));
+        proxy.getEventManager().register(this, new ProxyListener(config));
+        proxy.getEventManager().register(this, new PluginMessageListener(proxy, logger, config));
         proxy.getPluginManager().getPlugin("fastlogin").ifPresent(fastlogin ->
             proxy.getEventManager().register(this, new FastLoginListener(proxy)));
 

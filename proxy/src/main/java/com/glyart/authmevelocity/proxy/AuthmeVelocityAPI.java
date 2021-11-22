@@ -3,7 +3,10 @@ package com.glyart.authmevelocity.proxy;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -50,6 +53,34 @@ public class AuthmeVelocityAPI {
             .map(uuid -> AuthMeVelocityPlugin.getInstance().getProxy().getPlayer(uuid).orElseThrow())
             .filter(predicate)
             .forEach(player -> AuthMeVelocityPlugin.loggedPlayers.remove(player.getUniqueId()));
+    }
+
+    /**
+     * Check if the player is on a login server
+     * @param player the player
+     * @return if the player is on a login server
+     */
+    public static boolean isInAuthServer(@NotNull Player player){
+        var connection = player.getCurrentServer();
+        return connection.isPresent() && isAuthServer(connection.get());
+    }
+
+    /**
+     * Check if a server is intended to be a logging server
+     * @param server the server
+     * @return if the server is a login server
+     */
+    public static boolean isAuthServer(@NotNull RegisteredServer server){
+        return AuthMeConfig.getConfig().getAuthServers().contains(server.getServerInfo().getName());
+    }
+
+    /**
+     * Checks if a connection is made from a login server
+     * @param connection the connection
+     * @return if the connection is made from a login server
+     */
+    public static boolean isAuthServer(@NotNull ServerConnection connection){
+        return AuthMeConfig.getConfig().getAuthServers().contains(connection.getServerInfo().getName());
     }
 
     private AuthmeVelocityAPI(){}

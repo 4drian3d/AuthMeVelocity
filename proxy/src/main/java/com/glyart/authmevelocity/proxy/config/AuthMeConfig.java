@@ -17,7 +17,7 @@ public class AuthMeConfig {
         AuthmeVelocity Proxy
 
         Original Developer: xQuickGlare
-        Actual Developer: 4drian3d
+        Current Developer: 4drian3d
         """;
     private static final HoconConfigurationLoader.Builder configBuilder = HoconConfigurationLoader.builder()
         .defaultOptions(opts -> opts
@@ -49,10 +49,16 @@ public class AuthMeConfig {
             "auth2"
         );
 
+        private Commands commands = new Commands();
+
         private ServerOnLogin send = new ServerOnLogin();
 
         public Set<String> getAuthServers(){
             return this.authservers;
+        }
+
+        public Commands getCommandsConfig(){
+            return this.commands;
         }
 
         public ServerOnLogin getToServerOptions(){
@@ -79,6 +85,32 @@ public class AuthMeConfig {
 
         public List<String> getTeleportServers(){
             return this.teleportServers;
+        }
+    }
+
+    @ConfigSerializable
+    public static class Commands{
+        @Comment("Sets the commands that users who have not yet logged in can execute")
+        private Set<String> allowedCommands = Set.of(
+            "login",
+            "register",
+            "l",
+            "reg",
+            "email",
+            "captcha"
+        );
+
+        @Comment("""
+        Sets the message to send in case a non-logged-in player executes an unauthorized command
+        To deactivate the message, leave it empty""")
+        private String blockedCommandMessage = "&4You cannot execute commands if you are not logged in yet.";
+
+        public Set<String> getAllowedCommands(){
+            return this.allowedCommands;
+        }
+
+        public String getBlockedMessage() {
+            return this.blockedCommandMessage;
         }
     }
     private static Config config;
