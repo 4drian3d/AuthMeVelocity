@@ -14,4 +14,5 @@ public class ConfigUtils {
                     blockedMessage));
         }
     }
+    private ConfigUtils(){}
 }
