@@ -3,6 +3,7 @@ package com.glyart.authmevelocity.proxy.listener;
 import com.glyart.authmevelocity.proxy.AuthmeVelocityAPI;
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.config.ConfigUtils;
+import com.glyart.authmevelocity.proxy.utils.AuthmeUtils;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
@@ -32,12 +33,8 @@ public class ProxyListener {
             return;
 
         if(AuthmeVelocityAPI.isInAuthServer(player)){
-            var commandconfig = config.getCommandsConfig();
-            String command = event.getCommand();
-            if(command.contains(" ")){
-                command = command.split(" ")[0];
-            }
-            if(!commandconfig.getAllowedCommands().contains(command)){
+            String command = AuthmeUtils.getFirstArgument(event.getCommand());
+            if(!config.getCommandsConfig().getAllowedCommands().contains(command)){
                 ConfigUtils.sendBlockedMessage(player);
                 event.setResult(CommandExecuteEvent.CommandResult.denied());
             }
