@@ -4,7 +4,6 @@ import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.listener.FastLoginListener;
 import com.glyart.authmevelocity.proxy.listener.PluginMessageListener;
 import com.glyart.authmevelocity.proxy.listener.ProxyListener;
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -16,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,7 +26,7 @@ public class AuthMeVelocityPlugin {
     private final Path pluginDirectory;
     private static AuthMeVelocityPlugin plugin;
 
-    protected static final Set<UUID> loggedPlayers = Sets.newConcurrentHashSet();
+    protected static final Set<UUID> loggedPlayers = Collections.synchronizedSet(new HashSet<>());
 
     @Inject
     public AuthMeVelocityPlugin(ProxyServer proxy, Logger logger, @DataDirectory Path dataDirectory) {

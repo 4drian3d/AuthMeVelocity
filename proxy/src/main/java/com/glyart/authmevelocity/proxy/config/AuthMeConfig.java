@@ -103,7 +103,7 @@ public class AuthMeConfig {
         @Comment("""
         Sets the message to send in case a non-logged-in player executes an unauthorized command
         To deactivate the message, leave it empty""")
-        private String blockedCommandMessage = "&4You cannot execute commands if you are not logged in yet.";
+        private String blockedCommandMessage = "&4You cannot execute commands if you are not logged in yet";
 
         public Set<String> getAllowedCommands(){
             return this.allowedCommands;
