@@ -18,8 +18,8 @@
 
     <repositories>
         <repository>
-            <id>velocity</id>
-            <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
         <repository>
             <id>codemc-snapshots</id>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.velocitypowered</groupId>
             <artifactId>velocity-api</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
