@@ -1,6 +1,5 @@
 package com.glyart.authmevelocity.spigot.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -12,7 +11,7 @@ public class PreSendLoginEvent extends PlayerEvent implements Cancellable {
     private boolean isCancelled;
 
     public PreSendLoginEvent(@NotNull final Player player) {
-        super(player, !Bukkit.isPrimaryThread());
+        super(player);
     }
 
     @Override
