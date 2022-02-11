@@ -11,7 +11,7 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
  * Event to be executed just before sending a player to another server after login/registration.
  * Here you have the ability to deny the event.
  */
-public class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
+public final class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
 
     private GenericResult result = GenericResult.allowed();
     private final Player player;

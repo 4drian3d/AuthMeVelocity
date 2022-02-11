@@ -36,10 +36,11 @@ public class PluginMessageListener {
 
     @Subscribe
     public void onPluginMessage(final PluginMessageEvent event, Continuation continuation) {
-        if (!(event.getSource() instanceof ServerConnection connection) || !event.getIdentifier().getId().equals("authmevelocity:main")){
+        if (!(event.getSource() instanceof ServerConnection) || !event.getIdentifier().getId().equals("authmevelocity:main")){
             continuation.resume();
             return;
         }
+        ServerConnection connection = ((ServerConnection)event.getSource());
 
         event.setResult(PluginMessageEvent.ForwardResult.handled());
 
@@ -47,24 +48,24 @@ public class PluginMessageListener {
         final String sChannel = input.readUTF();
         final Player loggedPlayer = connection.getPlayer();
         switch(sChannel){
-            case "LOGIN" -> {
+            case "LOGIN" :
                 if (AuthmeVelocityAPI.addPlayer(loggedPlayer)){
                     createServerConnectionRequest(loggedPlayer, config, proxy, logger, connection);
                 }
                 continuation.resume();
-            }
-            case "LOGOUT" -> {
+                break;
+            case "LOGOUT":
                 if(AuthmeVelocityAPI.removePlayer(loggedPlayer)){
                     proxy.getEventManager().fireAndForget(new ProxyLogoutEvent(loggedPlayer));
                 }
                 continuation.resume();
-            }
-            case "REGISTER" -> {
+                break;
+            case "REGISTER":
                 proxy.getEventManager().fireAndForget(new ProxyRegisterEvent(loggedPlayer));
                 continuation.resume();
-            }
+                break;
 
-            default -> continuation.resume();
+            default: continuation.resume();
         }
     }
 

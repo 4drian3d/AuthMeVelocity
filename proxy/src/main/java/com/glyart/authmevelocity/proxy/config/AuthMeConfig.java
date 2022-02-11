@@ -13,12 +13,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 public class AuthMeConfig {
-    private static final String HEADER = """
-        AuthmeVelocity Proxy
-
-        Original Developer: xQuickGlare
-        Current Developer: 4drian3d
-        """;
+    private static final String HEADER = "AuthmeVelocity Proxy\n\nOriginal Developer: xQuickGlare\nCurrent Developer: 4drian3d";
     private static final HoconConfigurationLoader.Builder configBuilder = HoconConfigurationLoader.builder()
         .defaultOptions(opts -> opts
             .shouldCopyDefaults(true)
@@ -70,10 +65,7 @@ public class AuthMeConfig {
         @Comment("Send logged in players to another server?")
         private boolean sendToServerOnLogin = false;
 
-        @Comment("""
-        List of servers to send
-        One of these servers will be chosen at random
-        """)
+        @Comment("List of servers to send\nOne of these servers will be chosen at random")
         private List<String> teleportServers = List.of(
             "lobby1",
             "lobby2"
@@ -100,9 +92,7 @@ public class AuthMeConfig {
             "captcha"
         );
 
-        @Comment("""
-        Sets the message to send in case a non-logged-in player executes an unauthorized command
-        To deactivate the message, leave it empty""")
+        @Comment("Sets the message to send in case a non-logged-in player executes an unauthorized command\nTo deactivate the message, leave it empty")
         private String blockedCommandMessage = "&4You cannot execute commands if you are not logged in yet";
 
         public Set<String> getAllowedCommands(){
