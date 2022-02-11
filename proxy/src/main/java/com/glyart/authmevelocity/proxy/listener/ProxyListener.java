@@ -4,6 +4,7 @@ import com.glyart.authmevelocity.proxy.AuthmeVelocityAPI;
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.config.ConfigUtils;
 import com.glyart.authmevelocity.proxy.utils.AuthmeUtils;
+import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
@@ -28,9 +29,18 @@ public class ProxyListener {
     }
 
     @Subscribe
-    public void onCommandExecute(final CommandExecuteEvent event) {
-        if (!(event.getCommandSource() instanceof Player player) || AuthmeVelocityAPI.isLogged(player))
+    public void onCommandExecute(final CommandExecuteEvent event, Continuation continuation) {
+        if (!(event.getCommandSource() instanceof Player)){
+            continuation.resume();
             return;
+        }
+
+        Player player = ((Player)event.getCommandSource());
+
+        if(AuthmeVelocityAPI.isLogged(player)){
+            continuation.resume();
+            return;
+        }
 
         if(AuthmeVelocityAPI.isInAuthServer(player)){
             String command = AuthmeUtils.getFirstArgument(event.getCommand());
@@ -42,6 +52,7 @@ public class ProxyListener {
             ConfigUtils.sendBlockedMessage(player);
             event.setResult(CommandExecuteEvent.CommandResult.denied());
         }
+        continuation.resume();
     }
 
     @Subscribe
@@ -52,14 +63,18 @@ public class ProxyListener {
     }
 
     @Subscribe
-    public void onServerPreConnect(ServerPreConnectEvent event) {
-        if (AuthmeVelocityAPI.isLogged(event.getPlayer())) return;
+    public void onServerPreConnect(ServerPreConnectEvent event, Continuation continuation) {
+        if (AuthmeVelocityAPI.isLogged(event.getPlayer())){
+            continuation.resume();
+            return;
+        }
 
         event.getResult().getServer().ifPresent(server -> {
             if(!AuthmeVelocityAPI.isAuthServer(server)){
                 event.setResult(ServerPreConnectEvent.ServerResult.denied());
             }
         });
+        continuation.resume();
     }
 
     @Subscribe
