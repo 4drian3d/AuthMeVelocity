@@ -3,4 +3,4 @@ author: xQuickGlare
 version: ${project.version}
 main: com.glyart.authmevelocity.spigot.AuthMeVelocityPlugin
 depend: [AuthMe]
-api-version: 1.16
+api-version: 1.15

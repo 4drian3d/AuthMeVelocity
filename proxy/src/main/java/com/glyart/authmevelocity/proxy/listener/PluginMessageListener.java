@@ -25,13 +25,15 @@ public class PluginMessageListener {
     private final ProxyServer proxy;
     private final Logger logger;
     private final Random rm;
-    private AuthMeConfig.Config config;
+    private final AuthMeConfig.Config config;
+    private final AuthmeVelocityAPI api;
 
-    public PluginMessageListener(@NotNull ProxyServer proxy, @NotNull Logger logger, @NotNull AuthMeConfig.Config config) {
+    public PluginMessageListener(@NotNull ProxyServer proxy, @NotNull Logger logger, @NotNull AuthMeConfig.Config config, AuthmeVelocityAPI api) {
         this.proxy = proxy;
         this.logger = logger;
         this.rm = new Random();
         this.config = config;
+        this.api = api;
     }
 
     @Subscribe
@@ -49,13 +51,13 @@ public class PluginMessageListener {
         final Player loggedPlayer = connection.getPlayer();
         switch(sChannel){
             case "LOGIN" :
-                if (AuthmeVelocityAPI.addPlayer(loggedPlayer)){
+                if (api.addPlayer(loggedPlayer)){
                     createServerConnectionRequest(loggedPlayer, config, proxy, logger, connection);
                 }
                 continuation.resume();
                 break;
             case "LOGOUT":
-                if(AuthmeVelocityAPI.removePlayer(loggedPlayer)){
+                if(api.removePlayer(loggedPlayer)){
                     proxy.getEventManager().fireAndForget(new ProxyLogoutEvent(loggedPlayer));
                 }
                 continuation.resume();

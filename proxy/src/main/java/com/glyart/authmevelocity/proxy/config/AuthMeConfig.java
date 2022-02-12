@@ -2,6 +2,7 @@ package com.glyart.authmevelocity.proxy.config;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
@@ -13,15 +14,13 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 public class AuthMeConfig {
-    private static final String HEADER = "AuthmeVelocity Proxy\n\nOriginal Developer: xQuickGlare\nCurrent Developer: 4drian3d";
-    private static final HoconConfigurationLoader.Builder configBuilder = HoconConfigurationLoader.builder()
-        .defaultOptions(opts -> opts
-            .shouldCopyDefaults(true)
-            .header(HEADER)
-        );
-    public static void loadConfig(@NotNull Path path, @NotNull Logger logger){
-        Path configPath = path.resolve("config.conf");
-        final HoconConfigurationLoader loader = configBuilder
+    public Config loadConfig(@NotNull Path path, @NotNull Logger logger){
+        Path configPath = Objects.requireNonNull(path).resolve("config.conf");
+        final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
+            .defaultOptions(opts -> opts
+                .shouldCopyDefaults(true)
+                .header("AuthmeVelocity Proxy\n\nOriginal Developer: xQuickGlare\nCurrent Developer: 4drian3d")
+            )
             .path(configPath)
             .build();
 
@@ -30,8 +29,10 @@ public class AuthMeConfig {
             config = node.get(Config.class);
             node.set(Config.class, config);
             loader.save(node);
+            return config;
         } catch (ConfigurateException exception){
             logger.error("Could not load configuration: {}", exception.getMessage());
+            return null;
         }
     }
 
@@ -103,9 +104,8 @@ public class AuthMeConfig {
             return this.blockedCommandMessage;
         }
     }
-    private static Config config;
-    public static Config getConfig(){
+    private Config config = null;
+    public Config getConfig(){
         return config;
     }
-    private AuthMeConfig(){}
 }

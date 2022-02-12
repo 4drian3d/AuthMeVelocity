@@ -18,14 +18,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class ProxyListener {
     private AuthMeConfig.Config config;
+    private final AuthmeVelocityAPI api;
 
-    public ProxyListener(@NotNull AuthMeConfig.Config config) {
+    public ProxyListener(@NotNull AuthMeConfig.Config config, AuthmeVelocityAPI api) {
         this.config = config;
+        this.api = api;
     }
 
     @Subscribe
     public void onDisconnect(final DisconnectEvent event) {
-        AuthmeVelocityAPI.removePlayer(event.getPlayer());
+        api.removePlayer(event.getPlayer());
     }
 
     @Subscribe
@@ -37,19 +39,19 @@ public class ProxyListener {
 
         Player player = ((Player)event.getCommandSource());
 
-        if(AuthmeVelocityAPI.isLogged(player)){
+        if(api.isLogged(player)){
             continuation.resume();
             return;
         }
 
-        if(AuthmeVelocityAPI.isInAuthServer(player)){
+        if(api.isInAuthServer(player)){
             String command = AuthmeUtils.getFirstArgument(event.getCommand());
             if(!config.getCommandsConfig().getAllowedCommands().contains(command)){
-                ConfigUtils.sendBlockedMessage(player);
+                ConfigUtils.sendBlockedMessage(player, config);
                 event.setResult(CommandExecuteEvent.CommandResult.denied());
             }
         } else {
-            ConfigUtils.sendBlockedMessage(player);
+            ConfigUtils.sendBlockedMessage(player, config);
             event.setResult(CommandExecuteEvent.CommandResult.denied());
         }
         continuation.resume();
@@ -57,20 +59,20 @@ public class ProxyListener {
 
     @Subscribe
     public void onPlayerChat(final PlayerChatEvent event) {
-        if (!AuthmeVelocityAPI.isLogged(event.getPlayer())) {
+        if (!api.isLogged(event.getPlayer())) {
             event.setResult(PlayerChatEvent.ChatResult.denied());
         }
     }
 
     @Subscribe
     public void onServerPreConnect(ServerPreConnectEvent event, Continuation continuation) {
-        if (AuthmeVelocityAPI.isLogged(event.getPlayer())){
+        if (api.isLogged(event.getPlayer())){
             continuation.resume();
             return;
         }
 
         event.getResult().getServer().ifPresent(server -> {
-            if(!AuthmeVelocityAPI.isAuthServer(server)){
+            if(!api.isAuthServer(server)){
                 event.setResult(ServerPreConnectEvent.ServerResult.denied());
             }
         });
@@ -79,7 +81,7 @@ public class ProxyListener {
 
     @Subscribe
     public EventTask onTabComplete(TabCompleteEvent event){
-        if (!AuthmeVelocityAPI.isLogged(event.getPlayer())){
+        if (!api.isLogged(event.getPlayer())){
             return EventTask.async(() -> event.getSuggestions().clear());
         }
         return null;

@@ -24,7 +24,7 @@ public class AuthMeListener implements Listener {
     public void onLogin(final LoginEvent event) {
         final Player player = event.getPlayer();
         PreSendLoginEvent preSendLoginEvent = new PreSendLoginEvent(player);
-        if(!preSendLoginEvent.callEvent()){
+        if(preSendLoginEvent.callEvent()){
             plugin.sendMessageToProxy(player, MessageType.LOGIN);
         }
     }

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PreSendLoginEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();
-    private boolean isCancelled;
+    private boolean isCancelled = false;
 
     public PreSendLoginEvent(@NotNull final Player player) {
         super(player);
@@ -16,7 +16,7 @@ public class PreSendLoginEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public boolean isCancelled() {
-        return isCancelled;
+        return this.isCancelled;
     }
 
     @Override
