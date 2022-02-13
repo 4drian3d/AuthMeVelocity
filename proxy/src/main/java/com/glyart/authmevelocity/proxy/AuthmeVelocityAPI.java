@@ -86,4 +86,13 @@ public final class AuthmeVelocityAPI {
     public boolean isAuthServer(@NotNull ServerConnection connection){
         return config.getAuthServers().contains(connection.getServerInfo().getName());
     }
+
+    /**
+     * Checks if a string is an name of an auth server
+     * @param server the server name
+     * @return if the server is an auth serverr
+     */
+    public boolean isAuthServer(@NotNull String server){
+        return config.getAuthServers().contains(server);
+    }
 }

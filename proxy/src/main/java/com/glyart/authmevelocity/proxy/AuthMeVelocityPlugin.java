@@ -49,7 +49,7 @@ public class AuthMeVelocityPlugin {
         AuthMeConfig config = Objects.requireNonNull(new AuthMeConfig(toml), "configuration cannot be null");
         this.api = new AuthmeVelocityAPI(this, config);
         proxy.getChannelRegistrar().register(MinecraftChannelIdentifier.create("authmevelocity", "main"));
-        proxy.getEventManager().register(this, new ProxyListener(config, api));
+        proxy.getEventManager().register(this, new ProxyListener(config, api, logger, proxy));
         proxy.getEventManager().register(this, new PluginMessageListener(proxy, logger, config, api));
 
         if(proxy.getPluginManager().isLoaded("fastlogin")){

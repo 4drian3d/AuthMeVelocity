@@ -9,11 +9,13 @@ public final class AuthMeConfig {
     private final List<String> authServers;
     private final ServerOnLogin serverOnLogin;
     private final Commands commands;
+    private final EnsureAuthServer ensure;
 
     public AuthMeConfig(Toml toml){
         this.authServers = toml.getList("authServers");
         this.serverOnLogin = toml.getTable("SendOnLogin").to(ServerOnLogin.class);
         this.commands = toml.getTable("Commands").to(Commands.class);
+        this.ensure = toml.getTable("EnsureAuthServer").to(EnsureAuthServer.class);
     }
 
     public static class ServerOnLogin {
@@ -42,12 +44,30 @@ public final class AuthMeConfig {
         }
     }
 
+    public static class EnsureAuthServer {
+        private boolean ensureFirstServerIsAuthServer;
+        private String disconnectMessage;
+
+        public boolean ensureAuthServer(){
+            return this.ensureFirstServerIsAuthServer;
+        }
+
+        public String getDisconnectMessage(){
+            return this.disconnectMessage;
+        }
+
+    }
+
     public Commands getCommandsConfig(){
         return this.commands;
     }
 
     public ServerOnLogin getToServerOptions(){
         return this.serverOnLogin;
+    }
+
+    public EnsureAuthServer getEnsureOptions(){
+        return this.ensure;
     }
 
     public List<String> getAuthServers(){
