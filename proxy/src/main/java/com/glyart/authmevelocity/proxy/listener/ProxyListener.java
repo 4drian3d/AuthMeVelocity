@@ -16,11 +16,11 @@ import com.velocitypowered.api.proxy.Player;
 
 import org.jetbrains.annotations.NotNull;
 
-public class ProxyListener {
-    private AuthMeConfig.Config config;
+public final class ProxyListener {
+    private final AuthMeConfig config;
     private final AuthmeVelocityAPI api;
 
-    public ProxyListener(@NotNull AuthMeConfig.Config config, AuthmeVelocityAPI api) {
+    public ProxyListener(@NotNull AuthMeConfig config, AuthmeVelocityAPI api) {
         this.config = config;
         this.api = api;
     }

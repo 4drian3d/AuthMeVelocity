@@ -1,76 +1,24 @@
 package com.glyart.authmevelocity.proxy.config;
 
-import java.nio.file.Path;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.spongepowered.configurate.CommentedConfigurationNode;
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
+import com.moandjiezana.toml.Toml;
 
-public class AuthMeConfig {
-    public Config loadConfig(@NotNull Path path, @NotNull Logger logger){
-        Path configPath = Objects.requireNonNull(path).resolve("config.conf");
-        final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
-            .defaultOptions(opts -> opts
-                .shouldCopyDefaults(true)
-                .header("AuthmeVelocity Proxy\n\nOriginal Developer: xQuickGlare\nCurrent Developer: 4drian3d")
-            )
-            .path(configPath)
-            .build();
+public final class AuthMeConfig {
+    private final List<String> authServers;
+    private final ServerOnLogin serverOnLogin;
+    private final Commands commands;
 
-        try {
-            final CommentedConfigurationNode node = loader.load();
-            config = node.get(Config.class);
-            node.set(Config.class, config);
-            loader.save(node);
-            return config;
-        } catch (ConfigurateException exception){
-            logger.error("Could not load configuration: {}", exception.getMessage());
-            return null;
-        }
+    public AuthMeConfig(Toml toml){
+        this.authServers = toml.getList("authServers");
+        this.serverOnLogin = toml.getTable("SendOnLogin").to(ServerOnLogin.class);
+        this.commands = toml.getTable("Commands").to(Commands.class);
     }
 
-    @ConfigSerializable
-    public static class Config {
-
-        @Comment("List of login/registration servers")
-        private Set<String> authservers = Set.of(
-            "auth1",
-            "auth2"
-        );
-
-        private Commands commands = new Commands();
-
-        private ServerOnLogin send = new ServerOnLogin();
-
-        public Set<String> getAuthServers(){
-            return this.authservers;
-        }
-
-        public Commands getCommandsConfig(){
-            return this.commands;
-        }
-
-        public ServerOnLogin getToServerOptions(){
-            return this.send;
-        }
-    }
-    @ConfigSerializable
     public static class ServerOnLogin {
-        @Comment("Send logged in players to another server?")
-        private boolean sendToServerOnLogin = false;
-
-        @Comment("List of servers to send\nOne of these servers will be chosen at random")
-        private List<String> teleportServers = List.of(
-            "lobby1",
-            "lobby2"
-        );
+        private boolean sendToServerOnLogin;
+        private List<String> teleportServers;
 
         public boolean sendToServer(){
             return this.sendToServerOnLogin;
@@ -81,20 +29,9 @@ public class AuthMeConfig {
         }
     }
 
-    @ConfigSerializable
     public static class Commands{
-        @Comment("Sets the commands that users who have not yet logged in can execute")
-        private Set<String> allowedCommands = Set.of(
-            "login",
-            "register",
-            "l",
-            "reg",
-            "email",
-            "captcha"
-        );
-
-        @Comment("Sets the message to send in case a non-logged-in player executes an unauthorized command\nTo deactivate the message, leave it empty")
-        private String blockedCommandMessage = "&4You cannot execute commands if you are not logged in yet";
+        private Set<String> allowedCommands;
+        private String blockedCommandMessage;
 
         public Set<String> getAllowedCommands(){
             return this.allowedCommands;
@@ -104,8 +41,16 @@ public class AuthMeConfig {
             return this.blockedCommandMessage;
         }
     }
-    private Config config = null;
-    public Config getConfig(){
-        return config;
+
+    public Commands getCommandsConfig(){
+        return this.commands;
+    }
+
+    public ServerOnLogin getToServerOptions(){
+        return this.serverOnLogin;
+    }
+
+    public List<String> getAuthServers(){
+        return this.authServers;
     }
 }

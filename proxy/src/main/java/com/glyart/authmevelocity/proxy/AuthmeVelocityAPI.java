@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
@@ -15,8 +16,10 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class AuthmeVelocityAPI {
     private final AuthMeVelocityPlugin plugin;
-    AuthmeVelocityAPI(AuthMeVelocityPlugin plugin){
+    private final AuthMeConfig config;
+    AuthmeVelocityAPI(AuthMeVelocityPlugin plugin, AuthMeConfig config){
         this.plugin = plugin;
+        this.config = config;
     }
     /**
      * Check if the player is logged in or not
@@ -72,7 +75,7 @@ public final class AuthmeVelocityAPI {
      * @return if the server is a login server
      */
     public boolean isAuthServer(@NotNull RegisteredServer server){
-        return plugin.config.getAuthServers().contains(server.getServerInfo().getName());
+        return config.getAuthServers().contains(server.getServerInfo().getName());
     }
 
     /**
@@ -81,6 +84,6 @@ public final class AuthmeVelocityAPI {
      * @return if the connection is made from a login server
      */
     public boolean isAuthServer(@NotNull ServerConnection connection){
-        return plugin.config.getAuthServers().contains(connection.getServerInfo().getName());
+        return config.getAuthServers().contains(connection.getServerInfo().getName());
     }
 }

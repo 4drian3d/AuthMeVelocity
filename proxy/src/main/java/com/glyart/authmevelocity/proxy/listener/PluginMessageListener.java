@@ -25,10 +25,10 @@ public class PluginMessageListener {
     private final ProxyServer proxy;
     private final Logger logger;
     private final Random rm;
-    private final AuthMeConfig.Config config;
+    private final AuthMeConfig config;
     private final AuthmeVelocityAPI api;
 
-    public PluginMessageListener(@NotNull ProxyServer proxy, @NotNull Logger logger, @NotNull AuthMeConfig.Config config, AuthmeVelocityAPI api) {
+    public PluginMessageListener(@NotNull ProxyServer proxy, @NotNull Logger logger, @NotNull AuthMeConfig config, AuthmeVelocityAPI api) {
         this.proxy = proxy;
         this.logger = logger;
         this.rm = new Random();
@@ -52,7 +52,7 @@ public class PluginMessageListener {
         switch(sChannel){
             case "LOGIN" :
                 if (api.addPlayer(loggedPlayer)){
-                    createServerConnectionRequest(loggedPlayer, config, proxy, logger, connection);
+                    createServerConnectionRequest(loggedPlayer, proxy, logger, connection);
                 }
                 continuation.resume();
                 break;
@@ -71,7 +71,7 @@ public class PluginMessageListener {
         }
     }
 
-    private void createServerConnectionRequest(Player loggedPlayer, AuthMeConfig.Config config, ProxyServer proxy, Logger logger, ServerConnection connection){
+    private void createServerConnectionRequest(Player loggedPlayer, ProxyServer proxy, Logger logger, ServerConnection connection){
         final RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElse(connection).getServer();
         proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer));
         if(config.getToServerOptions().sendToServer()){

@@ -1,0 +1,22 @@
+# AuthmeVelocity Proxy
+# Original Developer: xQuickGlare
+# Actual Developer: 4drian3d
+
+# List of login/registration servers
+authServers = ["auth1", "auth2"]
+
+[SendOnLogin]
+    # Send logged in players to another server?
+    sendToServerOnLogin = false
+
+    # List of servers to send
+    # One of these servers will be chosen at random
+    teleportServers = ["lobby1", "lobby2"]
+
+[Commands]
+    # Sets the commands that users who have not yet logged in can execute
+    allowedCommands = ["login", "register", "l", "reg", "email", "captcha"]
+
+    # Sets the message to send in case a non-logged-in player executes an unauthorized command
+    # To deactivate the message, leave it empty
+    blockedCommandMessage = "&4You cannot execute commands if you are not logged in yet"
