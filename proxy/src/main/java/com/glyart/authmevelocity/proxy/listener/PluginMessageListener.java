@@ -6,9 +6,11 @@ import java.util.Random;
 import com.glyart.authmevelocity.proxy.AuthmeVelocityAPI;
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.event.PreSendOnLoginEvent;
+import com.glyart.authmevelocity.proxy.event.ProxyForcedUnregisterEvent;
 import com.glyart.authmevelocity.proxy.event.ProxyLoginEvent;
 import com.glyart.authmevelocity.proxy.event.ProxyLogoutEvent;
 import com.glyart.authmevelocity.proxy.event.ProxyRegisterEvent;
+import com.glyart.authmevelocity.proxy.event.ProxyUnregisterEvent;
 import com.google.common.io.ByteArrayDataInput;
 import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.Subscribe;
@@ -19,6 +21,7 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 public class PluginMessageListener {
@@ -48,27 +51,33 @@ public class PluginMessageListener {
 
         ByteArrayDataInput input = event.dataAsDataStream();
         final String sChannel = input.readUTF();
-        final Player loggedPlayer = connection.getPlayer();
+        final String playername = input.readUTF();
+        final @Nullable Player loggedPlayer = proxy.getPlayer(playername).orElse(null);
         switch(sChannel){
             case "LOGIN" :
-                if (api.addPlayer(loggedPlayer)){
+                if (loggedPlayer != null && api.addPlayer(loggedPlayer)){
                     createServerConnectionRequest(loggedPlayer, proxy, logger, connection);
                 }
-                continuation.resume();
                 break;
             case "LOGOUT":
-                if(api.removePlayer(loggedPlayer)){
+                if(loggedPlayer != null && api.removePlayer(loggedPlayer)){
                     proxy.getEventManager().fireAndForget(new ProxyLogoutEvent(loggedPlayer));
                 }
-                continuation.resume();
                 break;
             case "REGISTER":
-                proxy.getEventManager().fireAndForget(new ProxyRegisterEvent(loggedPlayer));
-                continuation.resume();
+                if(loggedPlayer != null)
+                    proxy.getEventManager().fireAndForget(new ProxyRegisterEvent(loggedPlayer));
                 break;
-
-            default: continuation.resume();
+            case "UNREGISTER":
+                if(loggedPlayer != null)
+                    proxy.getEventManager().fireAndForget(new ProxyUnregisterEvent(loggedPlayer));
+                break;
+            case "FORCE_UNREGISTER":
+                proxy.getEventManager().fireAndForget(new ProxyForcedUnregisterEvent(loggedPlayer));
+                break;
+            default: break;
         }
+        continuation.resume();
     }
 
     private void createServerConnectionRequest(Player loggedPlayer, ProxyServer proxy, Logger logger, ServerConnection connection){

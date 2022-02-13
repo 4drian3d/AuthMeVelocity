@@ -7,6 +7,8 @@ import com.velocitypowered.api.event.ResultedEvent.GenericResult;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Event to be executed just before sending a player to another server after login/registration.
  * Here you have the ability to deny the event.
@@ -24,7 +26,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
      * @param actualServer the server on which the player is located
      * @param serverToSend the server to which the player will be sent
      */
-    public PreSendOnLoginEvent(Player player, RegisteredServer actualServer, RegisteredServer serverToSend){
+    public PreSendOnLoginEvent(@NotNull Player player, @NotNull RegisteredServer actualServer, @NotNull RegisteredServer serverToSend){
         this.player = player;
         this.actualserver = actualServer;
         this.serverToSend = serverToSend;
@@ -34,7 +36,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
      * Obtain the logged player
      * @return the player
      */
-    public Player getPlayer(){
+    public @NotNull Player getPlayer(){
         return this.player;
     }
 
@@ -42,7 +44,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
      * Obtain the server on which the player is located
      * @return the actual server of the player
      */
-    public RegisteredServer getActualServer(){
+    public @NotNull RegisteredServer getActualServer(){
         return this.actualserver;
     }
 
@@ -50,7 +52,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
      * Obtain the server to which the player will be sent
      * @return the server to send the player
      */
-    public RegisteredServer getSendServer(){
+    public @NotNull RegisteredServer getSendServer(){
         return this.serverToSend;
     }
 
@@ -58,7 +60,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
      * Get the result of the event
      */
     @Override
-    public GenericResult getResult() {
+    public @NotNull GenericResult getResult() {
         return this.result;
     }
 
@@ -67,7 +69,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
      * @param newresult the new result
      */
     @Override
-    public void setResult(GenericResult newresult) {
+    public void setResult(@NotNull GenericResult newresult) {
         this.result = Objects.requireNonNull(newresult);
     }
 }

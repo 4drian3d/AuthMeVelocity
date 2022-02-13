@@ -1,6 +1,7 @@
 name: AuthMeVelocity
-author: xQuickGlare
+authors: [xQuickGlare, 4drian3d]
 version: ${project.version}
 main: com.glyart.authmevelocity.spigot.AuthMeVelocityPlugin
 depend: [AuthMe]
-api-version: 1.15
+# pls, dont use outdated versions, use 1.16.5+
+api-version: 1.13
