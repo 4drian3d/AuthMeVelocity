@@ -2,7 +2,6 @@ package com.glyart.authmevelocity.proxy.listener;
 
 import java.util.Optional;
 
-import com.glyart.authmevelocity.proxy.AuthMeVelocityPlugin;
 import com.glyart.authmevelocity.proxy.AuthmeVelocityAPI;
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.config.ConfigUtils;
@@ -39,8 +38,8 @@ public final class ProxyListener {
     }
 
     @Subscribe
-    public void onDisconnect(final DisconnectEvent event) {
-        api.removePlayer(event.getPlayer());
+    public EventTask onDisconnect(final DisconnectEvent event) {
+        return EventTask.async(() -> api.removePlayer(event.getPlayer()));
     }
 
     @Subscribe(order = PostOrder.FIRST)
@@ -94,10 +93,11 @@ public final class ProxyListener {
 
     @Subscribe(order = PostOrder.FIRST)
     public EventTask onTabComplete(TabCompleteEvent event){
-        if (!api.isLogged(event.getPlayer())){
-            return EventTask.async(() -> event.getSuggestions().clear());
-        }
-        return null;
+        return EventTask.async(() -> {
+            if (!api.isLogged(event.getPlayer())){
+                event.getSuggestions().clear();
+            }
+        });
     }
 
     @Subscribe(order = PostOrder.LATE)
@@ -111,7 +111,7 @@ public final class ProxyListener {
             continuation.resume();
             return;
         }
-        RegisteredServer server = getAvailableServer();
+        @Nullable RegisteredServer server = getAvailableServer();
         if(server == null) {
             continuation.resume();
             logger.error("Cannot send the player {} to an auth server", event.getPlayer().getUsername());
