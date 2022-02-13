@@ -34,7 +34,6 @@ public final class ProxyListener {
     public ProxyListener(@NotNull AuthMeConfig config, AuthmeVelocityAPI api, Logger logger, ProxyServer proxy) {
         this.config = config;
         this.api = api;
-        this.plugin = plugin;
         this.logger = logger;
         this.proxy = proxy;
     }
