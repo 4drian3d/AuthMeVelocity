@@ -5,18 +5,22 @@ import com.glyart.authmevelocity.proxy.listener.FastLoginListener;
 import com.glyart.authmevelocity.proxy.listener.PluginMessageListener;
 import com.glyart.authmevelocity.proxy.listener.ProxyListener;
 import com.google.inject.Inject;
+import com.moandjiezana.toml.Toml;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,30 +28,32 @@ public class AuthMeVelocityPlugin {
     private final ProxyServer proxy;
     private final Logger logger;
     private final Path pluginDirectory;
-    private static AuthMeVelocityPlugin plugin;
+    private AuthmeVelocityAPI api;
 
-    protected static final Set<UUID> loggedPlayers = Collections.synchronizedSet(new HashSet<>());
+    protected final Set<UUID> loggedPlayers = Collections.<UUID>synchronizedSet(new HashSet<>());
 
     @Inject
     public AuthMeVelocityPlugin(ProxyServer proxy, Logger logger, @DataDirectory Path dataDirectory) {
-        plugin = this;
         this.proxy = proxy;
         this.logger = logger;
         this.pluginDirectory = dataDirectory;
     }
 
     @Subscribe
-    public void onProxyInitialize(ProxyInitializeEvent event) {
-        AuthMeConfig.loadConfig(pluginDirectory, logger);
-        @NotNull var config = AuthMeConfig.getConfig();
-
-        proxy.getChannelRegistrar().register(
-            MinecraftChannelIdentifier.create("authmevelocity", "main"));
-        proxy.getEventManager().register(this, new ProxyListener(config));
-        proxy.getEventManager().register(this, new PluginMessageListener(proxy, logger, config));
+    public void onProxyInitialization(ProxyInitializeEvent event) {
+        Toml toml = this.loadConfig(pluginDirectory, logger);
+        if(toml == null){
+            logger.warn("Failed to load config.toml. Shutting down.");
+            return;
+        }
+        AuthMeConfig config = Objects.requireNonNull(new AuthMeConfig(toml), "configuration cannot be null");
+        this.api = new AuthmeVelocityAPI(this, config);
+        proxy.getChannelRegistrar().register(MinecraftChannelIdentifier.create("authmevelocity", "main"));
+        proxy.getEventManager().register(this, new ProxyListener(config, api, logger, proxy));
+        proxy.getEventManager().register(this, new PluginMessageListener(proxy, logger, config, api));
 
         if(proxy.getPluginManager().isLoaded("fastlogin")){
-            proxy.getEventManager().register(this, new FastLoginListener(proxy));
+            proxy.getEventManager().register(this, new FastLoginListener(proxy, api));
         }
 
         logger.info("-- AuthMeVelocity enabled --");
@@ -61,7 +67,28 @@ public class AuthMeVelocityPlugin {
         return this.proxy;
     }
 
-    public static AuthMeVelocityPlugin getInstance(){
-        return plugin;
+    public AuthmeVelocityAPI getAPI(){
+        return this.api;
+    }
+
+    private Toml loadConfig(Path path, Logger logger){
+        if(!Files.exists(path)){
+            try {
+                Files.createDirectory(path);
+            } catch(IOException e){
+                logger.info("An error ocurred on configuration initialization: {}", e.getMessage());
+                return null;
+            }
+        }
+        Path configPath = path.resolve("config.toml");
+        if(!Files.exists(configPath)){
+            try(InputStream in = this.getClass().getClassLoader().getResourceAsStream("config.toml")){
+                Files.copy(in, configPath);
+            } catch(IOException e){
+                logger.info("An error ocurred on configuration initialization: {}", e.getMessage());
+                return null;
+            }
+        }
+        return new Toml().read(configPath.toFile());
     }
 }

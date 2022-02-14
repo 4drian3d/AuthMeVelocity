@@ -8,15 +8,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class PreSendLoginEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();
-    private boolean isCancelled;
+    private boolean isCancelled = false;
 
-    public PreSendLoginEvent(@NotNull final Player player) {
+    public PreSendLoginEvent(@NotNull Player player) {
         super(player);
     }
 
     @Override
     public boolean isCancelled() {
-        return isCancelled;
+        return this.isCancelled;
     }
 
     @Override

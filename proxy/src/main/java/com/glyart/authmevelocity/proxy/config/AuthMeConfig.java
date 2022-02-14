@@ -1,111 +1,79 @@
 package com.glyart.authmevelocity.proxy.config;
 
-import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
+import com.moandjiezana.toml.Toml;
+
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.spongepowered.configurate.CommentedConfigurationNode;
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 
-public class AuthMeConfig {
-    private static final String HEADER = "AuthmeVelocity Proxy\n\nOriginal Developer: xQuickGlare\nCurrent Developer: 4drian3d";
-    private static final HoconConfigurationLoader.Builder configBuilder = HoconConfigurationLoader.builder()
-        .defaultOptions(opts -> opts
-            .shouldCopyDefaults(true)
-            .header(HEADER)
-        );
-    public static void loadConfig(@NotNull Path path, @NotNull Logger logger){
-        Path configPath = path.resolve("config.conf");
-        final HoconConfigurationLoader loader = configBuilder
-            .path(configPath)
-            .build();
+public final class AuthMeConfig {
+    private final List<String> authServers;
+    private final ServerOnLogin serverOnLogin;
+    private final Commands commands;
+    private final EnsureAuthServer ensure;
 
-        try {
-            final CommentedConfigurationNode node = loader.load();
-            config = node.get(Config.class);
-            node.set(Config.class, config);
-            loader.save(node);
-        } catch (ConfigurateException exception){
-            logger.error("Could not load configuration: {}", exception.getMessage());
-        }
+    public AuthMeConfig(@NotNull Toml toml){
+        this.authServers = Objects.requireNonNull(toml.getList("authServers"), "the list of auth servers is not available, please check your configuration for any failure");
+        this.serverOnLogin = Objects.requireNonNull(toml.getTable("SendOnLogin"), "SendOnLogin options are not available, check your configuration").to(ServerOnLogin.class);
+        this.commands = Objects.requireNonNull(toml.getTable("Commands"), "Commands options are not available, check your configuration").to(Commands.class);
+        this.ensure = Objects.requireNonNull(toml.getTable("EnsureAuthServer"), "EnsureAuthServer options are not available, check your configuration").to(EnsureAuthServer.class);
     }
 
-    @ConfigSerializable
-    public static class Config {
-
-        @Comment("List of login/registration servers")
-        private Set<String> authservers = Set.of(
-            "auth1",
-            "auth2"
-        );
-
-        private Commands commands = new Commands();
-
-        private ServerOnLogin send = new ServerOnLogin();
-
-        public Set<String> getAuthServers(){
-            return this.authservers;
-        }
-
-        public Commands getCommandsConfig(){
-            return this.commands;
-        }
-
-        public ServerOnLogin getToServerOptions(){
-            return this.send;
-        }
-    }
-    @ConfigSerializable
     public static class ServerOnLogin {
-        @Comment("Send logged in players to another server?")
-        private boolean sendToServerOnLogin = false;
-
-        @Comment("List of servers to send\nOne of these servers will be chosen at random")
-        private List<String> teleportServers = List.of(
-            "lobby1",
-            "lobby2"
-        );
+        private boolean sendToServerOnLogin;
+        private List<String> teleportServers;
 
         public boolean sendToServer(){
             return this.sendToServerOnLogin;
         }
 
-        public List<String> getTeleportServers(){
+        public @NotNull List<String> getTeleportServers(){
             return this.teleportServers;
         }
     }
 
-    @ConfigSerializable
     public static class Commands{
-        @Comment("Sets the commands that users who have not yet logged in can execute")
-        private Set<String> allowedCommands = Set.of(
-            "login",
-            "register",
-            "l",
-            "reg",
-            "email",
-            "captcha"
-        );
+        private Set<String> allowedCommands;
+        private String blockedCommandMessage;
 
-        @Comment("Sets the message to send in case a non-logged-in player executes an unauthorized command\nTo deactivate the message, leave it empty")
-        private String blockedCommandMessage = "&4You cannot execute commands if you are not logged in yet";
-
-        public Set<String> getAllowedCommands(){
+        public @NotNull Set<String> getAllowedCommands(){
             return this.allowedCommands;
         }
 
-        public String getBlockedMessage() {
+        public @NotNull String getBlockedMessage() {
             return this.blockedCommandMessage;
         }
     }
-    private static Config config;
-    public static Config getConfig(){
-        return config;
+
+    public static class EnsureAuthServer {
+        private boolean ensureFirstServerIsAuthServer;
+        private String disconnectMessage;
+
+        public boolean ensureAuthServer(){
+            return this.ensureFirstServerIsAuthServer;
+        }
+
+        public @NotNull String getDisconnectMessage(){
+            return this.disconnectMessage;
+        }
+
     }
-    private AuthMeConfig(){}
+
+    public @NotNull Commands getCommandsConfig(){
+        return this.commands;
+    }
+
+    public @NotNull ServerOnLogin getToServerOptions(){
+        return this.serverOnLogin;
+    }
+
+    public @NotNull EnsureAuthServer getEnsureOptions(){
+        return this.ensure;
+    }
+
+    public @NotNull List<String> getAuthServers(){
+        return this.authServers;
+    }
 }

@@ -1,5 +1,6 @@
 package com.glyart.authmevelocity.proxy;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -11,17 +12,23 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * APi provided to interact with logged players
+ * API provided to interact with logged players
  */
-public class AuthmeVelocityAPI {
+public final class AuthmeVelocityAPI {
+    private final AuthMeVelocityPlugin plugin;
+    private final AuthMeConfig config;
+    AuthmeVelocityAPI(AuthMeVelocityPlugin plugin, AuthMeConfig config){
+        this.plugin = plugin;
+        this.config = config;
+    }
     /**
      * Check if the player is logged in or not
      * @param player the player
      * @return if the player is logged in or not
      */
-    public static boolean isLogged(@NotNull Player player){
+    public boolean isLogged(@NotNull Player player){
         final UUID playerUUID = player.getUniqueId();
-        return AuthMeVelocityPlugin.loggedPlayers.contains(playerUUID);
+        return plugin.loggedPlayers.contains(playerUUID);
     }
 
     /**
@@ -29,9 +36,9 @@ public class AuthmeVelocityAPI {
      * @param player the new logged player
      * @return if the player was succesfully added
      */
-    public static boolean addPlayer(@NotNull Player player){
+    public boolean addPlayer(@NotNull Player player){
         final UUID playerUUID = player.getUniqueId();
-        return AuthMeVelocityPlugin.loggedPlayers.add(playerUUID);
+        return plugin.loggedPlayers.add(playerUUID);
     }
 
     /**
@@ -39,20 +46,17 @@ public class AuthmeVelocityAPI {
      * @param player the unlogged player
      * @return if the player was succesfully removed
      */
-    public static boolean removePlayer(@NotNull Player player){
+    public boolean removePlayer(@NotNull Player player){
         final UUID playerUUID = player.getUniqueId();
-        return AuthMeVelocityPlugin.loggedPlayers.remove(playerUUID);
+        return plugin.loggedPlayers.remove(playerUUID);
     }
 
     /**
      * Removes players who meet the established condition
      * @param predicate the condition
      */
-    public static void removePlayerIf(@NotNull Predicate<Player> predicate){
-        AuthMeVelocityPlugin.loggedPlayers.stream()
-            .map(uuid -> AuthMeVelocityPlugin.getInstance().getProxy().getPlayer(uuid).orElseThrow())
-            .filter(predicate)
-            .forEach(player -> AuthMeVelocityPlugin.loggedPlayers.remove(player.getUniqueId()));
+    public void removePlayerIf(@NotNull Predicate<Player> predicate){
+        plugin.loggedPlayers.removeIf(uuid -> predicate.test(plugin.getProxy().getPlayer(uuid).orElseThrow()));
     }
 
     /**
@@ -60,8 +64,8 @@ public class AuthmeVelocityAPI {
      * @param player the player
      * @return if the player is on a login server
      */
-    public static boolean isInAuthServer(@NotNull Player player){
-        var connection = player.getCurrentServer();
+    public boolean isInAuthServer(@NotNull Player player){
+        Optional<ServerConnection> connection = player.getCurrentServer();
         return connection.isPresent() && isAuthServer(connection.get());
     }
 
@@ -70,8 +74,8 @@ public class AuthmeVelocityAPI {
      * @param server the server
      * @return if the server is a login server
      */
-    public static boolean isAuthServer(@NotNull RegisteredServer server){
-        return AuthMeConfig.getConfig().getAuthServers().contains(server.getServerInfo().getName());
+    public boolean isAuthServer(@NotNull RegisteredServer server){
+        return config.getAuthServers().contains(server.getServerInfo().getName());
     }
 
     /**
@@ -79,9 +83,16 @@ public class AuthmeVelocityAPI {
      * @param connection the connection
      * @return if the connection is made from a login server
      */
-    public static boolean isAuthServer(@NotNull ServerConnection connection){
-        return AuthMeConfig.getConfig().getAuthServers().contains(connection.getServerInfo().getName());
+    public boolean isAuthServer(@NotNull ServerConnection connection){
+        return config.getAuthServers().contains(connection.getServerInfo().getName());
     }
 
-    private AuthmeVelocityAPI(){}
+    /**
+     * Checks if a string is an name of an auth server
+     * @param server the server name
+     * @return if the server is an auth serverr
+     */
+    public boolean isAuthServer(@NotNull String server){
+        return config.getAuthServers().contains(server);
+    }
 }

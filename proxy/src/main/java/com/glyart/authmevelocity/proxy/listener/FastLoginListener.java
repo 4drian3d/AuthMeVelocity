@@ -7,11 +7,13 @@ import com.velocitypowered.api.proxy.ProxyServer;
 
 public class FastLoginListener {
     private final ProxyServer server;
-    public FastLoginListener(ProxyServer server){
+    private final AuthmeVelocityAPI api;
+    public FastLoginListener(ProxyServer server, AuthmeVelocityAPI api){
         this.server = server;
+        this.api = api;
     }
     @Subscribe
     public void onAutoLogin(VelocityFastLoginAutoLoginEvent event){
-        server.getPlayer(event.getProfile().getName()).ifPresent(AuthmeVelocityAPI::addPlayer);
+        server.getPlayer(event.getProfile().getName()).ifPresent(api::addPlayer);
     }
 }

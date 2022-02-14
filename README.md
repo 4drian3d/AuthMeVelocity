@@ -2,9 +2,9 @@
 This plugin adds the support for [Velocity](https://velocitypowered.com/) to [AuthMeReloaded](https://github.com/AuthMe/AuthMeReloaded)
 
 ## Requirements
-- Paper, Airplane or Purpur 1.16+
-- Velocity 3.0.1+
-- Java 16
+- Paper, Airplane or Purpur 1.13+
+- Velocity 3.1.1+
+- Java 11+
 
 ## Setup
 1. Download the latest release of the plugin [link](https://github.com/4drian3d/AuthMeVelocity/releases)

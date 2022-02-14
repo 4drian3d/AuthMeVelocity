@@ -6,9 +6,11 @@ import java.util.Random;
 import com.glyart.authmevelocity.proxy.AuthmeVelocityAPI;
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.event.PreSendOnLoginEvent;
+import com.glyart.authmevelocity.proxy.event.ProxyForcedUnregisterEvent;
 import com.glyart.authmevelocity.proxy.event.ProxyLoginEvent;
 import com.glyart.authmevelocity.proxy.event.ProxyLogoutEvent;
 import com.glyart.authmevelocity.proxy.event.ProxyRegisterEvent;
+import com.glyart.authmevelocity.proxy.event.ProxyUnregisterEvent;
 import com.google.common.io.ByteArrayDataInput;
 import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.Subscribe;
@@ -19,19 +21,22 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 public class PluginMessageListener {
     private final ProxyServer proxy;
     private final Logger logger;
     private final Random rm;
-    private AuthMeConfig.Config config;
+    private final AuthMeConfig config;
+    private final AuthmeVelocityAPI api;
 
-    public PluginMessageListener(@NotNull ProxyServer proxy, @NotNull Logger logger, @NotNull AuthMeConfig.Config config) {
+    public PluginMessageListener(@NotNull ProxyServer proxy, @NotNull Logger logger, @NotNull AuthMeConfig config, AuthmeVelocityAPI api) {
         this.proxy = proxy;
         this.logger = logger;
         this.rm = new Random();
         this.config = config;
+        this.api = api;
     }
 
     @Subscribe
@@ -46,30 +51,36 @@ public class PluginMessageListener {
 
         ByteArrayDataInput input = event.dataAsDataStream();
         final String sChannel = input.readUTF();
-        final Player loggedPlayer = connection.getPlayer();
+        final String playername = input.readUTF();
+        final @Nullable Player loggedPlayer = proxy.getPlayer(playername).orElse(null);
         switch(sChannel){
             case "LOGIN" :
-                if (AuthmeVelocityAPI.addPlayer(loggedPlayer)){
-                    createServerConnectionRequest(loggedPlayer, config, proxy, logger, connection);
+                if (loggedPlayer != null && api.addPlayer(loggedPlayer)){
+                    createServerConnectionRequest(loggedPlayer, proxy, logger, connection);
                 }
-                continuation.resume();
                 break;
             case "LOGOUT":
-                if(AuthmeVelocityAPI.removePlayer(loggedPlayer)){
+                if(loggedPlayer != null && api.removePlayer(loggedPlayer)){
                     proxy.getEventManager().fireAndForget(new ProxyLogoutEvent(loggedPlayer));
                 }
-                continuation.resume();
                 break;
             case "REGISTER":
-                proxy.getEventManager().fireAndForget(new ProxyRegisterEvent(loggedPlayer));
-                continuation.resume();
+                if(loggedPlayer != null)
+                    proxy.getEventManager().fireAndForget(new ProxyRegisterEvent(loggedPlayer));
                 break;
-
-            default: continuation.resume();
+            case "UNREGISTER":
+                if(loggedPlayer != null)
+                    proxy.getEventManager().fireAndForget(new ProxyUnregisterEvent(loggedPlayer));
+                break;
+            case "FORCE_UNREGISTER":
+                proxy.getEventManager().fireAndForget(new ProxyForcedUnregisterEvent(loggedPlayer));
+                break;
+            default: break;
         }
+        continuation.resume();
     }
 
-    private void createServerConnectionRequest(Player loggedPlayer, AuthMeConfig.Config config, ProxyServer proxy, Logger logger, ServerConnection connection){
+    private void createServerConnectionRequest(Player loggedPlayer, ProxyServer proxy, Logger logger, ServerConnection connection){
         final RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElse(connection).getServer();
         proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer));
         if(config.getToServerOptions().sendToServer()){
