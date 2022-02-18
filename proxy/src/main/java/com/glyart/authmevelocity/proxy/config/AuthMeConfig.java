@@ -1,7 +1,6 @@
 package com.glyart.authmevelocity.proxy.config;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import com.moandjiezana.toml.Toml;
@@ -15,15 +14,20 @@ public final class AuthMeConfig {
     private final EnsureAuthServer ensure;
 
     public AuthMeConfig(@NotNull Toml toml){
-        this.authServers = Objects.requireNonNull(toml.getList("authServers"), "the list of auth servers is not available, please check your configuration for any failure");
-        this.serverOnLogin = Objects.requireNonNull(toml.getTable("SendOnLogin"), "SendOnLogin options are not available, check your configuration").to(ServerOnLogin.class);
-        this.commands = Objects.requireNonNull(toml.getTable("Commands"), "Commands options are not available, check your configuration").to(Commands.class);
-        this.ensure = Objects.requireNonNull(toml.getTable("EnsureAuthServer"), "EnsureAuthServer options are not available, check your configuration").to(EnsureAuthServer.class);
+        this.authServers = toml.getList("authServers", List.of("auth1", "auth2"));
+        this.serverOnLogin = ConfigUtils.getOrElse(toml, "SendOnLogin", new ServerOnLogin(false, List.of("lobby1", "lobby2")));
+        this.commands = ConfigUtils.getOrElse(toml, "Commands", new Commands(Set.of("login", "register", "l", "reg", "email", "captcha"),"&4You cannot execute commands if you are not logged in yet"));
+        this.ensure = ConfigUtils.getOrElse(toml, "EnsureAuthServer", new EnsureAuthServer(false, "&4You could not connect to a login server, please try again later"));
     }
 
     public static class ServerOnLogin {
         private boolean sendToServerOnLogin;
         private List<String> teleportServers;
+
+        public ServerOnLogin(boolean sendToServerOnLogin, List<String> teleportServers){
+            this.sendToServerOnLogin = sendToServerOnLogin;
+            this.teleportServers = teleportServers;
+        }
 
         public boolean sendToServer(){
             return this.sendToServerOnLogin;
@@ -34,9 +38,14 @@ public final class AuthMeConfig {
         }
     }
 
-    public static class Commands{
+    public static class Commands {
         private Set<String> allowedCommands;
         private String blockedCommandMessage;
+
+        public Commands(Set<String> allowedCommands, String blockedCommandMessage){
+            this.allowedCommands = allowedCommands;
+            this.blockedCommandMessage = blockedCommandMessage;
+        }
 
         public @NotNull Set<String> getAllowedCommands(){
             return this.allowedCommands;
@@ -50,6 +59,11 @@ public final class AuthMeConfig {
     public static class EnsureAuthServer {
         private boolean ensureFirstServerIsAuthServer;
         private String disconnectMessage;
+
+        public EnsureAuthServer(boolean ensureFirstServerIsAuthServer, String disconnectMessage){
+            this.ensureFirstServerIsAuthServer = ensureFirstServerIsAuthServer;
+            this.disconnectMessage = disconnectMessage;
+        }
 
         public boolean ensureAuthServer(){
             return this.ensureFirstServerIsAuthServer;
