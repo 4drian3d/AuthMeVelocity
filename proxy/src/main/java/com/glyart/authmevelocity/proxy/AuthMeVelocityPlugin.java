@@ -41,7 +41,7 @@ public class AuthMeVelocityPlugin {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        Toml toml = this.loadConfig(pluginDirectory, logger);
+        Toml toml = this.loadConfig(pluginDirectory);
         if(toml == null){
             logger.warn("Failed to load config.toml. Shutting down.");
             return;
@@ -71,12 +71,12 @@ public class AuthMeVelocityPlugin {
         return this.api;
     }
 
-    private Toml loadConfig(Path path, Logger logger){
+    private Toml loadConfig(Path path){
         if(!Files.exists(path)){
             try {
                 Files.createDirectory(path);
             } catch(IOException e){
-                logger.info("An error ocurred on configuration initialization: {}", e.getMessage());
+                configError(e);
                 return null;
             }
         }
@@ -85,10 +85,19 @@ public class AuthMeVelocityPlugin {
             try(InputStream in = this.getClass().getClassLoader().getResourceAsStream("config.toml")){
                 Files.copy(in, configPath);
             } catch(IOException e){
-                logger.info("An error ocurred on configuration initialization: {}", e.getMessage());
+                configError(e);
                 return null;
             }
         }
-        return new Toml().read(configPath.toFile());
+        try {
+            return new Toml().read(Files.newInputStream(configPath));
+        } catch(IOException e){
+            configError(e);
+            return null;
+        }
+    }
+
+    private void configError(Exception ex){
+        logger.info("An error ocurred on configuration initialization: {}", ex.getMessage());
     }
 }
