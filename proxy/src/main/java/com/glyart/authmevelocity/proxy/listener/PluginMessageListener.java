@@ -56,7 +56,7 @@ public class PluginMessageListener {
         switch(sChannel){
             case "LOGIN" :
                 if (loggedPlayer != null && api.addPlayer(loggedPlayer)){
-                    createServerConnectionRequest(loggedPlayer, proxy, logger, connection);
+                    this.createServerConnectionRequest(loggedPlayer, connection);
                 }
                 break;
             case "LOGOUT":
@@ -80,7 +80,7 @@ public class PluginMessageListener {
         continuation.resume();
     }
 
-    private void createServerConnectionRequest(Player loggedPlayer, ProxyServer proxy, Logger logger, ServerConnection connection){
+    private void createServerConnectionRequest(Player loggedPlayer, ServerConnection connection){
         final RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElse(connection).getServer();
         proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer));
         if(config.getToServerOptions().sendToServer()){
