@@ -3,7 +3,7 @@ This plugin adds the support for [Velocity](https://velocitypowered.com/) to [Au
 
 ## Requirements
 - Paper, Airplane or Purpur 1.13+
-- Velocity 3.1.1+
+- Velocity 3.1.2+
 - Java 11+
 
 ## Setup
