@@ -89,8 +89,8 @@ public class PluginMessageListener {
             proxy.getServer(randomServer).ifPresentOrElse(serverToSend ->
                 proxy.getEventManager().fire(new PreSendOnLoginEvent(loggedPlayer, loginServer, serverToSend)).thenAcceptAsync(preSendEvent -> {
                     if(preSendEvent.getResult().isAllowed()){
-                        loggedPlayer.createConnectionRequest(serverToSend).connect().thenAcceptAsync(result -> {
-                            if(!result.isSuccessful()) {
+                        loggedPlayer.createConnectionRequest(serverToSend).connectWithIndication().thenAcceptAsync(result -> {
+                            if(!result.booleanValue()) {
                                 logger.info("Unable to connect the player {} to the server {}",
                                     loggedPlayer.getUsername(),
                                     serverToSend.getServerInfo().getName());
