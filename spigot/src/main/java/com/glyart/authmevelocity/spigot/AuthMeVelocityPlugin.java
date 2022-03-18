@@ -16,6 +16,10 @@ public class AuthMeVelocityPlugin extends JavaPlugin {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
         this.getServer().getPluginManager().registerEvents(new AuthMeListener(this), this);
 
+        if(this.getServer().getPluginManager().isPluginEnabled("MiniPlaceholders")){
+            AuthmePlaceholders.getExpansion().register();
+        }
+
         this.getSLF4JLogger().info("AuthMeVelocity enabled");
     }
 

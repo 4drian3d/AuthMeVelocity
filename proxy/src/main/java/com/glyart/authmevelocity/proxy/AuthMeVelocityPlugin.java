@@ -56,6 +56,10 @@ public class AuthMeVelocityPlugin {
             proxy.getEventManager().register(this, new FastLoginListener(proxy, api));
         }
 
+        if(proxy.getPluginManager().isLoaded("miniplaceholders")){
+            AuthmePlaceholders.getExpansion(this).register();
+        }
+
         logger.info("-- AuthMeVelocity enabled --");
         logger.info("AuthServers: {}", config.getAuthServers());
         if(config.getToServerOptions().sendToServer()){
