@@ -9,6 +9,10 @@
     {
       "id":"fastlogin",
       "optional":true
+    },
+    {
+      "id":"miniplaceholders",
+      "optional":true
     }
   ],
   "main":"com.glyart.authmevelocity.proxy.AuthMeVelocityPlugin"
