@@ -116,9 +116,7 @@ public final class ProxyListener {
             continuation.resume();
             logger.error("Cannot send the player {} to an auth server", event.getPlayer().getUsername());
             String disconnectMessage = config.getEnsureOptions().getDisconnectMessage();
-            event.getPlayer().disconnect(disconnectMessage.indexOf('&') != -1
-                ? ConfigUtils.SERIALIZER.deserialize(config.getEnsureOptions().getDisconnectMessage())
-                : ConfigUtils.MINIMESSAGE.deserialize(disconnectMessage));
+            event.getPlayer().disconnect(ConfigUtils.MINIMESSAGE.deserialize(disconnectMessage));
             return;
         }
         event.setInitialServer(server);
