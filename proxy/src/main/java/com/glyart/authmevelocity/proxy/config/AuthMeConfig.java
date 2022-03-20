@@ -15,9 +15,9 @@ public final class AuthMeConfig {
 
     public AuthMeConfig(@NotNull Toml toml){
         this.authServers = toml.getList("authServers", List.of("auth1", "auth2"));
-        this.serverOnLogin = ConfigUtils.getOrElse(toml, "SendOnLogin", () -> new ServerOnLogin(false, List.of("lobby1", "lobby2")));
-        this.commands = ConfigUtils.getOrElse(toml, "Commands", () -> new Commands(Set.of("login", "register", "l", "reg", "email", "captcha"),"<red>You cannot execute commands if you are not logged in yet"));
-        this.ensure = ConfigUtils.getOrElse(toml, "EnsureAuthServer", () -> new EnsureAuthServer(false, "<red>You could not connect to a login server, please try again later"));
+        this.serverOnLogin = ConfigUtils.getOrElse(toml, "SendOnLogin", new ServerOnLogin(false, List.of("lobby1", "lobby2")));
+        this.commands = ConfigUtils.getOrElse(toml, "Commands", new Commands(Set.of("login", "register", "l", "reg", "email", "captcha"),"<red>You cannot execute commands if you are not logged in yet"));
+        this.ensure = ConfigUtils.getOrElse(toml, "EnsureAuthServer", new EnsureAuthServer(false, "<red>You could not connect to a login server, please try again later"));
     }
 
     public static class ServerOnLogin {

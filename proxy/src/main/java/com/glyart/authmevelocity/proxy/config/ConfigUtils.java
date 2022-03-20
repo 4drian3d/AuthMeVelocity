@@ -1,7 +1,5 @@
 package com.glyart.authmevelocity.proxy.config;
 
-import java.util.function.Supplier;
-
 import com.moandjiezana.toml.Toml;
 import com.velocitypowered.api.proxy.Player;
 
@@ -18,9 +16,9 @@ public final class ConfigUtils {
     }
 
     @SuppressWarnings("unchecked")
-    static <T>T getOrElse(Toml config, String key, Supplier<T> defaultValue){
+    static <T>T getOrElse(Toml config, String key, T defaultValue){
         Toml configTable = config.getTable(key);
-        return configTable == null ? defaultValue.get() : (T)configTable.to(defaultValue.getClass());
+        return configTable == null ? defaultValue : (T)configTable.to(defaultValue.getClass());
     }
     private ConfigUtils(){}
 }
