@@ -1,0 +1,8 @@
+# Message File for Hub System
+# Author: NiceCraftz
+
+notPlayer = "<red>You must be a player to execute this command!"
+noServers = "<red>Currently there are no servers available."
+moveSuccessful = "<green>You were moved in a hub successfully! <rainbow>Woo!"
+alreadyConnected = "<green>You are already connected to a lobby."
+error = "<red>There was an error trying to execute your command!"

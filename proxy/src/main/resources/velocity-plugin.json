@@ -2,9 +2,9 @@
   "id":"authmevelocity",
   "name":"AuthMeVelocity",
   "version":"${project.version}",
-  "url":"https://github.com/4drian3d/AuthMeVelocity",
+  "url":"https://github.com/NiceCraftz/AuthMeVelocity",
   "description":"This plugin adds the support for AuthMeReloaded to Velocity.",
-  "authors":["xQuickGlare", "4drian3d"],
+  "authors":["xQuickGlare", "4drian3d", "NiceCraftz"],
   "dependencies":[
     {
       "id":"fastlogin",

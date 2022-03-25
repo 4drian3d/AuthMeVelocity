@@ -13,7 +13,7 @@ public final class AuthMeConfig {
     private final Commands commands;
     private final EnsureAuthServer ensure;
 
-    public AuthMeConfig(@NotNull Toml toml){
+    public AuthMeConfig(Toml toml){
         this.authServers = ConfigUtils.listOrElse(toml, "authServers",
             () -> List.of("auth1", "auth2"));
         this.serverOnLogin = ConfigUtils.getObjectOrElse(toml, "SendOnLogin", ServerOnLogin.class,

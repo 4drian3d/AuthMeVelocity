@@ -4,104 +4,109 @@ import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.listener.FastLoginListener;
 import com.glyart.authmevelocity.proxy.listener.PluginMessageListener;
 import com.glyart.authmevelocity.proxy.listener.ProxyListener;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
+import com.nicecodes.commands.HubCommand;
+import com.nicecodes.objects.TomlFile;
+import com.velocitypowered.api.command.CommandManager;
+import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-
+import com.velocitypowered.api.proxy.server.RegisteredServer;
 import org.slf4j.Logger;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class AuthMeVelocityPlugin {
     private final ProxyServer proxy;
     private final Logger logger;
-    private final Path pluginDirectory;
-    private AuthmeVelocityAPI api;
 
-    protected final Set<UUID> loggedPlayers = Collections.<UUID>synchronizedSet(new HashSet<>());
+    private AuthmeVelocityAPI api;
+    private AuthMeConfig config;
+
+    private final HubCommand hubCommand;
+    private final CommandManager commandManager;
+
+    private final TomlFile configTomlFile;
+    private final TomlFile hubTomlFile;
+
+
+    protected final Set<UUID> loggedPlayers = Collections.synchronizedSet(new HashSet<>());
 
     @Inject
     public AuthMeVelocityPlugin(ProxyServer proxy, Logger logger, @DataDirectory Path dataDirectory) {
         this.proxy = proxy;
         this.logger = logger;
-        this.pluginDirectory = dataDirectory;
+
+        this.configTomlFile = new TomlFile(dataDirectory, "config.toml");
+        this.hubTomlFile = new TomlFile(dataDirectory, "hub.toml");
+
+        this.hubCommand = new HubCommand(this);
+        this.commandManager = proxy.getCommandManager();
     }
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        Toml toml = this.loadConfig(pluginDirectory);
-        if(toml == null){
-            logger.warn("Failed to load config.toml. Shutting down.");
-            return;
-        }
-        AuthMeConfig config = Objects.requireNonNull(new AuthMeConfig(toml), "configuration cannot be null");
+        config = new AuthMeConfig(configTomlFile.getToml());
+
         this.api = new AuthmeVelocityAPI(this, config);
+
         proxy.getChannelRegistrar().register(MinecraftChannelIdentifier.create("authmevelocity", "main"));
+
         proxy.getEventManager().register(this, new ProxyListener(config, api, logger, proxy));
         proxy.getEventManager().register(this, new PluginMessageListener(proxy, logger, config, api));
 
-        if(proxy.getPluginManager().isLoaded("fastlogin")){
-            proxy.getEventManager().register(this, new FastLoginListener(proxy, api));
-        }
-
-        if(proxy.getPluginManager().isLoaded("miniplaceholders")){
-            AuthmePlaceholders.getExpansion(this).register();
-        }
+        loadCommand();
+        registerExpansions();
 
         logger.info("-- AuthMeVelocity enabled --");
         logger.info("AuthServers: {}", config.getAuthServers());
-        if(config.getToServerOptions().sendToServer()){
+
+        if (config.getToServerOptions().sendToServer()) {
             logger.info("LobbyServers: {}", config.getToServerOptions().getTeleportServers());
         }
     }
 
-    protected ProxyServer getProxy(){
-        return this.proxy;
+    private void registerExpansions() {
+        if (proxy.getPluginManager().isLoaded("fastlogin")) {
+            proxy.getEventManager().register(this, new FastLoginListener(proxy, api));
+        }
+
+        if (proxy.getPluginManager().isLoaded("miniplaceholders")) {
+            AuthmePlaceholders.getExpansion(this).register();
+        }
     }
 
-    public AuthmeVelocityAPI getAPI(){
+    public AuthmeVelocityAPI getAPI() {
         return this.api;
     }
 
-    private Toml loadConfig(Path path){
-        if(!Files.exists(path)){
-            try {
-                Files.createDirectory(path);
-            } catch(IOException e){
-                configError(e);
-                return null;
-            }
+    public List<RegisteredServer> getServers() {
+        List<String> stringList = config.getToServerOptions().getTeleportServers();
+        List<RegisteredServer> registeredServers = Lists.newArrayList();
+
+        for (String lobbyName : stringList) {
+            proxy.getServer(lobbyName).ifPresent(registeredServers::add);
         }
-        Path configPath = path.resolve("config.toml");
-        if(!Files.exists(configPath)){
-            try(InputStream in = this.getClass().getClassLoader().getResourceAsStream("config.toml")){
-                Files.copy(in, configPath);
-            } catch(IOException e){
-                configError(e);
-                return null;
-            }
-        }
-        try {
-            return new Toml().read(Files.newInputStream(configPath));
-        } catch(IOException e){
-            configError(e);
-            return null;
-        }
+
+        return registeredServers;
     }
 
-    private void configError(Exception ex){
-        logger.info("An error ocurred on configuration initialization: {}", ex.getMessage());
+    private void loadCommand() {
+        CommandMeta commandMeta = commandManager.metaBuilder("hub").build();
+        commandManager.register(commandMeta, hubCommand);
+    }
+
+    public Toml getHubToml() {
+        return hubTomlFile.getToml();
+    }
+
+    public ProxyServer getProxy() {
+        return this.proxy;
     }
 }

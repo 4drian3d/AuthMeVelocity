@@ -1,6 +1,7 @@
 # AuthmeVelocity Proxy
 # Original Developer: xQuickGlare
 # Actual Developer: 4drian3d
+# Fork Developer : NiceCraftz
 
 # List of login/registration servers
 authServers = ["auth1", "auth2"]
@@ -27,3 +28,4 @@ authServers = ["auth1", "auth2"]
 
     # Message to be sent to the player in case no auth server is available
     disconnectMessage = "<red>You could not connect to a login server, please try again later"
+
