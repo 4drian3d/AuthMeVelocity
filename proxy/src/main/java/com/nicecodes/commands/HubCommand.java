@@ -9,7 +9,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class HubCommand implements SimpleCommand {
     private final AuthMeVelocityPlugin plugin;
@@ -36,15 +35,13 @@ public class HubCommand implements SimpleCommand {
         }
 
         AtomicBoolean isFound = new AtomicBoolean(false);
-        AtomicInteger index = new AtomicInteger(0);
 
-        do {
-            if (index.get() >= lobbies.size()) {
+        for (int i = 0; i < lobbies.size(); i++) {
+            if (isFound.get()) {
                 return;
             }
 
-            RegisteredServer rs = lobbies.get(index.get());
-            index.set(index.get() + 1);
+            RegisteredServer rs = lobbies.get(i);
 
             var playerCurrentServerOptional = player.getCurrentServer();
             if (playerCurrentServerOptional.isPresent() && playerCurrentServerOptional.get().getServer().equals(rs)) {
@@ -60,11 +57,13 @@ public class HubCommand implements SimpleCommand {
 
                 if (result.isSuccessful()) {
                     sendMessage(player, "moveSuccessful");
+                    isFound.set(true);
                 } else {
                     sendMessage(player, "error");
                 }
+
             });
-        } while (!isFound.get());
+        }
     }
 
     private void sendMessage(CommandSource commandSource, String path) {
