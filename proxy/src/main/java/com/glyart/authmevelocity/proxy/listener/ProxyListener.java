@@ -2,10 +2,13 @@ package com.glyart.authmevelocity.proxy.listener;
 
 import java.util.Optional;
 
+import com.glyart.authmevelocity.proxy.AuthMeVelocityPlugin;
 import com.glyart.authmevelocity.proxy.AuthmeVelocityAPI;
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.config.ConfigUtils;
 import com.glyart.authmevelocity.proxy.utils.AuthmeUtils;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.PostOrder;
@@ -14,6 +17,7 @@ import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
+import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.event.player.TabCompleteEvent;
 import com.velocitypowered.api.proxy.Player;
@@ -78,17 +82,26 @@ public final class ProxyListener {
 
     @Subscribe
     public void onServerPreConnect(ServerPreConnectEvent event, Continuation continuation) {
-        if (api.isLogged(event.getPlayer())){
+        if (!event.getResult().isAllowed() && api.isLogged(event.getPlayer())){
             continuation.resume();
             return;
         }
-
-        event.getResult().getServer().ifPresent(server -> {
-            if(!api.isAuthServer(server)){
-                event.setResult(ServerPreConnectEvent.ServerResult.denied());
-            }
-        });
+        if(!event.getResult().getServer().map(api::isAuthServer).orElse(false)){
+            continuation.resume();
+            return;
+        }
+        event.setResult(ServerPreConnectEvent.ServerResult.denied());
         continuation.resume();
+    }
+
+    @Subscribe
+    public void onServerPostConnect(ServerPostConnectEvent event) {
+        Player player = event.getPlayer();
+        if(api.isInAuthServer(player)){
+            ByteArrayDataOutput buf = ByteStreams.newDataOutput();
+            buf.writeUTF("LOGIN");
+            player.sendPluginMessage(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL, buf.toByteArray());
+        }
     }
 
     @Subscribe(order = PostOrder.FIRST)
@@ -106,8 +119,7 @@ public final class ProxyListener {
             continuation.resume();
             return;
         }
-        Optional<RegisteredServer> optionalSV = event.getInitialServer();
-        if(optionalSV.isPresent() && api.isAuthServer(optionalSV.get())){
+        if(event.getInitialServer().map(api::isAuthServer).orElse(false)){
             continuation.resume();
             return;
         }

@@ -1,6 +1,7 @@
 package com.glyart.authmevelocity.spigot;
 
 import com.glyart.authmevelocity.spigot.listeners.AuthMeListener;
+import com.glyart.authmevelocity.spigot.listeners.MessageListener;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
@@ -14,6 +15,7 @@ public class AuthMeVelocityPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, CHANNEL, new MessageListener());
         this.getServer().getPluginManager().registerEvents(new AuthMeListener(this), this);
 
         if(this.getServer().getPluginManager().isPluginEnabled("MiniPlaceholders")){

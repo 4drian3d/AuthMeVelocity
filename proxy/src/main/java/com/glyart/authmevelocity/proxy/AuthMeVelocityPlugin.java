@@ -10,6 +10,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class AuthMeVelocityPlugin {
+    public static final ChannelIdentifier AUTHMEVELOCITY_CHANNEL = MinecraftChannelIdentifier.create("authmevelocity", "main");
     private final ProxyServer proxy;
     private final Logger logger;
     private final Path pluginDirectory;
@@ -48,7 +50,7 @@ public class AuthMeVelocityPlugin {
         }
         AuthMeConfig config = Objects.requireNonNull(new AuthMeConfig(toml), "configuration cannot be null");
         this.api = new AuthmeVelocityAPI(this, config);
-        proxy.getChannelRegistrar().register(MinecraftChannelIdentifier.create("authmevelocity", "main"));
+        proxy.getChannelRegistrar().register(AUTHMEVELOCITY_CHANNEL);
         proxy.getEventManager().register(this, new ProxyListener(config, api, logger, proxy));
         proxy.getEventManager().register(this, new PluginMessageListener(proxy, logger, config, api));
 

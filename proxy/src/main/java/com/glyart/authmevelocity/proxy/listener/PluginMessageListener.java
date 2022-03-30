@@ -3,6 +3,7 @@ package com.glyart.authmevelocity.proxy.listener;
 import java.util.List;
 import java.util.Random;
 
+import com.glyart.authmevelocity.proxy.AuthMeVelocityPlugin;
 import com.glyart.authmevelocity.proxy.AuthmeVelocityAPI;
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
 import com.glyart.authmevelocity.proxy.event.PreSendOnLoginEvent;
@@ -41,7 +42,7 @@ public class PluginMessageListener {
 
     @Subscribe
     public void onPluginMessage(final PluginMessageEvent event, Continuation continuation) {
-        if (!(event.getSource() instanceof ServerConnection) || !event.getIdentifier().getId().equals("authmevelocity:main")){
+        if (!(event.getSource() instanceof ServerConnection) || !event.getIdentifier().equals(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL)){
             continuation.resume();
             return;
         }
@@ -49,7 +50,7 @@ public class PluginMessageListener {
 
         event.setResult(PluginMessageEvent.ForwardResult.handled());
 
-        ByteArrayDataInput input = event.dataAsDataStream();
+        final ByteArrayDataInput input = event.dataAsDataStream();
         final String sChannel = input.readUTF();
         final String playername = input.readUTF();
         final @Nullable Player loggedPlayer = proxy.getPlayer(playername).orElse(null);
