@@ -1,7 +1,5 @@
 package com.glyart.authmevelocity.proxy;
 
-import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Predicate;
 
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
@@ -27,8 +25,7 @@ public final class AuthmeVelocityAPI {
      * @return if the player is logged in or not
      */
     public boolean isLogged(@NotNull Player player){
-        final UUID playerUUID = player.getUniqueId();
-        return plugin.loggedPlayers.contains(playerUUID);
+        return plugin.loggedPlayers.contains(player.getUniqueId());
     }
 
     /**
@@ -37,8 +34,7 @@ public final class AuthmeVelocityAPI {
      * @return if the player was succesfully added
      */
     public boolean addPlayer(@NotNull Player player){
-        final UUID playerUUID = player.getUniqueId();
-        return plugin.loggedPlayers.add(playerUUID);
+        return plugin.loggedPlayers.add(player.getUniqueId());
     }
 
     /**
@@ -47,8 +43,7 @@ public final class AuthmeVelocityAPI {
      * @return if the player was succesfully removed
      */
     public boolean removePlayer(@NotNull Player player){
-        final UUID playerUUID = player.getUniqueId();
-        return plugin.loggedPlayers.remove(playerUUID);
+        return plugin.loggedPlayers.remove(player.getUniqueId());
     }
 
     /**
@@ -65,8 +60,7 @@ public final class AuthmeVelocityAPI {
      * @return if the player is on a login server
      */
     public boolean isInAuthServer(@NotNull Player player){
-        Optional<ServerConnection> connection = player.getCurrentServer();
-        return connection.isPresent() && isAuthServer(connection.get());
+        return player.getCurrentServer().map(this::isAuthServer).orElse(false);
     }
 
     /**
