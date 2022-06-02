@@ -42,7 +42,10 @@ public class PluginMessageListener {
 
     @Subscribe
     public void onPluginMessage(final PluginMessageEvent event, Continuation continuation) {
-        if (!(event.getSource() instanceof ServerConnection) || !event.getIdentifier().equals(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL)){
+        if (
+            !(event.getSource() instanceof ServerConnection)
+            || !event.getIdentifier().equals(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL)
+        ) {
             continuation.resume();
             return;
         }
@@ -90,8 +93,8 @@ public class PluginMessageListener {
             proxy.getServer(randomServer).ifPresentOrElse(serverToSend ->
                 proxy.getEventManager().fire(new PreSendOnLoginEvent(loggedPlayer, loginServer, serverToSend)).thenAcceptAsync(preSendEvent -> {
                     if(preSendEvent.getResult().isAllowed()){
-                        loggedPlayer.createConnectionRequest(serverToSend).connectWithIndication().thenAcceptAsync(result -> {
-                            if(!result.booleanValue()) {
+                        loggedPlayer.createConnectionRequest(serverToSend).connect().thenAcceptAsync(result -> {
+                            if(!result.isSuccessful()) {
                                 logger.info("Unable to connect the player {} to the server {}",
                                     loggedPlayer.getUsername(),
                                     serverToSend.getServerInfo().getName());
@@ -99,7 +102,7 @@ public class PluginMessageListener {
                         });
                     }
                 })
-            , () -> logger.info("The server {} does not exist", randomServer));
+            , () -> logger.warn("The server {} does not exist", randomServer));
         }
     }
 }

@@ -82,11 +82,10 @@ public final class ProxyListener {
 
     @Subscribe
     public void onServerPreConnect(ServerPreConnectEvent event, Continuation continuation) {
-        if (!event.getResult().isAllowed() && api.isLogged(event.getPlayer())){
-            continuation.resume();
-            return;
-        }
-        if(!event.getResult().getServer().map(api::isAuthServer).orElse(false)){
+        if (
+            !event.getResult().isAllowed() && api.isLogged(event.getPlayer())
+            || !event.getResult().getServer().map(api::isAuthServer).orElse(false)
+        ) {
             continuation.resume();
             return;
         }
@@ -116,11 +115,10 @@ public final class ProxyListener {
 
     @Subscribe(order = PostOrder.LATE)
     public void onInitialServer(PlayerChooseInitialServerEvent event, Continuation continuation){
-        if(!config.getEnsureOptions().ensureAuthServer()){
-            continuation.resume();
-            return;
-        }
-        if(event.getInitialServer().map(api::isAuthServer).orElse(false)){
+        if(
+            !config.getEnsureOptions().ensureAuthServer()
+            || event.getInitialServer().map(api::isAuthServer).orElse(false)
+        ) {
             continuation.resume();
             return;
         }

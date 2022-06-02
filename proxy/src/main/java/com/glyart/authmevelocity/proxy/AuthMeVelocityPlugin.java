@@ -21,12 +21,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
 public class AuthMeVelocityPlugin {
-    public static final ChannelIdentifier AUTHMEVELOCITY_CHANNEL = MinecraftChannelIdentifier.create("authmevelocity", "main");
+    public static final ChannelIdentifier AUTHMEVELOCITY_CHANNEL
+        = MinecraftChannelIdentifier.create("authmevelocity", "main");
     private final ProxyServer proxy;
     private final Logger logger;
     private final Path pluginDirectory;
@@ -48,7 +48,7 @@ public class AuthMeVelocityPlugin {
             logger.warn("Failed to load config.toml. Shutting down.");
             return;
         }
-        AuthMeConfig config = Objects.requireNonNull(new AuthMeConfig(toml), "configuration cannot be null");
+        AuthMeConfig config = new AuthMeConfig(toml);
         this.api = new AuthmeVelocityAPI(this, config);
         proxy.getChannelRegistrar().register(AUTHMEVELOCITY_CHANNEL);
         proxy.getEventManager().register(this, new ProxyListener(config, api, logger, proxy));
