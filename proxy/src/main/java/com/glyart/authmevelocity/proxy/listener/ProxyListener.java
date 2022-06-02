@@ -96,11 +96,12 @@ public final class ProxyListener {
 
     @Subscribe
     public void onServerPostConnect(ServerPostConnectEvent event) {
-        Player player = event.getPlayer();
+        final Player player = event.getPlayer();
         if(api.isInAuthServer(player)){
             ByteArrayDataOutput buf = ByteStreams.newDataOutput();
             buf.writeUTF("LOGIN");
-            player.sendPluginMessage(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL, buf.toByteArray());
+            player.getCurrentServer().ifPresent(sv ->
+                sv.sendPluginMessage(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL, buf.toByteArray()));
         }
     }
 
