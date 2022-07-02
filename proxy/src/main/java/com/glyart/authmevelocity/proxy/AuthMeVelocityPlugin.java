@@ -44,7 +44,7 @@ public class AuthMeVelocityPlugin {
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         Toml toml = this.loadConfig(pluginDirectory);
-        if(toml == null){
+        if (toml == null) {
             logger.warn("Failed to load config.toml. Shutting down.");
             return;
         }
