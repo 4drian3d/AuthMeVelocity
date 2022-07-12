@@ -53,16 +53,16 @@ public final class ProxyListener {
             return;
         }
 
-        Player player = ((Player)event.getCommandSource());
+        Player player = (Player)event.getCommandSource();
 
-        if(api.isLogged(player)){
+        if (api.isLogged(player)) {
             continuation.resume();
             return;
         }
 
-        if(api.isInAuthServer(player)){
+        if (api.isInAuthServer(player)) {
             String command = AuthmeUtils.getFirstArgument(event.getCommand());
-            if(!config.getCommandsConfig().getAllowedCommands().contains(command)){
+            if (!config.getCommandsConfig().getAllowedCommands().contains(command)) {
                 ConfigUtils.sendBlockedMessage(player, config);
                 event.setResult(CommandExecuteEvent.CommandResult.denied());
             }
@@ -75,7 +75,7 @@ public final class ProxyListener {
 
     @Subscribe(order = PostOrder.FIRST)
     public void onPlayerChat(final PlayerChatEvent event) {
-        if (!api.isLogged(event.getPlayer())) {
+        if (api.isNotLogged(event.getPlayer())) {
             event.setResult(PlayerChatEvent.ChatResult.denied());
         }
     }
@@ -105,12 +105,19 @@ public final class ProxyListener {
     }
 
     @Subscribe(order = PostOrder.FIRST)
-    public EventTask onTabComplete(TabCompleteEvent event){
-        return EventTask.async(() -> {
-            if (!api.isLogged(event.getPlayer())){
-                event.getSuggestions().clear();
+    public void onTabComplete(TabCompleteEvent event){
+        if (api.isLogged(event.getPlayer())) {
+            return;
+        }
+
+        final String command = event.getPartialMessage();
+        for (final String allowed : config.getCommandsConfig().getAllowedCommands()) {
+            if (allowed.startsWith(command)) {
+                return;
             }
-        });
+        }
+
+        event.getSuggestions().clear();
     }
 
     @Subscribe(order = PostOrder.LATE)
@@ -123,7 +130,7 @@ public final class ProxyListener {
             return;
         }
         @Nullable RegisteredServer server = getAvailableServer();
-        if(server == null) {
+        if (server == null) {
             continuation.resume();
             logger.error("Cannot send the player {} to an auth server", event.getPlayer().getUsername());
             String disconnectMessage = config.getEnsureOptions().getDisconnectMessage();
@@ -135,7 +142,7 @@ public final class ProxyListener {
 
     }
 
-    private @Nullable RegisteredServer getAvailableServer(){
+    private @Nullable RegisteredServer getAvailableServer() {
         for(String sv : config.getAuthServers()){
             Optional<RegisteredServer> opt = proxy.getServer(sv);
             if(opt.isPresent()) return opt.get();
