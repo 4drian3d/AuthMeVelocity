@@ -13,14 +13,16 @@ public class MessageListener implements PluginMessageListener {
 
     @Override
     public void onPluginMessageReceived(@NotNull String identifier, @NotNull Player player, @NotNull byte[] bytes) {
-        if(identifier.equals("authmevelocity")){
-            ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
-            String subchannel = input.readUTF();
-            if("main".equals(subchannel)){
-                String msg = input.readUTF();
-                if("LOGIN".equals(msg)){
-                    AuthMeApi.getInstance().forceLogin(player);
-                }
+        if (!identifier.equals("authmevelocity")) {
+            return;
+        }
+
+        ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
+        String subchannel = input.readUTF();
+        if ("main".equals(subchannel)) {
+            String msg = input.readUTF();
+            if ("LOGIN".equals(msg)) {
+                AuthMeApi.getInstance().forceLogin(player);
             }
         }
     }

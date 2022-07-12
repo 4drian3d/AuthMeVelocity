@@ -87,7 +87,7 @@ public class PluginMessageListener {
     private void createServerConnectionRequest(Player loggedPlayer, ServerConnection connection){
         final RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElse(connection).getServer();
         proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer));
-        if(config.getToServerOptions().sendToServer()){
+        if (config.getToServerOptions().sendToServer()) {
             final List<String> serverList = config.getToServerOptions().getTeleportServers();
             final String randomServer = serverList.get(rm.nextInt(serverList.size()));
             proxy.getServer(randomServer).ifPresentOrElse(serverToSend ->
