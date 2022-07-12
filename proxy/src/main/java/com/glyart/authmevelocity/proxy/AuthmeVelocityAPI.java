@@ -19,6 +19,7 @@ public final class AuthmeVelocityAPI {
         this.plugin = plugin;
         this.config = config;
     }
+
     /**
      * Check if the player is logged in or not
      * @param player the player
@@ -26,6 +27,15 @@ public final class AuthmeVelocityAPI {
      */
     public boolean isLogged(@NotNull Player player){
         return plugin.loggedPlayers.contains(player.getUniqueId());
+    }
+
+    /**
+     * Check if the player is not logged
+     * @param player the player
+     * @return if the player is not logged
+     */
+    public boolean isNotLogged(@NotNull Player player){
+        return !plugin.loggedPlayers.contains(player.getUniqueId());
     }
 
     /**
@@ -51,7 +61,7 @@ public final class AuthmeVelocityAPI {
      * @param predicate the condition
      */
     public void removePlayerIf(@NotNull Predicate<Player> predicate){
-        plugin.loggedPlayers.removeIf(uuid -> predicate.test(plugin.getProxy().getPlayer(uuid).orElseThrow()));
+        plugin.loggedPlayers.removeIf(uuid -> predicate.test(plugin.getProxy().getPlayer(uuid).orElse(null)));
     }
 
     /**
