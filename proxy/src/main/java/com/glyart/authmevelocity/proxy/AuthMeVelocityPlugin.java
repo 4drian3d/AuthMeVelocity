@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -32,7 +33,7 @@ public class AuthMeVelocityPlugin {
     private final Path pluginDirectory;
     private AuthmeVelocityAPI api;
 
-    protected final Set<UUID> loggedPlayers = Collections.<UUID>synchronizedSet(new HashSet<>());
+    protected final Set<UUID> loggedPlayers = Collections.synchronizedSet(new HashSet<>());
 
     @Inject
     public AuthMeVelocityPlugin(ProxyServer proxy, Logger logger, @DataDirectory Path dataDirectory) {
@@ -54,17 +55,17 @@ public class AuthMeVelocityPlugin {
         proxy.getEventManager().register(this, new ProxyListener(config, api, logger, proxy));
         proxy.getEventManager().register(this, new PluginMessageListener(proxy, logger, config, api));
 
-        if(proxy.getPluginManager().isLoaded("fastlogin")){
+        if (proxy.getPluginManager().isLoaded("fastlogin")) {
             proxy.getEventManager().register(this, new FastLoginListener(proxy, api));
         }
 
-        if(proxy.getPluginManager().isLoaded("miniplaceholders")){
+        if (proxy.getPluginManager().isLoaded("miniplaceholders")) {
             AuthmePlaceholders.getExpansion(this).register();
         }
 
         logger.info("-- AuthMeVelocity enabled --");
         logger.info("AuthServers: {}", config.getAuthServers());
-        if(config.getToServerOptions().sendToServer()){
+        if (config.getToServerOptions().sendToServer()) {
             logger.info("LobbyServers: {}", config.getToServerOptions().getTeleportServers());
         }
     }
@@ -78,32 +79,23 @@ public class AuthMeVelocityPlugin {
     }
 
     private Toml loadConfig(Path path){
-        if(!Files.exists(path)){
-            try {
-                Files.createDirectory(path);
-            } catch(IOException e){
-                configError(e);
-                return null;
-            }
-        }
-        Path configPath = path.resolve("config.toml");
-        if(!Files.exists(configPath)){
-            try(InputStream in = this.getClass().getClassLoader().getResourceAsStream("config.toml")){
-                Files.copy(in, configPath);
-            } catch(IOException e){
-                configError(e);
-                return null;
-            }
-        }
         try {
+            if (Files.notExists(path)) {
+                Files.createDirectory(path);
+            }
+
+            Path configPath = path.resolve("config.toml");
+            if (Files.notExists(configPath)) {
+                try (InputStream in = this.getClass().getClassLoader().getResourceAsStream("config.toml")) {
+                    Files.copy(Objects.requireNonNull(in, "The configuration does not exists"), configPath);
+                }
+            }
+
             return new Toml().read(Files.newInputStream(configPath));
-        } catch(IOException e){
-            configError(e);
+        } catch (IOException ex) {
+            logger.info("An error ocurred on configuration initialization", ex);
             return null;
         }
-    }
-
-    private void configError(Exception ex){
-        logger.info("An error ocurred on configuration initialization: {}", ex.getMessage());
+        
     }
 }
