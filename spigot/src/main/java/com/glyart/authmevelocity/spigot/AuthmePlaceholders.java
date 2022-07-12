@@ -14,6 +14,7 @@ final class AuthmePlaceholders {
 
     static Expansion getExpansion(){
         return Expansion.builder("authme")
+            .filter(Player.class)
             .audiencePlaceholder("is_logged", (aud, queue, ctx) -> 
                 Tag.selfClosingInserting(AuthMeApi.getInstance().isAuthenticated((Player)aud)
                     ? TRUE_COMPONENT
