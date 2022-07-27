@@ -23,7 +23,7 @@ public class AuthmeCommand {
                     CommandSource source = cmd.getSource();
                     if (plugin.reload()) {
                         plugin.sendInfoMessage();
-                        source.sendMessage(Component.text("AuthmeVelocity was correctly reloaded", NamedTextColor.GREEN));
+                        source.sendMessage(Component.text("AuthmeVelocity has been successfully reloaded", NamedTextColor.GREEN));
                     } else {
                         source.sendMessage(Component.text(
                             "There was an error while reloading the configuration. Check the server console", NamedTextColor.DARK_RED));
