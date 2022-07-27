@@ -15,7 +15,6 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import org.slf4j.Logger;
@@ -122,7 +121,8 @@ public class AuthMeVelocityPlugin {
 
     public void sendInfoMessage() {
         CommandSource source = proxy.getConsoleCommandSource();
-        source.sendMessage(Component.text("-- AuthMeVelocity enabled --"));
+        source.sendMessage(MiniMessage.miniMessage().deserialize(
+            " <gray>--- <aqua>AuthMeVelocity</aqua> ---"));
         source.sendMessage(MiniMessage.miniMessage().deserialize(
             "<gray>AuthServers: <green>" + config.getAuthServers()));
         if (config.getToServerOptions().sendToServer()) {

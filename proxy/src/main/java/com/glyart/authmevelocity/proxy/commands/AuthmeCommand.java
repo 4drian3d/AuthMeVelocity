@@ -9,8 +9,7 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.command.CommandSource;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public class AuthmeCommand {
     private AuthmeCommand() {}
@@ -23,10 +22,11 @@ public class AuthmeCommand {
                     CommandSource source = cmd.getSource();
                     if (plugin.reload()) {
                         plugin.sendInfoMessage();
-                        source.sendMessage(Component.text("AuthmeVelocity has been successfully reloaded", NamedTextColor.GREEN));
+                        source.sendMessage(MiniMessage.miniMessage().deserialize(
+                            "<aqua>AuthmeVelocity <green>has been successfully reloaded"));
                     } else {
-                        source.sendMessage(Component.text(
-                            "There was an error while reloading the configuration. Check the server console", NamedTextColor.DARK_RED));
+                        source.sendMessage(MiniMessage.miniMessage().deserialize(
+                            "<dark_red>There was an error while reloading the configuration. <red>Check the server console"));
                     }
                     return Command.SINGLE_SUCCESS;
                 })
