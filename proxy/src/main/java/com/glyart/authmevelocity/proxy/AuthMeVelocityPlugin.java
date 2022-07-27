@@ -105,6 +105,7 @@ public class AuthMeVelocityPlugin {
         proxy.getChannelRegistrar().register(AUTHMEVELOCITY_CHANNEL);
 
         listeners.forEach(listener -> proxy.getEventManager().unregisterListener(this, listener));
+        listeners.clear();
 
         listeners.add(new ProxyListener(config, api, logger, proxy));
         listeners.add(new PluginMessageListener(proxy, logger, config, api));
