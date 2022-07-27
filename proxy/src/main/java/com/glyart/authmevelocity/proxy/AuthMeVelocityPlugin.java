@@ -91,9 +91,12 @@ public class AuthMeVelocityPlugin {
 
             return new Toml().read(Files.newInputStream(configPath));
         } catch (IOException ex) {
-            logger.info("An error ocurred on configuration initialization", ex);
+            logger.error("An error ocurred on configuration initialization", ex);
             return null;
-        } 
+        } catch(IllegalStateException ex) {
+            logger.error("Invalid configuration provided", ex);
+            return null;
+        }
     }
 
     public boolean reload() {
