@@ -58,6 +58,8 @@ public class AuthMeVelocityPlugin {
             return;
         }
 
+        proxy.getChannelRegistrar().register(AUTHMEVELOCITY_CHANNEL);
+
         if (proxy.getPluginManager().isLoaded("miniplaceholders")) {
             AuthmePlaceholders.getExpansion(this).register();
         }
@@ -100,9 +102,9 @@ public class AuthMeVelocityPlugin {
         if (toml == null) {
             return false;
         }
+
         this.config = new AuthMeConfig(toml);
         this.api = new AuthmeVelocityAPI(this, config);
-        proxy.getChannelRegistrar().register(AUTHMEVELOCITY_CHANNEL);
 
         listeners.forEach(listener -> proxy.getEventManager().unregisterListener(this, listener));
         listeners.clear();
