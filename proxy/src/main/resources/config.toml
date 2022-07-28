@@ -24,6 +24,3 @@ authServers = ["auth1", "auth2"]
 [EnsureAuthServer]
     # Ensure that the first server to which players connect is an auth server
     ensureFirstServerIsAuthServer = false
-
-    # Message to be sent to the player in case no auth server is available
-    disconnectMessage = "<red>You could not connect to a login server, please try again later"

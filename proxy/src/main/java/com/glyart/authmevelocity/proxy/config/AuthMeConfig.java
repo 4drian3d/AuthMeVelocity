@@ -21,7 +21,7 @@ public final class AuthMeConfig {
         this.commands = ConfigUtils.getObjectOrElse(toml, "Commands", Commands.class,
             () -> new Commands(Set.of("login", "register", "l", "reg", "email", "captcha"), "<red>You cannot execute commands if you are not logged in yet"));
         this.ensure = ConfigUtils.getObjectOrElse(toml, "EnsureAuthServer", EnsureAuthServer.class,
-            () -> new EnsureAuthServer(false, "<red>You could not connect to a login server, please try again later"));
+            () -> new EnsureAuthServer(false));
     }
 
     public static class ServerOnLogin {
@@ -62,19 +62,13 @@ public final class AuthMeConfig {
 
     public static class EnsureAuthServer {
         private final boolean ensureFirstServerIsAuthServer;
-        private final String disconnectMessage;
 
-        public EnsureAuthServer(boolean ensureFirstServerIsAuthServer, String disconnectMessage){
+        public EnsureAuthServer(boolean ensureFirstServerIsAuthServer){
             this.ensureFirstServerIsAuthServer = ensureFirstServerIsAuthServer;
-            this.disconnectMessage = disconnectMessage;
         }
 
         public boolean ensureAuthServer(){
             return this.ensureFirstServerIsAuthServer;
-        }
-
-        public @NotNull String getDisconnectMessage(){
-            return this.disconnectMessage;
         }
 
     }

@@ -96,7 +96,7 @@ public final class ProxyListener {
     @Subscribe
     public void onServerPostConnect(ServerPostConnectEvent event) {
         final Player player = event.getPlayer();
-        if(api.isInAuthServer(player)){
+        if (api.isLogged(player) && api.isInAuthServer(player)){
             ByteArrayDataOutput buf = ByteStreams.newDataOutput();
             buf.writeUTF("LOGIN");
             player.getCurrentServer().ifPresent(sv ->
@@ -122,30 +122,26 @@ public final class ProxyListener {
 
     @Subscribe(order = PostOrder.LATE)
     public void onInitialServer(PlayerChooseInitialServerEvent event, Continuation continuation){
-        if(
-            !config.getEnsureOptions().ensureAuthServer()
+        if(!config.getEnsureOptions().ensureAuthServer()
             || event.getInitialServer().map(api::isAuthServer).orElse(false)
         ) {
             continuation.resume();
             return;
         }
         @Nullable RegisteredServer server = getAvailableServer();
-        if (server == null) {
-            continuation.resume();
-            logger.error("Cannot send the player {} to an auth server", event.getPlayer().getUsername());
-            String disconnectMessage = config.getEnsureOptions().getDisconnectMessage();
-            event.getPlayer().disconnect(ConfigUtils.MINIMESSAGE.deserialize(disconnectMessage));
-            return;
-        }
+        // Velocity takes over in case the initial server is not present
         event.setInitialServer(server);
         continuation.resume();
-
+        if (server == null) {
+            logger.error("Cannot send the player {} to an auth server", event.getPlayer().getUsername());
+        }
     }
 
+    // TODO: Implement #40
     private @Nullable RegisteredServer getAvailableServer() {
         for(String sv : config.getAuthServers()){
             Optional<RegisteredServer> opt = proxy.getServer(sv);
-            if(opt.isPresent()) return opt.get();
+            if (opt.isPresent()) return opt.get();
         }
         return null;
     }
