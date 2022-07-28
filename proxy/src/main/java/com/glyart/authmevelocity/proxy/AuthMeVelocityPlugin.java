@@ -2,6 +2,7 @@ package com.glyart.authmevelocity.proxy;
 
 import com.glyart.authmevelocity.proxy.commands.AuthmeCommand;
 import com.glyart.authmevelocity.proxy.config.AuthMeConfig;
+import com.glyart.authmevelocity.proxy.listener.ConnectListener;
 import com.glyart.authmevelocity.proxy.listener.FastLoginListener;
 import com.glyart.authmevelocity.proxy.listener.PluginMessageListener;
 import com.glyart.authmevelocity.proxy.listener.ProxyListener;
@@ -111,7 +112,8 @@ public class AuthMeVelocityPlugin {
         listeners.forEach(listener -> proxy.getEventManager().unregisterListener(this, listener));
         listeners.clear();
 
-        listeners.add(new ProxyListener(config, api, logger, proxy));
+        listeners.add(new ProxyListener(config, api));
+        listeners.add(new ConnectListener(config, api, proxy, logger));
         listeners.add(new PluginMessageListener(proxy, logger, config, api));
 
         if (proxy.getPluginManager().isLoaded("fastlogin")) {
