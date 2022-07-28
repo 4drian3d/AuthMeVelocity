@@ -67,6 +67,7 @@ public class ConnectListener {
                 event.setResult(ServerPreConnectEvent.ServerResult.denied());
             }
         });
+        continuation.resume();
     }
 
     @Subscribe
