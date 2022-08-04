@@ -15,19 +15,17 @@ jobs:
       with:
         java-version: 17
         distribution: 'temurin'
-        cache: 'maven'
+        cache: 'gradle'
 
-    - name: Build with Maven
+    - name: Build with Gradle
       uses: nick-invision/retry@v2
       with:
         timeout_minutes: 5
         max_attempts: 2
-        command: mvn -B package --file pom.xml
+        command: gradle clean build
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: AuthmeVelocity
-        path: |
-          proxy/target/AuthMeVelocity-proxy.jar
-          spigot/target/AuthMeVelocity-spigot.jar
+        name: AuthMeVelocity
+        path: build/libs/AuthMeVelocity.jar
