@@ -21,7 +21,7 @@ final class AuthmePlaceholders {
                     : FALSE_COMPONENT)
             )
             .globalPlaceholder("is_player_logged", (queue, ctx) -> {
-                String playerName = queue.popOr(() -> "you need to provide a player name").value();
+                String playerName = queue.popOr("you need to provide a player name").value();
                 Player player = Bukkit.getPlayer(playerName);
                 if(player == null) return Tag.selfClosingInserting(FALSE_COMPONENT);
                 return Tag.selfClosingInserting(AuthMeApi.getInstance().isAuthenticated(player)

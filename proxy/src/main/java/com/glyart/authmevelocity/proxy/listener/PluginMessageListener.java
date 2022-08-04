@@ -15,6 +15,8 @@ import com.glyart.authmevelocity.proxy.event.ProxyUnregisterEvent;
 import com.google.common.io.ByteArrayDataInput;
 import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.ResultedEvent.GenericResult;
+import com.velocitypowered.api.proxy.ConnectionRequestBuilder.Result;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -42,13 +44,13 @@ public class PluginMessageListener {
 
     @Subscribe
     public void onPluginMessage(final PluginMessageEvent event, Continuation continuation) {
-        if (
-            !(event.getSource() instanceof ServerConnection)
-            || !event.getIdentifier().equals(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL)
-        ) {
+        final boolean cancelled = !(event.getSource() instanceof ServerConnection)
+            || !event.getIdentifier().equals(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL);
+        if (cancelled) {
             continuation.resume();
             return;
         }
+
         ServerConnection connection = ((ServerConnection)event.getSource());
 
         event.setResult(PluginMessageEvent.ForwardResult.handled());
@@ -57,19 +59,20 @@ public class PluginMessageListener {
         final String sChannel = input.readUTF();
         final String playername = input.readUTF();
         final @Nullable Player loggedPlayer = proxy.getPlayer(playername).orElse(null);
-        switch(sChannel){
+        switch (sChannel) {
             case "LOGIN" :
                 if (loggedPlayer != null && api.addPlayer(loggedPlayer)){
+                    proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer));
                     this.createServerConnectionRequest(loggedPlayer, connection);
                 }
                 break;
             case "LOGOUT":
-                if(loggedPlayer != null && api.removePlayer(loggedPlayer)){
+                if (loggedPlayer != null && api.removePlayer(loggedPlayer)){
                     proxy.getEventManager().fireAndForget(new ProxyLogoutEvent(loggedPlayer));
                 }
                 break;
             case "REGISTER":
-                if(loggedPlayer != null)
+                if (loggedPlayer != null)
                     proxy.getEventManager().fireAndForget(new ProxyRegisterEvent(loggedPlayer));
                 break;
             case "UNREGISTER":
@@ -84,25 +87,38 @@ public class PluginMessageListener {
         continuation.resume();
     }
 
-    private void createServerConnectionRequest(Player loggedPlayer, ServerConnection connection){
-        final RegisteredServer loginServer = loggedPlayer.getCurrentServer().orElse(connection).getServer();
-        proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer));
-        if (config.getToServerOptions().sendToServer()) {
-            final List<String> serverList = config.getToServerOptions().getTeleportServers();
-            final String randomServer = serverList.get(rm.nextInt(serverList.size()));
-            proxy.getServer(randomServer).ifPresentOrElse(serverToSend ->
-                proxy.getEventManager().fire(new PreSendOnLoginEvent(loggedPlayer, loginServer, serverToSend)).thenAcceptAsync(preSendEvent -> {
-                    if(preSendEvent.getResult().isAllowed()){
-                        loggedPlayer.createConnectionRequest(serverToSend).connect().thenAcceptAsync(result -> {
-                            if(!result.isSuccessful()) {
-                                logger.info("Unable to connect the player {} to the server {}",
-                                    loggedPlayer.getUsername(),
-                                    serverToSend.getServerInfo().getName());
-                            }
-                        });
-                    }
-                })
-            , () -> logger.warn("The server {} does not exist", randomServer));
+    private void createServerConnectionRequest(Player player, ServerConnection connection){
+        if (!config.getToServerOptions().sendToServer()) {
+            return;
         }
+
+        final RegisteredServer loginServer = player.getCurrentServer().orElse(connection).getServer();
+        final String randomServer = this.getRandomServer();
+
+        proxy.getServer(randomServer).ifPresentOrElse(server ->
+            proxy.getEventManager().fire(new PreSendOnLoginEvent(player, loginServer, server))
+                .thenApply(PreSendOnLoginEvent::getResult)
+                .thenApply(GenericResult::isAllowed)
+                .thenAcceptAsync(allowed -> {
+                    if (!allowed) {
+                        return;
+                    }
+                    player.createConnectionRequest(server)
+                        .connect()
+                        .thenApply(Result::isSuccessful)
+                        .thenAcceptAsync(result -> {
+                            if(!result) {
+                                logger.info("Unable to connect the player {} to the server {}",
+                                    player.getUsername(),
+                                    server.getServerInfo().getName());
+                            }
+                    });
+                })
+        , () -> logger.warn("The server {} does not exist", randomServer));
+    }
+
+    private String getRandomServer() {
+        final List<String> serverList = config.getToServerOptions().getTeleportServers();
+        return serverList.get(rm.nextInt(serverList.size()));
     }
 }

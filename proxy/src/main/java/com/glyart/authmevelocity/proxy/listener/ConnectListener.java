@@ -62,18 +62,17 @@ public class ConnectListener {
             return;
         }
 
-        event.getResult().getServer().ifPresent(server -> {
-            if(!api.isAuthServer(server)){
-                event.setResult(ServerPreConnectEvent.ServerResult.denied());
-            }
-        });
+        // this should be present, "event.getResult().isAllowed()" is the "isPresent" check
+        if(!api.isAuthServer(event.getResult().getServer().get())) {
+            event.setResult(ServerPreConnectEvent.ServerResult.denied());
+        }
         continuation.resume();
     }
 
     @Subscribe
     public void onServerPostConnect(ServerPostConnectEvent event) {
         final Player player = event.getPlayer();
-        if (api.isLogged(player) && api.isInAuthServer(player)){
+        if (api.isLogged(player) && api.isInAuthServer(player)) {
             ByteArrayDataOutput buf = ByteStreams.newDataOutput();
             buf.writeUTF("LOGIN");
             player.getCurrentServer().ifPresent(sv ->

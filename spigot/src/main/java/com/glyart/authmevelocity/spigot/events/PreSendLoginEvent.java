@@ -1,5 +1,6 @@
 package com.glyart.authmevelocity.spigot.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -11,7 +12,7 @@ public class PreSendLoginEvent extends PlayerEvent implements Cancellable {
     private boolean isCancelled = false;
 
     public PreSendLoginEvent(@NotNull Player player) {
-        super(player);
+        super(player, !Bukkit.isPrimaryThread());
     }
 
     @Override
@@ -26,6 +27,10 @@ public class PreSendLoginEvent extends PlayerEvent implements Cancellable {
 
     @Override
     public @NotNull HandlerList getHandlers() {
+        return HANDLERS;
+    }
+
+    public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

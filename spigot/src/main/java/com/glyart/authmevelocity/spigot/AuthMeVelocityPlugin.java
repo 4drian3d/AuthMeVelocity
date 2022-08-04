@@ -39,7 +39,7 @@ public class AuthMeVelocityPlugin extends JavaPlugin {
         out.writeUTF(type.toString());
         out.writeUTF(playername);
 
-        if(player == null){
+        if (player == null) {
             Bukkit.getServer().sendPluginMessage(this, CHANNEL, out.toByteArray());
         } else {
             player.sendPluginMessage(this, CHANNEL, out.toByteArray());
