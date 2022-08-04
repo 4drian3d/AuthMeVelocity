@@ -1,4 +1,9 @@
-  
+
+.gradle/
+/.idea/
+build/
+bin/
+
 target/
 pom.xml.tag
 pom.xml.releaseBackup
