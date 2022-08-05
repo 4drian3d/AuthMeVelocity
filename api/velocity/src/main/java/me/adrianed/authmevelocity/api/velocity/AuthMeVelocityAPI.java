@@ -1,8 +1,7 @@
-package me.adrianed.authmevelocity.velocity;
+package me.adrianed.authmevelocity.api.velocity;
 
 import java.util.function.Predicate;
 
-import me.adrianed.authmevelocity.velocity.config.AuthMeConfig;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
@@ -12,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * API provided to interact with logged players
  */
-public sealed interface AuthMeVelocityAPI permits AuthMeVelocityPlugin {
+public interface AuthMeVelocityAPI {
 
     /**
      * Check if the player is logged in or not

@@ -15,6 +15,7 @@ dependencies {
     compileOnly("com.github.games647:fastlogin.velocity:1.11-SNAPSHOT")
     shadow("net.byteflux:libby-velocity:1.1.5")
     compileOnly(project(":authmevelocity-common"))
+    compileOnly(project(":authmevelocity-api-velocity"))
 }
 
 tasks.compileJava {

@@ -15,6 +15,8 @@ allprojects {
 
 dependencies {
     shadow(project(":authmevelocity-common"))
+    shadow(project(":authmevelocity-api-paper"))
+    shadow(project(":authmevelocity-api-velocity"))
     shadow(project(":authmevelocity-velocity"))
     shadow(project(":authmevelocity-paper"))
 }

@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Random;
 
 import me.adrianed.authmevelocity.velocity.config.AuthMeConfig;
-import me.adrianed.authmevelocity.velocity.event.PreSendOnLoginEvent;
-import me.adrianed.authmevelocity.velocity.event.ProxyForcedUnregisterEvent;
-import me.adrianed.authmevelocity.velocity.event.ProxyLoginEvent;
-import me.adrianed.authmevelocity.velocity.event.ProxyLogoutEvent;
-import me.adrianed.authmevelocity.velocity.event.ProxyRegisterEvent;
-import me.adrianed.authmevelocity.velocity.event.ProxyUnregisterEvent;
+import me.adrianed.authmevelocity.api.velocity.event.PreSendOnLoginEvent;
+import me.adrianed.authmevelocity.api.velocity.event.ProxyForcedUnregisterEvent;
+import me.adrianed.authmevelocity.api.velocity.event.ProxyLoginEvent;
+import me.adrianed.authmevelocity.api.velocity.event.ProxyLogoutEvent;
+import me.adrianed.authmevelocity.api.velocity.event.ProxyRegisterEvent;
+import me.adrianed.authmevelocity.api.velocity.event.ProxyUnregisterEvent;
 import com.google.common.io.ByteArrayDataInput;
 import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.Subscribe;
@@ -22,7 +22,7 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
 import me.adrianed.authmevelocity.velocity.AuthMeVelocityPlugin;
-import me.adrianed.authmevelocity.velocity.AuthMeVelocityAPI;
+import me.adrianed.authmevelocity.api.velocity.AuthMeVelocityAPI;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

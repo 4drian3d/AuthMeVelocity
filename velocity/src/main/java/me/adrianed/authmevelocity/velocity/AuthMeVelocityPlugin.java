@@ -6,6 +6,7 @@ import me.adrianed.authmevelocity.velocity.listener.ConnectListener;
 import me.adrianed.authmevelocity.velocity.listener.FastLoginListener;
 import me.adrianed.authmevelocity.velocity.listener.PluginMessageListener;
 import me.adrianed.authmevelocity.velocity.listener.ProxyListener;
+import me.adrianed.authmevelocity.api.velocity.AuthMeVelocityAPI;
 import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
 import com.velocitypowered.api.command.CommandSource;

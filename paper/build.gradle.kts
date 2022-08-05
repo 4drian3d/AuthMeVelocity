@@ -12,11 +12,12 @@ repositories {
 }
 
 dependencies {
+    compileOnly(project(":authmevelocity-common"))
+    compileOnly(project(":authmevelocity-api-paper"))
     compileOnly("io.papermc.paper:paper-api:1.19.1-R0.1-SNAPSHOT")
     compileOnly("fr.xephi:authme:5.6.0-SNAPSHOT")
     compileOnly("com.github.4drian3d:MiniPlaceholders:1.1.1")
     shadow("net.byteflux:libby-bukkit:1.1.5")
-    compileOnly(project(":authmevelocity-common"))
 }
 
 bukkit {

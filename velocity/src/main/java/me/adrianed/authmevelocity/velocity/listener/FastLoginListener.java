@@ -4,7 +4,7 @@ import com.github.games647.fastlogin.velocity.event.VelocityFastLoginAutoLoginEv
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.proxy.ProxyServer;
 
-import me.adrianed.authmevelocity.velocity.AuthMeVelocityAPI;
+import me.adrianed.authmevelocity.api.velocity.AuthMeVelocityAPI;
 
 public class FastLoginListener {
     private final ProxyServer server;

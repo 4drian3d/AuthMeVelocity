@@ -19,7 +19,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
 import me.adrianed.authmevelocity.velocity.AuthMeVelocityPlugin;
-import me.adrianed.authmevelocity.velocity.AuthMeVelocityAPI;
+import me.adrianed.authmevelocity.api.velocity.AuthMeVelocityAPI;
 
 public class ConnectListener {
     private final ProxyServer proxy;

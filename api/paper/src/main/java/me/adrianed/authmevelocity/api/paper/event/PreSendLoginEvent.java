@@ -1,4 +1,4 @@
-package me.adrianed.authmevelocity.paper.events;
+package me.adrianed.authmevelocity.api.paper.event;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

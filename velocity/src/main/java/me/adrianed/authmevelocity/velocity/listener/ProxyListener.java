@@ -13,7 +13,7 @@ import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.player.TabCompleteEvent;
 import com.velocitypowered.api.proxy.Player;
 
-import me.adrianed.authmevelocity.velocity.AuthMeVelocityAPI;
+import me.adrianed.authmevelocity.api.velocity.AuthMeVelocityAPI;
 
 import org.jetbrains.annotations.NotNull;
 

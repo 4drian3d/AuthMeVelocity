@@ -1,13 +1,16 @@
-package me.adrianed.authmevelocity.velocity.event;
+package me.adrianed.authmevelocity.api.velocity.event;
 
 import com.velocitypowered.api.proxy.Player;
 
 import org.jetbrains.annotations.NotNull;
 
-public class ProxyUnregisterEvent {
+/**
+ * Event executed in case the player is successfully logged in
+ */
+public final class ProxyLoginEvent {
     private final Player player;
 
-    public ProxyUnregisterEvent(@NotNull Player player){
+    public ProxyLoginEvent(@NotNull Player player){
         this.player = player;
     }
 

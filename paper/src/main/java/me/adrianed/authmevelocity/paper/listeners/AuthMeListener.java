@@ -2,7 +2,7 @@ package me.adrianed.authmevelocity.paper.listeners;
 
 import me.adrianed.authmevelocity.paper.AuthMeVelocityPlugin;
 import me.adrianed.authmevelocity.common.MessageType;
-import me.adrianed.authmevelocity.paper.events.PreSendLoginEvent;
+import me.adrianed.authmevelocity.api.paper.event.PreSendLoginEvent;
 
 import fr.xephi.authme.events.LoginEvent;
 import fr.xephi.authme.events.LogoutEvent;

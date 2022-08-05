@@ -1,4 +1,4 @@
-package me.adrianed.authmevelocity.velocity.event;
+package me.adrianed.authmevelocity.api.velocity.event;
 
 import java.util.Objects;
 
