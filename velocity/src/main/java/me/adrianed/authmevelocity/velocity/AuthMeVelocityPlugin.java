@@ -1,12 +1,13 @@
 package me.adrianed.authmevelocity.velocity;
 
 import me.adrianed.authmevelocity.velocity.commands.AuthmeCommand;
-import me.adrianed.authmevelocity.velocity.config.AuthMeConfig;
 import me.adrianed.authmevelocity.velocity.listener.ConnectListener;
 import me.adrianed.authmevelocity.velocity.listener.FastLoginListener;
 import me.adrianed.authmevelocity.velocity.listener.PluginMessageListener;
 import me.adrianed.authmevelocity.velocity.listener.ProxyListener;
 import me.adrianed.authmevelocity.api.velocity.AuthMeVelocityAPI;
+import me.adrianed.authmevelocity.common.configuration.Loader;
+import me.adrianed.authmevelocity.common.configuration.ProxyConfiguration;
 import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
 import com.velocitypowered.api.command.CommandSource;
@@ -33,7 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -61,10 +62,10 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     private final ProxyServer proxy;
     private final Logger logger;
     private final Path pluginDirectory;
-    private AuthMeConfig config;
+    private Loader<ProxyConfiguration> config;
 
     private final List<Object> listeners = new ArrayList<>(3);
-    protected final Set<UUID> loggedPlayers = Collections.synchronizedSet(new HashSet<>());
+    protected final Set<UUID> loggedPlayers = ConcurrentHashMap.newKeySet();
 
     @Inject
     public AuthMeVelocityPlugin(ProxyServer proxy, Logger logger, @DataDirectory Path dataDirectory) {
@@ -75,12 +76,25 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        if (!this.reload()) {
-            logger.warn("Failed to load config.toml. Shutting down.");
-            return;
-        }
+        final VelocityLibraries libraries
+            = new VelocityLibraries(logger, pluginDirectory, proxy.getPluginManager(), this);
+        libraries.registerRepositories();
+        libraries.loadLibraries();
+
+        this.config = Loader.create(pluginDirectory, "config.yml", ProxyConfiguration.class, logger);
 
         proxy.getChannelRegistrar().register(AUTHMEVELOCITY_CHANNEL);
+
+        List.of(
+            new ProxyListener(this),
+            new ConnectListener(this, proxy, logger),
+            new PluginMessageListener(proxy, logger, this)
+        ).forEach(listener ->
+            proxy.getEventManager().register(this, listener));
+
+        if (proxy.getPluginManager().isLoaded("fastlogin")) {
+            proxy.getEventManager().register(this, new FastLoginListener(proxy, this));
+        }
 
         if (proxy.getPluginManager().isLoaded("miniplaceholders")) {
             AuthMePlaceholders.getExpansion(this).register();
@@ -95,62 +109,20 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         return this.proxy;
     }
 
-    private Toml loadConfig(Path path){
-        try {
-            if (Files.notExists(path)) {
-                Files.createDirectory(path);
-            }
-
-            Path configPath = path.resolve("config.toml");
-            if (Files.notExists(configPath)) {
-                try (InputStream in = this.getClass().getClassLoader().getResourceAsStream("config.toml")) {
-                    Files.copy(Objects.requireNonNull(in, "The configuration does not exists"), configPath);
-                }
-            }
-
-            return new Toml().read(Files.newInputStream(configPath));
-        } catch (IOException ex) {
-            logger.error("An error ocurred on configuration initialization", ex);
-            return null;
-        } catch(IllegalStateException ex) {
-            logger.error("Invalid configuration provided", ex);
-            return null;
-        }
-    }
-
-    public boolean reload() {
-        Toml toml = this.loadConfig(pluginDirectory);
-        if (toml == null) {
-            return false;
-        }
-
-        this.config = new AuthMeConfig(toml);
-
-        listeners.forEach(listener -> proxy.getEventManager().unregisterListener(this, listener));
-        listeners.clear();
-
-        listeners.add(new ProxyListener(config, this));
-        listeners.add(new ConnectListener(config, this, proxy, logger));
-        listeners.add(new PluginMessageListener(proxy, logger, config, this));
-
-        if (proxy.getPluginManager().isLoaded("fastlogin")) {
-            listeners.add(new FastLoginListener(proxy, this));
-        }
-
-        listeners.forEach(listener -> proxy.getEventManager().register(this, listener));
-        return true;
-    }
-
     public void sendInfoMessage() {
         CommandSource source = proxy.getConsoleCommandSource();
         source.sendMessage(MiniMessage.miniMessage().deserialize(
             " <gray>--- <aqua>AuthMeVelocity</aqua> ---"));
         source.sendMessage(MiniMessage.miniMessage().deserialize(
-            "<gray>AuthServers: <green>" + config.getAuthServers()));
-        if (config.getToServerOptions().sendToServer()) {
+            "<gray>AuthServers: <green>" + config.getConfig().authServers()));
+        if (config.getConfig().sendOnLogin().sendToServerOnLogin()) {
             source.sendMessage(MiniMessage.miniMessage().deserialize(
-                "<gray>LobbyServers: <green>" + config.getToServerOptions().getTeleportServers()));
+                "<gray>LobbyServers: <green>" + config.getConfig().sendOnLogin().teleportServers()));
         }
+    }
+
+    public Loader<ProxyConfiguration> config() {
+        return this.config;
     }
 
     @Override
@@ -185,16 +157,16 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
 
     @Override
     public boolean isAuthServer(RegisteredServer server){
-        return config.getAuthServers().contains(server.getServerInfo().getName());
+        return config.getConfig().authServers().contains(server.getServerInfo().getName());
     }
 
     @Override
     public boolean isAuthServer(ServerConnection connection){
-        return config.getAuthServers().contains(connection.getServerInfo().getName());
+        return config.getConfig().authServers().contains(connection.getServerInfo().getName());
     }
 
     @Override
     public boolean isAuthServer(String server){
-        return config.getAuthServers().contains(server);
+        return config.getConfig().authServers().contains(server);
     }
 }

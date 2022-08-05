@@ -18,10 +18,16 @@ dependencies {
     compileOnly(project(":authmevelocity-api-velocity"))
 }
 
-tasks.compileJava {
-    options.encoding = Charsets.UTF_8.name()
+tasks {
+    compileJava {
+        options.encoding = Charsets.UTF_8.name()
 
-    options.release.set(17)
+        options.release.set(17)
+    }
+
+    build {
+        dependsOn(shadowJar)
+    }
 }
 
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))

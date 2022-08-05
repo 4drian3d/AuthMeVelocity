@@ -1,5 +1,5 @@
 package me.adrianed.authmevelocity.common.configuration;
 
-public class PaperConfiguration {
-    
+public interface PaperConfiguration {
+    boolean debug();
 }

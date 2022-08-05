@@ -20,7 +20,7 @@ public class AuthmeCommand {
             .then(LiteralArgumentBuilder.<CommandSource>literal("reload")
                 .executes(cmd -> {
                     CommandSource source = cmd.getSource();
-                    if (plugin.reload()) {
+                    if (plugin.config().reloadConfig()) {
                         plugin.sendInfoMessage();
                         source.sendMessage(MiniMessage.miniMessage().deserialize(
                             "<aqua>AuthmeVelocity <green>has been successfully reloaded"));

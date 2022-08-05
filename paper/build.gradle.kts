@@ -30,6 +30,7 @@ bukkit {
     depend = listOf("AuthMe")
     version = "4.0.0"
 }
+
 tasks {
     shadowJar {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE

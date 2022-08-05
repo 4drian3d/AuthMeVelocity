@@ -3,7 +3,6 @@ package me.adrianed.authmevelocity.velocity.listener;
 import java.util.List;
 import java.util.Random;
 
-import me.adrianed.authmevelocity.velocity.config.AuthMeConfig;
 import me.adrianed.authmevelocity.api.velocity.event.PreSendOnLoginEvent;
 import me.adrianed.authmevelocity.api.velocity.event.ProxyForcedUnregisterEvent;
 import me.adrianed.authmevelocity.api.velocity.event.ProxyLoginEvent;
@@ -22,7 +21,6 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
 import me.adrianed.authmevelocity.velocity.AuthMeVelocityPlugin;
-import me.adrianed.authmevelocity.api.velocity.AuthMeVelocityAPI;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,15 +30,13 @@ public class PluginMessageListener {
     private final ProxyServer proxy;
     private final Logger logger;
     private final Random rm;
-    private final AuthMeConfig config;
-    private final AuthMeVelocityAPI api;
+    private final AuthMeVelocityPlugin plugin;
 
-    public PluginMessageListener(@NotNull ProxyServer proxy, @NotNull Logger logger, @NotNull AuthMeConfig config, AuthMeVelocityAPI api) {
+    public PluginMessageListener(@NotNull ProxyServer proxy, @NotNull Logger logger, AuthMeVelocityPlugin plugin) {
         this.proxy = proxy;
         this.logger = logger;
         this.rm = new Random();
-        this.config = config;
-        this.api = api;
+        this.plugin = plugin;
     }
 
     @Subscribe
@@ -62,13 +58,13 @@ public class PluginMessageListener {
         final @Nullable Player loggedPlayer = proxy.getPlayer(playername).orElse(null);
         switch (sChannel) {
             case "LOGIN" :
-                if (loggedPlayer != null && api.addPlayer(loggedPlayer)){
+                if (loggedPlayer != null && plugin.addPlayer(loggedPlayer)){
                     proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer));
                     this.createServerConnectionRequest(loggedPlayer, connection);
                 }
                 break;
             case "LOGOUT":
-                if (loggedPlayer != null && api.removePlayer(loggedPlayer)){
+                if (loggedPlayer != null && plugin.removePlayer(loggedPlayer)){
                     proxy.getEventManager().fireAndForget(new ProxyLogoutEvent(loggedPlayer));
                 }
                 break;
@@ -89,7 +85,7 @@ public class PluginMessageListener {
     }
 
     private void createServerConnectionRequest(Player player, ServerConnection connection){
-        if (!config.getToServerOptions().sendToServer()) {
+        if (!plugin.config().getConfig().sendOnLogin().sendToServerOnLogin()) {
             return;
         }
 
@@ -119,7 +115,7 @@ public class PluginMessageListener {
     }
 
     private String getRandomServer() {
-        final List<String> serverList = config.getToServerOptions().getTeleportServers();
+        final List<String> serverList = plugin.config().getConfig().sendOnLogin().teleportServers();
         return serverList.get(rm.nextInt(serverList.size()));
     }
 }
