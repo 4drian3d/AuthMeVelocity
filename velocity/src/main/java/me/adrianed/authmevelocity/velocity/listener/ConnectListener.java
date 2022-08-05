@@ -32,7 +32,7 @@ public class ConnectListener {
 
     @Subscribe(order = PostOrder.LATE)
     public void onInitialServer(PlayerChooseInitialServerEvent event, Continuation continuation){
-        if(!plugin.config().getConfig().ensureAuthServer().ensureFirstServerIsAuthServer()) {
+        if(!plugin.config().get().ensureAuthServer().ensureFirstServerIsAuthServer()) {
             continuation.resume();
             return;
         }
@@ -79,7 +79,7 @@ public class ConnectListener {
 
     // TODO: Implement #40
     private @Nullable RegisteredServer getAvailableServer() {
-        for(String sv : plugin.config().getConfig().authServers()){
+        for(String sv : plugin.config().get().authServers()){
             Optional<RegisteredServer> opt = proxy.getServer(sv);
             if (opt.isPresent()) return opt.get();
         }

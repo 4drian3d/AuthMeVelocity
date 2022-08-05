@@ -14,35 +14,36 @@ public final class LibsManager {
     }
 
     public void loadLibraries() {
-        final String dazzlePackage = new String(new char[] {
-            's','p','a','c','e','.','a','r','i','m','.','d','a','z','z','l','e','c','o','n','f'});
-        final Relocation dazzleRelocation
-            = new Relocation(dazzlePackage, "me.adrianed.authmevelocity.libs.dazzleconf");
-        final Relocation snakeYamlRelocation
-            = new Relocation("org.yaml.snakeyaml", "me.adrianed.authmevelocity.libs.snakeyaml");
-        final Library dazzleConf = Library.builder()
-            .groupId(dazzlePackage)
-            .artifactId("dazzleconf-core")
-            .version("1.3.0-M1")
-            .relocate(dazzleRelocation)
+        final Relocation configurateRelocation
+            = new Relocation("org{}spongepowered", "me.adrianed.authmevelocity.libs.sponge");
+        final Relocation geantyrefRelocation =
+            new Relocation("io{}leangen{}geantyref", "me.adrianed.authmevelocity.libs.geantyref");
+        final Library hocon = Library.builder()
+            .groupId("org{}spongepowered")
+            .artifactId("configurate-hocon")
+            .version(Constants.CONFIGURATE)
+            .id("configurate-hocon")
+            .relocate(configurateRelocation)
+            .relocate(geantyrefRelocation)
             .build();
-        final Library dazzleYaml = Library.builder()
-            .groupId(dazzlePackage)
-            .artifactId("dazzleconf-ext-snakeyaml")
-            .version("1.3.0-M1")
-            .relocate(dazzleRelocation)
-            .relocate(snakeYamlRelocation)
+        final Library confCore = Library.builder()
+            .groupId("org{}spongepowered")
+            .artifactId("configurate-core")
+            .version(Constants.CONFIGURATE)
+            .id("configurate-core")
+            .relocate(configurateRelocation)
+            .relocate(geantyrefRelocation)
             .build();
-        final Library snakeYaml = Library.builder()
-            .groupId("org.yaml")
-            .artifactId("snakeyaml")
-            .version("1.30")
-            .relocate(dazzleRelocation)
-            .relocate(snakeYamlRelocation)
+        final Library geantyref = Library.builder()
+            .groupId("io{}leangen{}geantyref")
+            .artifactId("geantyref")
+            .version(Constants.GEANTYREF)
+            .id("geantyref")
+            .relocate(geantyrefRelocation)
             .build();
 
-        manager.loadLibrary(snakeYaml);
-        manager.loadLibrary(dazzleConf);
-        manager.loadLibrary(dazzleYaml);
+        manager.loadLibrary(confCore);
+        manager.loadLibrary(hocon);
+        manager.loadLibrary(geantyref);
     }
 }

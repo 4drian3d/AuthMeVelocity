@@ -42,7 +42,7 @@ public final class ProxyListener {
 
         if (plugin.isInAuthServer(player)) {
             String command = AuthmeUtils.getFirstArgument(event.getCommand());
-            if (!plugin.config().getConfig().commands().allowedCommands().contains(command)) {
+            if (!plugin.config().get().commands().allowedCommands().contains(command)) {
                 sendBlockedMessage(player);
                 event.setResult(CommandExecuteEvent.CommandResult.denied());
             }
@@ -67,7 +67,7 @@ public final class ProxyListener {
         }
 
         final String command = event.getPartialMessage();
-        for (final String allowed : plugin.config().getConfig().commands().allowedCommands()) {
+        for (final String allowed : plugin.config().get().commands().allowedCommands()) {
             if (allowed.startsWith(command)) {
                 return;
             }
@@ -77,7 +77,7 @@ public final class ProxyListener {
     }
 
     void sendBlockedMessage(Player player){
-        String blockedMessage = plugin.config().getConfig().commands().blockedCommandMessage();
+        String blockedMessage = plugin.config().get().commands().blockedCommandMessage();
         if (!blockedMessage.isBlank()){
             player.sendMessage(MiniMessage.miniMessage().deserialize(blockedMessage));
         }

@@ -7,6 +7,7 @@ import me.adrianed.authmevelocity.velocity.listener.PluginMessageListener;
 import me.adrianed.authmevelocity.velocity.listener.ProxyListener;
 import me.adrianed.authmevelocity.api.velocity.AuthMeVelocityAPI;
 import me.adrianed.authmevelocity.common.LibsManager;
+import me.adrianed.authmevelocity.common.configuration.ConfigurationContainer;
 import me.adrianed.authmevelocity.common.configuration.Loader;
 import me.adrianed.authmevelocity.common.configuration.ProxyConfiguration;
 import com.google.inject.Inject;
@@ -58,7 +59,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     private final ProxyServer proxy;
     private final Logger logger;
     private final Path pluginDirectory;
-    private Loader<ProxyConfiguration> config;
+    private ConfigurationContainer<ProxyConfiguration> config;
 
     protected final Set<UUID> loggedPlayers = ConcurrentHashMap.newKeySet();
 
@@ -77,7 +78,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
                     logger, pluginDirectory, proxy.getPluginManager(), this));
         libraries.loadLibraries();
 
-        this.config = Loader.create(pluginDirectory, "config.yml", ProxyConfiguration.class, logger);
+        this.config = Loader.loadMainConfig(pluginDirectory, ProxyConfiguration.class, logger);
 
         proxy.getChannelRegistrar().register(AUTHMEVELOCITY_CHANNEL);
 
@@ -110,14 +111,14 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         source.sendMessage(MiniMessage.miniMessage().deserialize(
             " <gray>--- <aqua>AuthMeVelocity</aqua> ---"));
         source.sendMessage(MiniMessage.miniMessage().deserialize(
-            "<gray>AuthServers: <green>" + config.getConfig().authServers()));
-        if (config.getConfig().sendOnLogin().sendToServerOnLogin()) {
+            "<gray>AuthServers: <green>" + config.get().authServers()));
+        if (config.get().sendOnLogin().sendToServerOnLogin()) {
             source.sendMessage(MiniMessage.miniMessage().deserialize(
-                "<gray>LobbyServers: <green>" + config.getConfig().sendOnLogin().teleportServers()));
+                "<gray>LobbyServers: <green>" + config.get().sendOnLogin().teleportServers()));
         }
     }
 
-    public Loader<ProxyConfiguration> config() {
+    public ConfigurationContainer<ProxyConfiguration> config() {
         return this.config;
     }
 
@@ -153,16 +154,16 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
 
     @Override
     public boolean isAuthServer(RegisteredServer server){
-        return config.getConfig().authServers().contains(server.getServerInfo().getName());
+        return config.get().authServers().contains(server.getServerInfo().getName());
     }
 
     @Override
     public boolean isAuthServer(ServerConnection connection){
-        return config.getConfig().authServers().contains(connection.getServerInfo().getName());
+        return config.get().authServers().contains(connection.getServerInfo().getName());
     }
 
     @Override
     public boolean isAuthServer(String server){
-        return config.getConfig().authServers().contains(server);
+        return config.get().authServers().contains(server);
     }
 }

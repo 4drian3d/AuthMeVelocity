@@ -85,7 +85,7 @@ public class PluginMessageListener {
     }
 
     private void createServerConnectionRequest(Player player, ServerConnection connection){
-        if (!plugin.config().getConfig().sendOnLogin().sendToServerOnLogin()) {
+        if (!plugin.config().get().sendOnLogin().sendToServerOnLogin()) {
             return;
         }
 
@@ -115,7 +115,7 @@ public class PluginMessageListener {
     }
 
     private String getRandomServer() {
-        final List<String> serverList = plugin.config().getConfig().sendOnLogin().teleportServers();
+        final List<String> serverList = plugin.config().get().sendOnLogin().teleportServers();
         return serverList.get(rm.nextInt(serverList.size()));
     }
 }

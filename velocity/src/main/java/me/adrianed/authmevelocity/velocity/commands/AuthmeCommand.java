@@ -20,14 +20,16 @@ public class AuthmeCommand {
             .then(LiteralArgumentBuilder.<CommandSource>literal("reload")
                 .executes(cmd -> {
                     CommandSource source = cmd.getSource();
-                    if (plugin.config().reloadConfig()) {
-                        plugin.sendInfoMessage();
-                        source.sendMessage(MiniMessage.miniMessage().deserialize(
-                            "<aqua>AuthmeVelocity <green>has been successfully reloaded"));
-                    } else {
-                        source.sendMessage(MiniMessage.miniMessage().deserialize(
-                            "<dark_red>There was an error while reloading the configuration. <red>Check the server console"));
-                    }
+                    plugin.config().reload().thenAcceptAsync(result -> {
+                        if(result) {
+                            plugin.sendInfoMessage();
+                            source.sendMessage(MiniMessage.miniMessage().deserialize(
+                                "<aqua>AuthmeVelocity <green>has been successfully reloaded"));
+                        } else {
+                            source.sendMessage(MiniMessage.miniMessage().deserialize(
+                                "<dark_red>There was an error while reloading the configuration. <red>Check the server console"));
+                        }
+                    });
                     return Command.SINGLE_SUCCESS;
                 })
             ).build();
