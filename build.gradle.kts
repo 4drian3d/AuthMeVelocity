@@ -5,6 +5,10 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
+repositories {
+    maven("https://repo.alessiodp.com/releases/")
+}
+
 allprojects {
     apply(plugin = "java")
     repositories {
@@ -14,11 +18,11 @@ allprojects {
 }
 
 dependencies {
-    shadow(project(":authmevelocity-common"))
+    shadow(project(":authmevelocity-common", "shadow"))
     shadow(project(":authmevelocity-api-paper"))
     shadow(project(":authmevelocity-api-velocity"))
-    shadow(project(":authmevelocity-velocity"))
-    shadow(project(":authmevelocity-paper"))
+    shadow(project(":authmevelocity-velocity", "shadow"))
+    shadow(project(":authmevelocity-paper", "shadow"))
 }
 
 tasks {

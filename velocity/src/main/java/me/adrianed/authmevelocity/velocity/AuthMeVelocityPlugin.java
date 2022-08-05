@@ -6,10 +6,10 @@ import me.adrianed.authmevelocity.velocity.listener.FastLoginListener;
 import me.adrianed.authmevelocity.velocity.listener.PluginMessageListener;
 import me.adrianed.authmevelocity.velocity.listener.ProxyListener;
 import me.adrianed.authmevelocity.api.velocity.AuthMeVelocityAPI;
+import me.adrianed.authmevelocity.common.LibsManager;
 import me.adrianed.authmevelocity.common.configuration.Loader;
 import me.adrianed.authmevelocity.common.configuration.ProxyConfiguration;
 import com.google.inject.Inject;
-import com.moandjiezana.toml.Toml;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -23,20 +23,15 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 
+import net.byteflux.libby.VelocityLibraryManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import org.slf4j.Logger;
 
 import java.util.function.Predicate;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -45,6 +40,7 @@ import java.util.UUID;
     name = "AuthMeVelocity",
     url = "https://github.com/4drian3d/AuthMeVelocity",
     description = "This plugin adds the support for AuthMeReloaded to Velocity",
+    version = "3.0.0",
     dependencies = {
         @Dependency(
             id = "miniplaceholders",
@@ -64,7 +60,6 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     private final Path pluginDirectory;
     private Loader<ProxyConfiguration> config;
 
-    private final List<Object> listeners = new ArrayList<>(3);
     protected final Set<UUID> loggedPlayers = ConcurrentHashMap.newKeySet();
 
     @Inject
@@ -76,9 +71,10 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        final VelocityLibraries libraries
-            = new VelocityLibraries(logger, pluginDirectory, proxy.getPluginManager(), this);
-        libraries.registerRepositories();
+        final LibsManager libraries
+            = new LibsManager(
+                new VelocityLibraryManager<>(
+                    logger, pluginDirectory, proxy.getPluginManager(), this));
         libraries.loadLibraries();
 
         this.config = Loader.create(pluginDirectory, "config.yml", ProxyConfiguration.class, logger);

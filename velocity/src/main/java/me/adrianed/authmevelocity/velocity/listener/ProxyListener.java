@@ -12,8 +12,6 @@ import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.player.TabCompleteEvent;
 import com.velocitypowered.api.proxy.Player;
 
-import org.jetbrains.annotations.NotNull;
-
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public final class ProxyListener {

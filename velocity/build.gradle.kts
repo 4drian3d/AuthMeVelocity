@@ -3,9 +3,9 @@ plugins {
 }
 
 repositories {
+    maven("https://repo.alessiodp.com/releases/")
     maven("https://jitpack.io")
     maven("https://repo.codemc.org/repository/maven-public/")
-    maven("https://repo.alessiodp.com/releases/")
 }
 
 dependencies {
@@ -25,8 +25,11 @@ tasks {
         options.release.set(17)
     }
 
-    build {
-        dependsOn(shadowJar)
+    shadowJar {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        relocate("net.byteflux.libby", "me.adrianed.authmevelocity.libs.libby")
+        relocate("space.arim.dazzleconf", "me.adrianed.authmevelocity.libs.dazzleconf")
+        configurations = listOf(project.configurations.shadow.get())
     }
 }
 
