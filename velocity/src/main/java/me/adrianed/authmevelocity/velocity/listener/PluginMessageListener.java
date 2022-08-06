@@ -2,6 +2,7 @@ package me.adrianed.authmevelocity.velocity.listener;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Locale;
 
 import me.adrianed.authmevelocity.api.velocity.event.PreSendOnLoginEvent;
 import me.adrianed.authmevelocity.api.velocity.event.ProxyForcedUnregisterEvent;
@@ -9,6 +10,7 @@ import me.adrianed.authmevelocity.api.velocity.event.ProxyLoginEvent;
 import me.adrianed.authmevelocity.api.velocity.event.ProxyLogoutEvent;
 import me.adrianed.authmevelocity.api.velocity.event.ProxyRegisterEvent;
 import me.adrianed.authmevelocity.api.velocity.event.ProxyUnregisterEvent;
+import me.adrianed.authmevelocity.common.MessageType;
 import com.google.common.io.ByteArrayDataInput;
 import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.Subscribe;
@@ -53,33 +55,34 @@ public class PluginMessageListener {
         event.setResult(PluginMessageEvent.ForwardResult.handled());
 
         final ByteArrayDataInput input = event.dataAsDataStream();
-        final String sChannel = input.readUTF();
-        final String playername = input.readUTF();
-        final @Nullable Player loggedPlayer = proxy.getPlayer(playername).orElse(null);
-        switch (sChannel) {
-            case "LOGIN" :
-                if (loggedPlayer != null && plugin.addPlayer(loggedPlayer)){
-                    proxy.getEventManager().fireAndForget(new ProxyLoginEvent(loggedPlayer));
-                    this.createServerConnectionRequest(loggedPlayer, connection);
+        final String message = input.readUTF();
+        final MessageType type = MessageType.INDEX.value(
+            message.toUpperCase(Locale.ROOT));
+        final String name = input.readUTF();
+        final @Nullable Player player = proxy.getPlayer(name).orElse(null);
+
+        switch (type) {
+            case LOGIN -> {
+                if (player != null && plugin.addPlayer(player)){
+                    proxy.getEventManager().fireAndForget(new ProxyLoginEvent(player));
+                    this.createServerConnectionRequest(player, connection);
                 }
-                break;
-            case "LOGOUT":
-                if (loggedPlayer != null && plugin.removePlayer(loggedPlayer)){
-                    proxy.getEventManager().fireAndForget(new ProxyLogoutEvent(loggedPlayer));
+            }
+            case LOGOUT -> {
+                if (player != null && plugin.removePlayer(player)){
+                    proxy.getEventManager().fireAndForget(new ProxyLogoutEvent(player));
                 }
-                break;
-            case "REGISTER":
-                if (loggedPlayer != null)
-                    proxy.getEventManager().fireAndForget(new ProxyRegisterEvent(loggedPlayer));
-                break;
-            case "UNREGISTER":
-                if(loggedPlayer != null)
-                    proxy.getEventManager().fireAndForget(new ProxyUnregisterEvent(loggedPlayer));
-                break;
-            case "FORCE_UNREGISTER":
-                proxy.getEventManager().fireAndForget(new ProxyForcedUnregisterEvent(loggedPlayer));
-                break;
-            default: break;
+            }
+            case REGISTER -> {
+                if (player != null)
+                    proxy.getEventManager().fireAndForget(new ProxyRegisterEvent(player));
+            }
+            case UNREGISTER -> {
+                if(player != null)
+                    proxy.getEventManager().fireAndForget(new ProxyUnregisterEvent(player));
+            }
+            case FORCE_UNREGISTER ->
+                proxy.getEventManager().fireAndForget(new ProxyForcedUnregisterEvent(player));
         }
         continuation.resume();
     }

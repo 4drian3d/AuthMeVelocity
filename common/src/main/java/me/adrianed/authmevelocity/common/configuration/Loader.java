@@ -11,7 +11,8 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 
-public class Loader {
+public final class Loader {
+    private Loader() {}
     public static <C> ConfigurationContainer<C> loadMainConfig(final Path path, Class<C> clazz, Logger logger){
         final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
             .defaultOptions(opts -> opts

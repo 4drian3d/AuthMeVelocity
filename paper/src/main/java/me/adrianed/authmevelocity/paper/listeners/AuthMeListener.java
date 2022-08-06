@@ -25,29 +25,35 @@ public final class AuthMeListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLogin(LoginEvent event) {
         final Player player = event.getPlayer();
+        plugin.logDebug("LoginEvent | Start");
 
         if (new PreSendLoginEvent(player).callEvent()) {
             plugin.sendMessageToProxy(player, MessageType.LOGIN, player.getName());
+            plugin.getSLF4JLogger().info("LoginEvent | PreSendLoginEvent allowed");
         }
     }
 
     @EventHandler
-    public void onRegister(RegisterEvent event){
+    public void onRegister(RegisterEvent event) {
+        plugin.logDebug("RegisterEvent | Executed");
         plugin.sendMessageToProxy(event.getPlayer(), MessageType.REGISTER, event.getPlayer().getName());
     }
 
     @EventHandler
-    public void onLogout(LogoutEvent event){
+    public void onLogout(LogoutEvent event) {
+        plugin.logDebug("LogoutEvent | Executed");
         plugin.sendMessageToProxy(event.getPlayer(), MessageType.LOGOUT, event.getPlayer().getName());
     }
 
     @EventHandler
-    public void onUnRegister(UnregisterByPlayerEvent event){
+    public void onUnRegister(UnregisterByPlayerEvent event) {
+        plugin.logDebug("UnregisterByPlayerEvent | Executed");
         plugin.sendMessageToProxy(event.getPlayer(), MessageType.UNREGISTER, event.getPlayer().getName());
     }
 
     @EventHandler
-    public void onAdminUnRegister(UnregisterByAdminEvent event){
+    public void onAdminUnRegister(UnregisterByAdminEvent event) {
+        plugin.logDebug("UnregisterByAdminEvent | Executed");
         plugin.sendMessageToProxy(event.getPlayer(), MessageType.FORCE_UNREGISTER, event.getPlayerName());
     }
 }

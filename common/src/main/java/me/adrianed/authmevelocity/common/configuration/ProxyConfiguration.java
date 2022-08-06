@@ -7,6 +7,12 @@ import java.util.List;
 
 @ConfigSerializable
 public class ProxyConfiguration {
+    @Comment("Enable debug mode")
+    private boolean debug = false;
+    public boolean debug() {
+        return this.debug;
+    }
+
     @Comment("List of login/registration servers")
     private List<String> authServers = List.of("auth1", "auth2");
     public List<String> authServers() {
