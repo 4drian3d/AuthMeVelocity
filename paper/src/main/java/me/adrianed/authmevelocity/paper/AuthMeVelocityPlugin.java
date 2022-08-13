@@ -69,7 +69,7 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
 
     public void logDebug(String debug) {
         if (config.get().debug()) {
-            getSLF4JLogger().info("[DEBUG] "+debug);
+            getSLF4JLogger().info("[DEBUG] {}", debug);
         }
     }
 }

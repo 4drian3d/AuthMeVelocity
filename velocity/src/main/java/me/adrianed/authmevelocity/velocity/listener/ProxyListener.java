@@ -28,25 +28,28 @@ public final class ProxyListener {
 
     @Subscribe(order = PostOrder.FIRST)
     public void onCommandExecute(final CommandExecuteEvent event, Continuation continuation) {
-        if (!(event.getCommandSource() instanceof Player)){
+        if (!(event.getCommandSource() instanceof final Player player)){
+            plugin.logDebug("CommandExecuteEvent | CommandSource is not a player");
             continuation.resume();
             return;
         }
 
-        Player player = (Player)event.getCommandSource();
-
         if (plugin.isLogged(player)) {
+            plugin.logDebug("CommandExecuteEvent | Player is not logged");
             continuation.resume();
             return;
         }
 
         if (plugin.isInAuthServer(player)) {
+            plugin.logDebug("CommandExecuteEvent | Player is in Auth Server");
             String command = AuthmeUtils.getFirstArgument(event.getCommand());
             if (!plugin.config().get().commands().allowedCommands().contains(command)) {
+                plugin.logDebug("CommandExecuteEvent | Player executed an blocked command");
                 sendBlockedMessage(player);
                 event.setResult(CommandExecuteEvent.CommandResult.denied());
             }
         } else {
+            plugin.logDebug("CommandExecuteEven | Player is not in auth server");
             sendBlockedMessage(player);
             event.setResult(CommandExecuteEvent.CommandResult.denied());
         }
@@ -56,6 +59,7 @@ public final class ProxyListener {
     @Subscribe(order = PostOrder.FIRST)
     public void onPlayerChat(final PlayerChatEvent event) {
         if (plugin.isNotLogged(event.getPlayer())) {
+            plugin.logDebug("PlayerChatEvent | Player is not logged");
             event.setResult(PlayerChatEvent.ChatResult.denied());
         }
     }
@@ -63,6 +67,7 @@ public final class ProxyListener {
     @Subscribe(order = PostOrder.FIRST)
     public void onTabComplete(TabCompleteEvent event){
         if (plugin.isLogged(event.getPlayer())) {
+            plugin.logDebug("TabCompleteEvent | Player is already logged");
             return;
         }
 
@@ -73,6 +78,7 @@ public final class ProxyListener {
             }
         }
 
+        plugin.logDebug("TabCompleteEvent | Not allowed tabcompletion");
         event.getSuggestions().clear();
     }
 

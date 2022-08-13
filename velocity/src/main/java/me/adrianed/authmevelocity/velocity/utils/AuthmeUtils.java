@@ -11,12 +11,12 @@ public class AuthmeUtils {
      * @param string the string
      * @return the first argument
      */
-    public static @NotNull String getFirstArgument(@NotNull String string){
-        int index = Objects.requireNonNull(string).indexOf(" ");
+    public static @NotNull String getFirstArgument(final @NotNull String string){
+        final int index = Objects.requireNonNull(string).indexOf(' ');
         if (index == -1) {
             return string;
         }
         return string.substring(0, index);
     }
-    private AuthmeUtils(){}
+    private AuthmeUtils() {}
 }

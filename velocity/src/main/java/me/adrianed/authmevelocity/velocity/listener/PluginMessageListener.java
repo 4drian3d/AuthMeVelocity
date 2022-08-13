@@ -43,14 +43,16 @@ public class PluginMessageListener {
 
     @Subscribe
     public void onPluginMessage(final PluginMessageEvent event, Continuation continuation) {
-        final boolean cancelled = !(event.getSource() instanceof ServerConnection)
+        final boolean cancelled = !event.getResult().isAllowed()
+            ||!(event.getSource() instanceof ServerConnection)
             || !event.getIdentifier().equals(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL);
         if (cancelled) {
             continuation.resume();
+            plugin.logDebug("PluginMessageEvent | Not allowed");
             return;
         }
 
-        ServerConnection connection = ((ServerConnection)event.getSource());
+        final ServerConnection connection = ((ServerConnection)event.getSource());
 
         event.setResult(PluginMessageEvent.ForwardResult.handled());
 
@@ -63,26 +65,39 @@ public class PluginMessageListener {
 
         switch (type) {
             case LOGIN -> {
+                plugin.logDebug("PluginMessageEvent | Login type");
                 if (player != null && plugin.addPlayer(player)){
                     proxy.getEventManager().fireAndForget(new ProxyLoginEvent(player));
                     this.createServerConnectionRequest(player, connection);
+                    plugin.logDebug("PluginMessageEvent | Player not null");
                 }
             }
             case LOGOUT -> {
+                plugin.logDebug("PluginMessageEvent | Logout type");
                 if (player != null && plugin.removePlayer(player)){
                     proxy.getEventManager().fireAndForget(new ProxyLogoutEvent(player));
+                    plugin.logDebug("PluginMessageEvent | Player not null");
                 }
             }
             case REGISTER -> {
-                if (player != null)
+                plugin.logDebug("PluginMessageEvent | Register");
+                if (player != null) {
                     proxy.getEventManager().fireAndForget(new ProxyRegisterEvent(player));
+                    plugin.logDebug("PluginMessageEvent | Player not null");
+                }
             }
             case UNREGISTER -> {
-                if(player != null)
+                plugin.logDebug("PluginMessageEvent | Unregister type");
+                if(player != null) {
+                    plugin.logDebug("PluginMessageEvent | Player not null");
                     proxy.getEventManager().fireAndForget(new ProxyUnregisterEvent(player));
+                } 
             }
-            case FORCE_UNREGISTER ->
+            case FORCE_UNREGISTER -> {
                 proxy.getEventManager().fireAndForget(new ProxyForcedUnregisterEvent(player));
+                plugin.logDebug("PluginMessageEvent | Forced Unregister type");
+            }
+                
         }
         continuation.resume();
     }
@@ -100,14 +115,14 @@ public class PluginMessageListener {
                 .thenApply(PreSendOnLoginEvent::getResult)
                 .thenApply(GenericResult::isAllowed)
                 .thenAcceptAsync(allowed -> {
-                    if (!allowed) {
+                    if (!allowed.booleanValue()) {
                         return;
                     }
                     player.createConnectionRequest(server)
                         .connect()
                         .thenApply(Result::isSuccessful)
                         .thenAcceptAsync(result -> {
-                            if(!result) {
+                            if(!result.booleanValue()) {
                                 logger.info("Unable to connect the player {} to the server {}",
                                     player.getUsername(),
                                     server.getServerInfo().getName());

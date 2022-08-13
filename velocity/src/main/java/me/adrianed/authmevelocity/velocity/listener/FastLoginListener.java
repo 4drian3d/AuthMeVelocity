@@ -4,18 +4,18 @@ import com.github.games647.fastlogin.velocity.event.VelocityFastLoginAutoLoginEv
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.proxy.ProxyServer;
 
-import me.adrianed.authmevelocity.api.velocity.AuthMeVelocityAPI;
+import me.adrianed.authmevelocity.velocity.AuthMeVelocityPlugin;
 
 public class FastLoginListener {
     private final ProxyServer proxy;
-    private final AuthMeVelocityAPI api;
-    public FastLoginListener(ProxyServer proxy, AuthMeVelocityAPI api){
+    private final AuthMeVelocityPlugin plugin;
+    public FastLoginListener(ProxyServer proxy, AuthMeVelocityPlugin plugin){
         this.proxy = proxy;
-        this.api = api;
+        this.plugin = plugin;
     }
     @Subscribe
     public void onAutoLogin(VelocityFastLoginAutoLoginEvent event){
-        proxy.getPlayer(event.getProfile().getName())
-        .ifPresent(api::addPlayer);
+        plugin.logDebug("VelocityFastLoginAutoLoginEvent | Attempt to auto register player");
+        proxy.getPlayer(event.getProfile().getName()).ifPresent(plugin::addPlayer);
     }
 }

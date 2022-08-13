@@ -34,12 +34,14 @@ public class ConnectListener {
     public void onInitialServer(PlayerChooseInitialServerEvent event, Continuation continuation){
         if(!plugin.config().get().ensureAuthServer().ensureFirstServerIsAuthServer()) {
             continuation.resume();
+            plugin.logDebug("PlayerChooseInitialServerEvent | Not enabled");
             return;
         }
 
         Optional<RegisteredServer> optionalSV = event.getInitialServer();
         if(optionalSV.isPresent() && plugin.isAuthServer(optionalSV.get())){
             continuation.resume();
+            plugin.logDebug("PlayerChooseInitialServerEvent | Player is in auth server");
             return;
         }
 
@@ -48,19 +50,22 @@ public class ConnectListener {
         event.setInitialServer(server);
         continuation.resume();
         if (server == null) {
+            plugin.logDebug("PlayerChooseInitialServerEvent | Null server");
             logger.error("Cannot send the player {} to an auth server", event.getPlayer().getUsername());
         }
     }
 
     @Subscribe
     public void onServerPreConnect(ServerPreConnectEvent event, Continuation continuation) {
-        if (!event.getResult().isAllowed() && plugin.isLogged(event.getPlayer())) {
+        if (!event.getResult().isAllowed() || plugin.isLogged(event.getPlayer())) {
+            plugin.logDebug("ServerPreConnectEvent | Not allowed or player not logged");
             continuation.resume();
             return;
         }
 
         // this should be present, "event.getResult().isAllowed()" is the "isPresent" check
-        if(!plugin.isAuthServer(event.getResult().getServer().get())) {
+        if(!plugin.isAuthServer(event.getResult().getServer().orElse(null))) {
+            plugin.logDebug("ServerPreConnectEvent | Server is not an auth server");
             event.setResult(ServerPreConnectEvent.ServerResult.denied());
         }
         continuation.resume();
@@ -70,7 +75,8 @@ public class ConnectListener {
     public void onServerPostConnect(ServerPostConnectEvent event) {
         final Player player = event.getPlayer();
         if (plugin.isLogged(player) && plugin.isInAuthServer(player)) {
-            ByteArrayDataOutput buf = ByteStreams.newDataOutput();
+            plugin.logDebug("ServerPostConnectEvent | Already logged player and connected to an Auth server");
+            final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
             buf.writeUTF("LOGIN");
             player.getCurrentServer().ifPresent(sv ->
                 sv.sendPluginMessage(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL, buf.toByteArray()));

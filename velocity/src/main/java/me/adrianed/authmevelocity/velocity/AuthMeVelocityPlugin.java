@@ -77,6 +77,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
                 new VelocityLibraryManager<>(
                     logger, pluginDirectory, proxy.getPluginManager(), this));
         libraries.loadLibraries();
+        logDebug("Loaded plugin libraries");
 
         this.config = Loader.loadMainConfig(pluginDirectory, ProxyConfiguration.class, logger);
 
@@ -90,10 +91,12 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
             proxy.getEventManager().register(this, listener));
 
         if (proxy.getPluginManager().isLoaded("fastlogin")) {
+            logDebug("Register FastLogin compatibility");
             proxy.getEventManager().register(this, new FastLoginListener(proxy, this));
         }
 
         if (proxy.getPluginManager().isLoaded("miniplaceholders")) {
+            logDebug("Register MiniPlaceholders compatibility");
             AuthMePlaceholders.getExpansion(this).register();
         }
 
@@ -165,5 +168,11 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     @Override
     public boolean isAuthServer(String server){
         return config.get().authServers().contains(server);
+    }
+
+    public void logDebug(String msg) {
+        if (config.get().debug()) {
+            logger.info("[DEBUG] {}", msg);
+        }
     }
 }
