@@ -57,7 +57,7 @@ public class ConnectListener {
 
     @Subscribe
     public void onServerPreConnect(ServerPreConnectEvent event, Continuation continuation) {
-        if (!event.getResult().isAllowed() && api.isLogged(event.getPlayer())) {
+        if (!event.getResult().isAllowed() || api.isLogged(event.getPlayer())) {
             continuation.resume();
             return;
         }
