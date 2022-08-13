@@ -3,7 +3,6 @@ package me.adrianed.authmevelocity.api.velocity.event;
 import java.util.Objects;
 
 import com.velocitypowered.api.event.ResultedEvent;
-import com.velocitypowered.api.event.ResultedEvent.GenericResult;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
@@ -13,12 +12,11 @@ import org.jetbrains.annotations.NotNull;
  * Event to be executed just before sending a player to another server after login/registration.
  * Here you have the ability to deny the event.
  */
-public final class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
+public final class PreSendOnLoginEvent implements ResultedEvent<ServerResult> {
 
-    private GenericResult result = GenericResult.allowed();
+    private ServerResult result;
     private final Player player;
     private final RegisteredServer actualserver;
-    private final RegisteredServer serverToSend;
 
     /**
      * Create a new PreSendOnLoginEvent
@@ -29,7 +27,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
     public PreSendOnLoginEvent(@NotNull Player player, @NotNull RegisteredServer actualServer, @NotNull RegisteredServer serverToSend){
         this.player = player;
         this.actualserver = actualServer;
-        this.serverToSend = serverToSend;
+        result = ServerResult.allowed(serverToSend);
     }
 
     /**
@@ -49,18 +47,10 @@ public final class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
     }
 
     /**
-     * Obtain the server to which the player will be sent
-     * @return the server to send the player
-     */
-    public @NotNull RegisteredServer getSendServer(){
-        return this.serverToSend;
-    }
-
-    /**
      * Get the result of the event
      */
     @Override
-    public @NotNull GenericResult getResult() {
+    public @NotNull ServerResult getResult() {
         return this.result;
     }
 
@@ -69,7 +59,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<GenericResult> {
      * @param newresult the new result
      */
     @Override
-    public void setResult(@NotNull GenericResult newresult) {
-        this.result = Objects.requireNonNull(newresult);
+    public void setResult(@NotNull ServerResult newResult) {
+        this.result = Objects.requireNonNull(newResult);
     }
 }
