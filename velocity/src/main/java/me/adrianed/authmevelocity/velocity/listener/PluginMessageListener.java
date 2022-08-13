@@ -107,7 +107,7 @@ public class PluginMessageListener {
         var config = plugin.config().get();
 
         var toSend = AuthmeUtils.serverToSend(
-            config.sendOnLogin().sendMode(), proxy, config.authServers(), config.randomAttempts());
+            config.sendOnLogin().sendMode(), proxy, config.authServers(), config.advanced().randomAttempts());
 
         if (toSend.isEmpty()) {
             if (toSend.string() != null) {

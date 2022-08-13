@@ -9,18 +9,6 @@ import java.util.List;
 
 @ConfigSerializable
 public class ProxyConfiguration {
-    @Comment("Enable debug mode")
-    private boolean debug = false;
-    public boolean debug() {
-        return this.debug;
-    }
-
-    @Comment("")
-    private int randomAttempts = 5;
-    public int randomAttempts() {
-        return this.randomAttempts;
-    }
-
     @Comment("List of login/registration servers")
     private List<String> authServers = List.of("auth1", "auth2");
     public List<String> authServers() {
@@ -42,6 +30,11 @@ public class ProxyConfiguration {
         return this.ensureAuthServer;
     }
 
+    private Advanced advanced = new Advanced();
+    public Advanced advanced() {
+        return this.advanced;
+    }
+
     @ConfigSerializable
     public static class EnsureAuthServer {
         @Comment("Ensure that the first server to which players connect is an auth server")
@@ -51,11 +44,11 @@ public class ProxyConfiguration {
         }
 
         @Comment("""
-                SendMode 
-                TO_FIRST | 
-                TO_EMPTIEST_SERVE | 
-                RANDOM |
-                """)
+            Selection Mode of the player's initial server
+            TO_FIRST | Send to the first valid server configured
+            TO_EMPTIEST_SERVER | Send to the server with the lowest number of players
+            RANDOM | Send to a random server
+            """)
         private SendMode sendMode = SendMode.RANDOM;
         public SendMode sendMode() {
             return this.sendMode;
@@ -79,12 +72,11 @@ public class ProxyConfiguration {
             return this.teleportServers;
         }
 
-        // TODO: Improve comments
         @Comment("""
-            SendMode 
-            TO_FIRST | 
-            TO_EMPTIEST_SERVE | 
-            RANDOM |
+            Selection Mode of the server to which the player will be sent
+            TO_FIRST | Send to the first valid server configured
+            TO_EMPTIEST_SERVER | Send to the server with the lowest number of players
+            RANDOM | Send to a random server
             """)
         private SendMode sendMode = SendMode.RANDOM;
         public SendMode sendMode() {
@@ -107,6 +99,21 @@ public class ProxyConfiguration {
         private String blockedMessage = "<red>You cannot execute commands if you are not logged in yet";
         public String blockedCommandMessage() {
             return this.blockedMessage;
+        }
+    }
+
+    @ConfigSerializable
+    public static class Advanced {
+        @Comment("Enable debug mode")
+        private boolean debug = false;
+        public boolean debug() {
+            return this.debug;
+        }
+    
+        @Comment("Attempts to get a valid server in SendMode Random")
+        private int randomAttempts = 5;
+        public int randomAttempts() {
+            return this.randomAttempts;
         }
     }
 

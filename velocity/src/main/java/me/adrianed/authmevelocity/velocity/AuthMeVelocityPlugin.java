@@ -171,7 +171,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     }
 
     public void logDebug(String msg) {
-        if (config.get().debug()) {
+        if (config.get().advanced().debug()) {
             logger.info("[DEBUG] {}", msg);
         }
     }

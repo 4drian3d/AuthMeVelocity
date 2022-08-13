@@ -46,7 +46,7 @@ public class ConnectListener {
         }
         var config = plugin.config().get();
         var server = AuthmeUtils.serverToSend(
-            config.ensureAuthServer().sendMode(), proxy, config.authServers(), config.randomAttempts());
+            config.ensureAuthServer().sendMode(), proxy, config.authServers(), config.advanced().randomAttempts());
 
         // Velocity takes over in case the initial server is not present
         event.setInitialServer(server.object());
