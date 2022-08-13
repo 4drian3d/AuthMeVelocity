@@ -3,6 +3,8 @@ package me.adrianed.authmevelocity.common.configuration;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
+import me.adrianed.authmevelocity.common.enums.SendMode;
+
 import java.util.List;
 
 @ConfigSerializable
@@ -11,6 +13,12 @@ public class ProxyConfiguration {
     private boolean debug = false;
     public boolean debug() {
         return this.debug;
+    }
+
+    @Comment("")
+    private int randomAttempts = 5;
+    public int randomAttempts() {
+        return this.randomAttempts;
     }
 
     @Comment("List of login/registration servers")
@@ -41,6 +49,17 @@ public class ProxyConfiguration {
         public boolean ensureFirstServerIsAuthServer() {
             return this.ensureAuthServer;
         }
+
+        @Comment("""
+                SendMode 
+                TO_FIRST | 
+                TO_EMPTIEST_SERVE | 
+                RANDOM |
+                """)
+        private SendMode sendMode = SendMode.RANDOM;
+        public SendMode sendMode() {
+            return this.sendMode;
+        }
     }
 
     @ConfigSerializable
@@ -58,6 +77,18 @@ public class ProxyConfiguration {
         private List<String> teleportServers = List.of("lobby1", "lobby2");
         public List<String> teleportServers() {
             return this.teleportServers;
+        }
+
+        // TODO: Improve comments
+        @Comment("""
+            SendMode 
+            TO_FIRST | 
+            TO_EMPTIEST_SERVE | 
+            RANDOM |
+            """)
+        private SendMode sendMode = SendMode.RANDOM;
+        public SendMode sendMode() {
+            return this.sendMode;
         }
     }
 
@@ -79,5 +110,6 @@ public class ProxyConfiguration {
         }
     }
 
+    
     
 }

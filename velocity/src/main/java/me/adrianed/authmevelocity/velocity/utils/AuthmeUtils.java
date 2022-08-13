@@ -1,8 +1,16 @@
 package me.adrianed.authmevelocity.velocity.utils;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 
 import org.jetbrains.annotations.NotNull;
+
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
+
+import me.adrianed.authmevelocity.common.enums.SendMode;
 
 public class AuthmeUtils {
     //Origin: https://github.com/4drian3d/ChatRegulator/blob/main/src/main/java/me/dreamerzero/chatregulator/utils/CommandUtils.java#L71
@@ -17,6 +25,56 @@ public class AuthmeUtils {
             return string;
         }
         return string.substring(0, index);
+    }
+
+    private static final Random RANDOM = new Random();
+
+    public static Pair<RegisteredServer> serverToSend(SendMode sendMode, ProxyServer proxy, List<String> servers, int attempts) {
+        return switch(sendMode) {
+            case TO_FIRST -> {
+                Optional<RegisteredServer> sv;
+                for (final String st : servers) {
+                    sv = proxy.getServer(st);
+                    if (sv.isPresent()) yield Pair.of(st, sv.get());
+                }
+                yield Pair.of(null, null);
+            }
+            case TO_EMPTIEST_SERVER -> {
+                RegisteredServer emptiest = null;
+                Optional<RegisteredServer> optional = Optional.empty();
+                for (final String st : servers) {
+                    optional = proxy.getServer(st);
+                    if (optional.isPresent()) {
+                        RegisteredServer actualsv = optional.get();
+                        int actualConnected = actualsv.getPlayersConnected().size();
+                        if (actualConnected == 0) {
+                            yield Pair.of(st, actualsv);
+                        } 
+                        if (emptiest == null || actualConnected < emptiest.getPlayersConnected().size()) {
+                            emptiest = actualsv;
+                        }
+                    }
+                }
+                yield Pair.of(optional.map(sv -> sv.getServerInfo().getName()).orElse(null), emptiest);
+            }
+            case RANDOM -> {
+                Optional<RegisteredServer> server;
+                if (servers.size() == 1) {
+                    server = proxy.getServer(servers.get(0));
+                    if (server.isPresent()) {
+                        yield Pair.of(server.get().getServerInfo().getName(), server.get());
+                    }
+                }
+                for (int i = 0; i < attempts; i++) {
+                    int value = RANDOM.nextInt(servers.size());
+                    server = proxy.getServer(servers.get(value));
+                    if (server.isPresent()) {
+                        yield Pair.of(server.get().getServerInfo().getName(), server.get());
+                    }
+                }
+                yield Pair.of(null, null);
+            }
+        };
     }
     private AuthmeUtils() {}
 }

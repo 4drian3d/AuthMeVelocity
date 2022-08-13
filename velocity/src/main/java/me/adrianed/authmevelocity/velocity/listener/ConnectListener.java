@@ -2,7 +2,6 @@ package me.adrianed.authmevelocity.velocity.listener;
 
 import java.util.Optional;
 
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import com.google.common.io.ByteArrayDataOutput;
@@ -18,6 +17,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
 import me.adrianed.authmevelocity.velocity.AuthMeVelocityPlugin;
+import me.adrianed.authmevelocity.velocity.utils.AuthmeUtils;
 
 public class ConnectListener {
     private final ProxyServer proxy;
@@ -44,12 +44,14 @@ public class ConnectListener {
             plugin.logDebug("PlayerChooseInitialServerEvent | Player is in auth server");
             return;
         }
+        var config = plugin.config().get();
+        var server = AuthmeUtils.serverToSend(
+            config.ensureAuthServer().sendMode(), proxy, config.authServers(), config.randomAttempts());
 
-        @Nullable RegisteredServer server = getAvailableServer();
         // Velocity takes over in case the initial server is not present
-        event.setInitialServer(server);
+        event.setInitialServer(server.object());
         continuation.resume();
-        if (server == null) {
+        if (server.isEmpty()) {
             plugin.logDebug("PlayerChooseInitialServerEvent | Null server");
             logger.error("Cannot send the player {} to an auth server", event.getPlayer().getUsername());
         }
@@ -81,14 +83,5 @@ public class ConnectListener {
             player.getCurrentServer().ifPresent(sv ->
                 sv.sendPluginMessage(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL, buf.toByteArray()));
         }
-    }
-
-    // TODO: Implement #40
-    private @Nullable RegisteredServer getAvailableServer() {
-        for(String sv : plugin.config().get().authServers()){
-            Optional<RegisteredServer> opt = proxy.getServer(sv);
-            if (opt.isPresent()) return opt.get();
-        }
-        return null;
     }
 }
