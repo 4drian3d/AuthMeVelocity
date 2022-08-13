@@ -47,8 +47,7 @@ public class ProxyConfiguration {
             Selection Mode of the player's initial server
             TO_FIRST | Send to the first valid server configured
             TO_EMPTIEST_SERVER | Send to the server with the lowest number of players
-            RANDOM | Send to a random server
-            """)
+            RANDOM | Send to a random server""")
         private SendMode sendMode = SendMode.RANDOM;
         public SendMode sendMode() {
             return this.sendMode;
@@ -65,8 +64,7 @@ public class ProxyConfiguration {
 
         @Comment("""
             List of servers to send
-            One of these servers will be chosen at random
-                """)
+            One of these servers will be chosen at random""")
         private List<String> teleportServers = List.of("lobby1", "lobby2");
         public List<String> teleportServers() {
             return this.teleportServers;
@@ -76,8 +74,7 @@ public class ProxyConfiguration {
             Selection Mode of the server to which the player will be sent
             TO_FIRST | Send to the first valid server configured
             TO_EMPTIEST_SERVER | Send to the server with the lowest number of players
-            RANDOM | Send to a random server
-            """)
+            RANDOM | Send to a random server""")
         private SendMode sendMode = SendMode.RANDOM;
         public SendMode sendMode() {
             return this.sendMode;
@@ -94,8 +91,7 @@ public class ProxyConfiguration {
 
         @Comment("""
             Sets the message to send in case a non-logged-in player executes an unauthorized command
-            To deactivate the message, leave it empty
-                """)
+            To deactivate the message, leave it empty""")
         private String blockedMessage = "<red>You cannot execute commands if you are not logged in yet";
         public String blockedCommandMessage() {
             return this.blockedMessage;
@@ -114,6 +110,16 @@ public class ProxyConfiguration {
         private int randomAttempts = 5;
         public int randomAttempts() {
             return this.randomAttempts;
+        }
+
+        @Comment("""
+            Ignore blocking of commands and chat messages to 1.19.1 clients with a valid signed key
+            When trying to block these executions, the proxy will kick the player out.
+            This option allows you to prevent the plugin from trying to block these executions,
+            avoiding the player to be kicked out""")
+        private boolean ignoreSignedPlayers = false;
+        public boolean ignoreSignedPlayers() {
+            return this.ignoreSignedPlayers;
         }
     }
 

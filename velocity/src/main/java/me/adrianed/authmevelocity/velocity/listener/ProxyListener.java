@@ -10,6 +10,7 @@ import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.player.TabCompleteEvent;
+import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
 
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -35,7 +36,13 @@ public final class ProxyListener {
         }
 
         if (plugin.isLogged(player)) {
-            plugin.logDebug("CommandExecuteEvent | Player is not logged");
+            plugin.logDebug("CommandExecuteEvent | Player is already logged");
+            continuation.resume();
+            return;
+        }
+
+        if (canBeIgnored(player)) {
+            plugin.logDebug("CommandexecuteEvent | Ignored signed player");
             continuation.resume();
             return;
         }
@@ -57,11 +64,23 @@ public final class ProxyListener {
     }
 
     @Subscribe(order = PostOrder.FIRST)
-    public void onPlayerChat(final PlayerChatEvent event) {
-        if (plugin.isNotLogged(event.getPlayer())) {
-            plugin.logDebug("PlayerChatEvent | Player is not logged");
-            event.setResult(PlayerChatEvent.ChatResult.denied());
+    public void onPlayerChat(final PlayerChatEvent event, Continuation continuation) {
+        if (plugin.isLogged(event.getPlayer())) {
+            plugin.logDebug("PlayerChatEvent | Player is already logged");
+            continuation.resume();
+            return;
         }
+
+        plugin.logDebug("PlayerChatEvent | Player is not logged");
+
+        if (canBeIgnored(event.getPlayer())) {
+            plugin.logDebug("PlayerChatEvent | Ignored signed player");
+            continuation.resume();
+            return; 
+        }
+
+        event.setResult(PlayerChatEvent.ChatResult.denied());
+        continuation.resume();
     }
 
     @Subscribe(order = PostOrder.FIRST)
@@ -87,6 +106,12 @@ public final class ProxyListener {
         if (!blockedMessage.isBlank()){
             player.sendMessage(MiniMessage.miniMessage().deserialize(blockedMessage));
         }
+    }
+
+    boolean canBeIgnored(Player player) {
+        return player.getIdentifiedKey() != null
+            && player.getProtocolVersion().compareTo(ProtocolVersion.MINECRAFT_1_19_1) >= 0
+            && plugin.config().get().advanced().ignoreSignedPlayers();
     }
     
 }
