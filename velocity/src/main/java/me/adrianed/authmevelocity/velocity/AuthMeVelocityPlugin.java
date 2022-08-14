@@ -6,6 +6,7 @@ import me.adrianed.authmevelocity.velocity.listener.FastLoginListener;
 import me.adrianed.authmevelocity.velocity.listener.PluginMessageListener;
 import me.adrianed.authmevelocity.velocity.listener.ProxyListener;
 import me.adrianed.authmevelocity.api.velocity.AuthMeVelocityAPI;
+import me.adrianed.authmevelocity.common.Constants;
 import me.adrianed.authmevelocity.common.LibsManager;
 import me.adrianed.authmevelocity.common.configuration.ConfigurationContainer;
 import me.adrianed.authmevelocity.common.configuration.Loader;
@@ -43,7 +44,7 @@ import java.util.UUID;
     name = "AuthMeVelocity",
     url = "https://github.com/4drian3d/AuthMeVelocity",
     description = "This plugin adds the support for AuthMeReloaded to Velocity",
-    version = "3.0.0",
+    version = Constants.VERSION,
     dependencies = {
         @Dependency(
             id = "miniplaceholders",
@@ -86,9 +87,9 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
                 new VelocityLibraryManager<>(
                     logger, pluginDirectory, proxy.getPluginManager(), this));
         libraries.loadLibraries();
-        logDebug("Loaded plugin libraries");
 
         this.config = Loader.loadMainConfig(pluginDirectory, ProxyConfiguration.class, logger);
+        logDebug("Loaded plugin libraries");
 
         final int pluginId = 16128;
         Metrics metrics = metricsFactory.make(this, pluginId);
