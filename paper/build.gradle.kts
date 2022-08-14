@@ -28,7 +28,7 @@ bukkit {
     authors = listOf("xQuickGlare", "4drian3d")
     softDepend = listOf("MiniPlaceholders")
     depend = listOf("AuthMe")
-    version = "4.0.0"
+    version = project.version as String
 }
 
 tasks {

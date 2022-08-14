@@ -1,4 +1,5 @@
 plugins {
+    id("net.kyori.blossom") version "1.3.1"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -26,3 +27,8 @@ tasks {
 }
 
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+
+blossom {
+    replaceTokenIn("src/main/java/me/adrianed/authmevelocity/common/Constants.java")
+    replaceToken("{version}", project.version)
+}
