@@ -21,8 +21,9 @@ tasks {
     javadoc {
         options.encoding = Charsets.UTF_8.name()
         (options as StandardJavadocDocletOptions).links(
-            "https://jd.adventure.kyori.net/api/4.10.0/",
-            "https://jd.adventure.kyori.net/text-minimessage/4.11.0/"
+            "https://jd.adventure.kyori.net/api/4.11.0/",
+            "https://jd.adventure.kyori.net/text-minimessage/4.11.0/",
+            "https://jd.papermc.io/velocity/3.0.0/"
         )
     }   
 }
