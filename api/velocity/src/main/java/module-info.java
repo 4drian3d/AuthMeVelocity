@@ -1,3 +1,5 @@
+/**AuthMeVelocity Velocity API Module */
+@SuppressWarnings({"requires-automatic", "requires-transitive-automatic"})
 module me.adrianed.authmevelocity.api.velocity {
     requires static transitive com.velocitypowered.api;
     requires static org.jetbrains.annotations;

@@ -7,10 +7,18 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Event executed before a player is sent to another server after being logged in
+ * <p>Here you have the possibility to cancel the player's sending
+*/
 public class PreSendLoginEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();
     private boolean isCancelled = false;
 
+    /**
+     * Creates a new PreSendLoginEvent
+     * @param player the player to be sended
+     */
     public PreSendLoginEvent(@NotNull Player player) {
         super(player, !Bukkit.isPrimaryThread());
     }
@@ -30,6 +38,10 @@ public class PreSendLoginEvent extends PlayerEvent implements Cancellable {
         return HANDLERS;
     }
 
+    /**
+     * Obtain the handlerlist of this event
+     * @return the handlerlist
+     */
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }

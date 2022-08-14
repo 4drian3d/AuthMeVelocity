@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
  * Here you have the ability to deny the event.
  */
 public final class PreSendOnLoginEvent implements ResultedEvent<ServerResult> {
-
     private ServerResult result;
     private final Player player;
     private final RegisteredServer actualserver;
@@ -34,7 +33,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<ServerResult> {
      * Obtain the logged player
      * @return the player
      */
-    public @NotNull Player getPlayer(){
+    public @NotNull Player player(){
         return this.player;
     }
 
@@ -42,7 +41,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<ServerResult> {
      * Obtain the server on which the player is located
      * @return the actual server of the player
      */
-    public @NotNull RegisteredServer getActualServer(){
+    public @NotNull RegisteredServer actualServer(){
         return this.actualserver;
     }
 
@@ -56,7 +55,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<ServerResult> {
 
     /**
      * Set the result of the event
-     * @param newresult the new result
+     * @param newResult the new result
      */
     @Override
     public void setResult(@NotNull ServerResult newResult) {

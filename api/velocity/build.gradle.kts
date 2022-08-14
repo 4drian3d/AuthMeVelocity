@@ -1,11 +1,39 @@
+plugins {
+    `maven-publish`
+}
+
 dependencies {
     compileOnly("com.velocitypowered:velocity-api:3.1.2-SNAPSHOT")
 }
 
-tasks.compileJava {
-    options.encoding = Charsets.UTF_8.name()
-
-    options.release.set(17)
+java {
+    withSourcesJar()
+    withJavadocJar()
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+tasks {
+    compileJava {
+        options.encoding = Charsets.UTF_8.name()
+
+        options.release.set(17)
+    }
+    javadoc {
+        options.encoding = Charsets.UTF_8.name()
+        (options as StandardJavadocDocletOptions).links(
+            "https://jd.adventure.kyori.net/api/4.10.0/",
+            "https://jd.adventure.kyori.net/text-minimessage/4.11.0/"
+        )
+    }   
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = project.group as String
+            artifactId = project.name
+            version = project.version as String
+            from(components["java"])
+        }
+    }
+}

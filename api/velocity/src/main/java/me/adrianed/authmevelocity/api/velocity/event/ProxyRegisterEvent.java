@@ -4,14 +4,5 @@ import com.velocitypowered.api.proxy.Player;
 
 import org.jetbrains.annotations.NotNull;
 
-public final class ProxyRegisterEvent {
-    private final Player player;
-
-    public ProxyRegisterEvent(@NotNull Player player){
-        this.player = player;
-    }
-
-    public @NotNull Player getPlayer(){
-        return this.player;
-    }
-}
+/**Event executed in case the player has register itself*/
+public record ProxyRegisterEvent(@NotNull Player player) {}
