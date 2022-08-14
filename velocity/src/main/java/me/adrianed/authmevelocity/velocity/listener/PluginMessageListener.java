@@ -123,7 +123,7 @@ public class PluginMessageListener {
                     if (!event.getResult().isAllowed()) {
                         return;
                     }
-                    player.createConnectionRequest(event.getResult().server())
+                    player.createConnectionRequest(event.getResult().getServer())
                         .connect()
                         .thenAcceptAsync(result -> {
                             if (!result.isSuccessful()) {

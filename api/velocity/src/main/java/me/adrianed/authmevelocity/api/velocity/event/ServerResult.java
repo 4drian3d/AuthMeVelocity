@@ -4,12 +4,25 @@ import com.velocitypowered.api.event.ResultedEvent.Result;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
 /**A result that produces a resulting server */
-public record ServerResult(RegisteredServer server) implements Result {
+public final class ServerResult implements Result {
     private static final ServerResult DENIED = new ServerResult(null);
+
+    private final RegisteredServer server;
+    private ServerResult(RegisteredServer server) {
+        this.server = server;
+    }
 
     @Override
     public boolean isAllowed() {
-        return server != null;
+        return this.server != null;
+    }
+
+    /**
+     * Obtain the resulted server
+     * @return the resulted server if is allowed, else null
+     */
+    public RegisteredServer getServer() {
+        return this.server;
     }
 
     /**
