@@ -1,4 +1,4 @@
-name: Maven Build
+name: Gradle Build
 
 on: [push, pull_request]
 

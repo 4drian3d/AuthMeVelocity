@@ -5,18 +5,30 @@
 
 version: 2
 updates:
-  - package-ecosystem: "maven"
+  - package-ecosystem: "gradle"
     directory: "/"
     schedule:
       interval: "weekly"
-  - package-ecosystem: "maven"
-    directory: "/proxy"
+  - package-ecosystem: "gradle"
+    directory: "/api/paper"
     schedule:
-      interval: "daily"
-  - package-ecosystem: "maven"
-    directory: "/spigot"
+      interval: "weekly"
+  - package-ecosystem: "gradle"
+    directory: "/api/velocity"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+  - package-ecosystem: "gradle"
+    directory: "/velocity"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "gradle"
+    directory: "/paper"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "gradle"
+    directory: "/common"
+    schedule:
+      interval: "weekly"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
