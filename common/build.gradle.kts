@@ -18,4 +18,11 @@ tasks {
         relocate("net.byteflux.libby", "me.adrianed.authmevelocity.libs.libby")
         relocate("org.spongepowered", "me.adrianed.authmevelocity.libs.sponge")
     }
+    compileJava {
+        options.encoding = Charsets.UTF_8.name()
+
+        options.release.set(17)
+    }
 }
+
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))

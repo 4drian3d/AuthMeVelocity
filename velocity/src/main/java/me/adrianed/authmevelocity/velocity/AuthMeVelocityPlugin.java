@@ -28,6 +28,8 @@ import net.byteflux.libby.VelocityLibraryManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import org.slf4j.Logger;
+import org.bstats.charts.SimplePie;
+import org.bstats.velocity.Metrics;
 
 import java.util.function.Predicate;
 import java.nio.file.Path;
@@ -59,15 +61,22 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     private final ProxyServer proxy;
     private final Logger logger;
     private final Path pluginDirectory;
+    private final Metrics.Factory metricsFactory;
     private ConfigurationContainer<ProxyConfiguration> config;
 
     protected final Set<UUID> loggedPlayers = ConcurrentHashMap.newKeySet();
 
     @Inject
-    public AuthMeVelocityPlugin(ProxyServer proxy, Logger logger, @DataDirectory Path dataDirectory) {
+    public AuthMeVelocityPlugin(
+        ProxyServer proxy,
+        Logger logger,
+        @DataDirectory Path dataDirectory,
+        Metrics.Factory factory
+    ) {
         this.proxy = proxy;
         this.logger = logger;
         this.pluginDirectory = dataDirectory;
+        this.metricsFactory = factory;
     }
 
     @Subscribe
@@ -81,6 +90,9 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
 
         this.config = Loader.loadMainConfig(pluginDirectory, ProxyConfiguration.class, logger);
 
+        final int pluginId = 16128;
+        Metrics metrics = metricsFactory.make(this, pluginId);
+
         proxy.getChannelRegistrar().register(AUTHMEVELOCITY_CHANNEL);
 
         List.of(
@@ -90,12 +102,16 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         ).forEach(listener ->
             proxy.getEventManager().register(this, listener));
 
-        if (proxy.getPluginManager().isLoaded("fastlogin")) {
+        boolean fastlogin = proxy.getPluginManager().isLoaded("fastlogin");
+        metrics.addCustomChart(new SimplePie("fastlogin_compatibility", () -> Boolean.toString(fastlogin)));
+        if (fastlogin) {
             logDebug("Register FastLogin compatibility");
             proxy.getEventManager().register(this, new FastLoginListener(proxy, this));
         }
 
-        if (proxy.getPluginManager().isLoaded("miniplaceholders")) {
+        boolean miniplaceholders = proxy.getPluginManager().isLoaded("miniplaceholders");
+        metrics.addCustomChart(new SimplePie("miniplaceholders_compatibility", () -> Boolean.toString(miniplaceholders)));
+        if (miniplaceholders) {
             logDebug("Register MiniPlaceholders compatibility");
             AuthMePlaceholders.getExpansion(this).register();
         }
