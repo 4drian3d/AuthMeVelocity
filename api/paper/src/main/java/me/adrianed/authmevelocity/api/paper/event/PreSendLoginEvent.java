@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Event executed before a player is sent to another server after being logged in
- * <p>Here you have the possibility to cancel the player's sending
+ * <p>Here you have the possibility to cancel the player's sending</p>
 */
-public class PreSendLoginEvent extends PlayerEvent implements Cancellable {
+public final class PreSendLoginEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();
     private boolean isCancelled = false;
 

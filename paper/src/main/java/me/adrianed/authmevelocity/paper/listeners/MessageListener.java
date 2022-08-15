@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
+import me.adrianed.authmevelocity.api.paper.event.LoginByProxyEvent;
 import me.adrianed.authmevelocity.paper.AuthMeVelocityPlugin;
 
 import fr.xephi.authme.api.v3.AuthMeApi;
@@ -35,6 +36,7 @@ public class MessageListener implements PluginMessageListener {
             final String msg = input.readUTF();
             if ("LOGIN".equals(msg)) {
                 plugin.logDebug("PluginMessage | Login Message");
+                new LoginByProxyEvent(player).callEvent();
                 AuthMeApi.getInstance().forceLogin(player);
             }
         }
