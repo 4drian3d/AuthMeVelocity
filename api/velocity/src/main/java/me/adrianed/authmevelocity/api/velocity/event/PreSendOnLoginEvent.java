@@ -3,6 +3,7 @@ package me.adrianed.authmevelocity.api.velocity.event;
 import java.util.Objects;
 
 import com.velocitypowered.api.event.ResultedEvent;
+import com.velocitypowered.api.event.annotation.AwaitingEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 
@@ -10,8 +11,12 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Event to be executed just before sending a player to another server after login/registration.
- * Here you have the ability to deny the event.
+ * 
+ * <p>AuthMeVelocity will wait for the execution of this event to perform the given action,
+ * which means that you can modify the server to which the player will connect
+ * or if the player should not be sent to any server after being logged in</p>
  */
+@AwaitingEvent
 public final class PreSendOnLoginEvent implements ResultedEvent<ServerResult> {
     private ServerResult result;
     private final Player player;
@@ -45,18 +50,11 @@ public final class PreSendOnLoginEvent implements ResultedEvent<ServerResult> {
         return this.actualserver;
     }
 
-    /**
-     * Get the result of the event
-     */
     @Override
     public @NotNull ServerResult getResult() {
         return this.result;
     }
 
-    /**
-     * Set the result of the event
-     * @param newResult the new result
-     */
     @Override
     public void setResult(@NotNull ServerResult newResult) {
         this.result = Objects.requireNonNull(newResult);
