@@ -18,6 +18,7 @@ tasks {
     shadowJar {
         relocate("net.byteflux.libby", "me.adrianed.authmevelocity.libs.libby")
         relocate("org.spongepowered", "me.adrianed.authmevelocity.libs.sponge")
+        relocate("io.leangen.geantyref", "me.adrianed.authmevelocity.libs.geantyref")
     }
     compileJava {
         options.encoding = Charsets.UTF_8.name()
@@ -31,4 +32,5 @@ java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 blossom {
     replaceTokenIn("src/main/java/me/adrianed/authmevelocity/common/Constants.java")
     replaceToken("{version}", project.version)
+    replaceToken("{description}", project.description)
 }
