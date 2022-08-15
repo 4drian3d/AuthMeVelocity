@@ -25,6 +25,7 @@ bukkit {
     main = "me.adrianed.authmevelocity.paper.AuthMeVelocityPaper"
     apiVersion = "1.13"
     website = "https://github.com/4drian3d/AuthMeVelocity"
+    description = project.description as String
     authors = listOf("xQuickGlare", "4drian3d")
     softDepend = listOf("MiniPlaceholders")
     depend = listOf("AuthMe")

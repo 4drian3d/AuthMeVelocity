@@ -43,8 +43,9 @@ import java.util.UUID;
     id = "authmevelocity",
     name = "AuthMeVelocity",
     url = "https://github.com/4drian3d/AuthMeVelocity",
-    description = "This plugin adds the support for AuthMeReloaded to Velocity",
+    description = Constants.DESCRIPTION,
     version = Constants.VERSION,
+    authors = {"xQuickGlare", "4drian3d"},
     dependencies = {
         @Dependency(
             id = "miniplaceholders",
