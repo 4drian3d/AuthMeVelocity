@@ -1,4 +1,9 @@
-  
+
+.gradle/
+/.idea/
+build/
+bin/
+
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -19,3 +24,4 @@ buildNumber.properties
 .vscode/ 
 
 *.class
+.gitpod.yml
