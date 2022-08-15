@@ -61,9 +61,10 @@ public class AuthmeUtils {
                 Optional<RegisteredServer> server;
                 if (servers.size() == 1) {
                     server = proxy.getServer(servers.get(0));
-                    if (server.isPresent()) {
-                        yield Pair.of(server.get().getServerInfo().getName(), server.get());
-                    }
+                    // It is nonsense to make so many attempts if there are a single server
+                    yield Pair.of(
+                        server.map(sv -> sv.getServerInfo().getName()).orElse(null),
+                        server.orElse(null));
                 }
                 for (int i = 0; i < attempts; i++) {
                     int value = RANDOM.nextInt(servers.size());
