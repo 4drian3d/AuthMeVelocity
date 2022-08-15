@@ -5,7 +5,6 @@ plugins {
 java {
     withSourcesJar()
     withJavadocJar()
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 dependencies {
@@ -13,10 +12,6 @@ dependencies {
 }
 
 tasks {
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
-    }
     javadoc {
         options.encoding = Charsets.UTF_8.name()
         (options as StandardJavadocDocletOptions).links(

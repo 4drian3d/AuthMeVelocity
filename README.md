@@ -4,13 +4,12 @@ This plugin adds the support for [Velocity](https://velocitypowered.com/) to [Au
 ## Requirements
 - Paper, Airplane or Purpur 1.13+
 - Velocity 3.1.2+
-- Java 11+
+- Java 17+
 
 ## Setup
 1. Download the latest release of the plugin [link](https://github.com/4drian3d/AuthMeVelocity/releases)
-2. Put the jar that ends with "-proxy" in Velocity's plugins folder
-3. Put the jar that ends with "-spigot" in the Spigot servers that contains AuthMe
-4. Start the Velocity proxy and set up the config.yml with the auth servers
+2. Put the plugin in the Velocity plugins folder and on all your Auth servers that have AuthMe installed.
+4. Start the Velocity proxy and set up the config.conf with the auth servers.
 
 ## Plugin API
 Check the plugin API [here](https://github.com/4drian3d/AuthMeVelocity/wiki/Plugin-API)

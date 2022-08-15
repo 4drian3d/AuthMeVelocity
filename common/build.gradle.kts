@@ -4,6 +4,7 @@ plugins {
 }
 
 repositories {
+    mavenCentral()
     maven("https://repo.alessiodp.com/releases/")
 }
 
@@ -20,14 +21,7 @@ tasks {
         relocate("org.spongepowered", "me.adrianed.authmevelocity.libs.sponge")
         relocate("io.leangen.geantyref", "me.adrianed.authmevelocity.libs.geantyref")
     }
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-
-        options.release.set(17)
-    }
 }
-
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 
 blossom {
     replaceTokenIn("src/main/java/me/adrianed/authmevelocity/common/Constants.java")

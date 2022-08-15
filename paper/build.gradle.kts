@@ -1,5 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.5.2"
     id("com.github.johnrengelman.shadow") version "7.1.2"
@@ -38,12 +36,5 @@ tasks {
         relocate("net.byteflux.libby", "me.adrianed.authmevelocity.libs.libby")
         configurations = listOf(project.configurations.shadow.get())
     }
-
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-
-        options.release.set(17)
-    }
 }
 
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))

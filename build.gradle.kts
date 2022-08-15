@@ -12,9 +12,16 @@ repositories {
 allprojects {
     apply<JavaPlugin>()
     repositories {
-        mavenCentral()
         maven("https://repo.papermc.io/repository/maven-public/")
     }
+
+    tasks.compileJava {
+        options.encoding = Charsets.UTF_8.name()
+
+        options.release.set(17)
+    }
+
+    java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 dependencies {
@@ -45,4 +52,3 @@ tasks {
     }
 }
 
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
