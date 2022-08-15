@@ -30,6 +30,8 @@ tasks {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         archiveFileName.set("AuthMeVelocity.jar")
         configurations = listOf(project.configurations.shadow.get())
+        exclude("net/byteflux/libby/**/")
+        exclude("org/bstats/**/")
     }
 
     build {
