@@ -10,7 +10,7 @@ repositories {
 }
 
 allprojects {
-    apply(plugin = "java")
+    apply<JavaPlugin>()
     repositories {
         mavenCentral()
         maven("https://repo.papermc.io/repository/maven-public/")
