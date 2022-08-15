@@ -45,8 +45,6 @@ public class ConfigurationContainer<C> {
             try {
                 final CommentedConfigurationNode node = loader.load();
                 newConfig = node.get(clazz);
-                node.set(clazz, config);
-                loader.save(node);
                 return true;
             } catch (ConfigurateException exception) {
                 logger.error("Could not load config.conf file", exception);
