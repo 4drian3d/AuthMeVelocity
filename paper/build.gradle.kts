@@ -20,7 +20,7 @@ dependencies {
 
 bukkit {
     name = "AuthMeVelocity"
-    main = "me.adrianed.authmevelocity.paper.AuthMeVelocityPaper"
+    main = "me.adrianed.authmevelocity.paper.AuthMeVelocityPlugin"
     apiVersion = "1.13"
     website = "https://github.com/4drian3d/AuthMeVelocity"
     description = project.description as String
