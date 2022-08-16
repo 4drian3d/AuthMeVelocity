@@ -9,7 +9,6 @@ import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
-
 public final class Loader {
     private Loader() {}
     public static <C> ConfigurationContainer<C> loadMainConfig(Path path, Class<C> clazz, Logger logger) {

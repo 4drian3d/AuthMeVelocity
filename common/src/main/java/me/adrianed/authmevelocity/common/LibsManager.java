@@ -18,6 +18,8 @@ public final class LibsManager {
             = new Relocation("org{}spongepowered", "me.adrianed.authmevelocity.libs.sponge");
         final Relocation geantyrefRelocation =
             new Relocation("io{}leangen{}geantyref", "me.adrianed.authmevelocity.libs.geantyref");
+        final Relocation typesafeRelocation
+            = new Relocation("com{}typesafe", "me.adrianed.authmevelocity.libs.config");
         final Library hocon = Library.builder()
             .groupId("org{}spongepowered")
             .artifactId("configurate-hocon")
@@ -25,6 +27,7 @@ public final class LibsManager {
             .id("configurate-hocon")
             .relocate(configurateRelocation)
             .relocate(geantyrefRelocation)
+            .relocate(typesafeRelocation)
             .build();
         final Library confCore = Library.builder()
             .groupId("org{}spongepowered")
@@ -41,7 +44,14 @@ public final class LibsManager {
             .id("geantyref")
             .relocate(geantyrefRelocation)
             .build();
+        final Library typesafe = Library.builder()
+            .groupId("com{}typesafe")
+            .artifactId("config")
+            .version("1.4.2")
+            .relocate(typesafeRelocation)
+            .build();
 
+        manager.loadLibrary(typesafe);
         manager.loadLibrary(confCore);
         manager.loadLibrary(hocon);
         manager.loadLibrary(geantyref);
