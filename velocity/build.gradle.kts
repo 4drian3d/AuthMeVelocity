@@ -12,7 +12,7 @@ dependencies {
     compileOnly(project(":authmevelocity-common"))
     compileOnly(project(":authmevelocity-api-velocity"))
     compileOnly("com.velocitypowered:velocity-api:3.1.2-SNAPSHOT")
-    compileOnly("com.github.4drian3d:MiniPlaceholders:1.2.1")
+    compileOnly("com.github.4drian3d:MiniPlaceholders:1.3.1")
     compileOnly("com.github.games647:fastlogin.velocity:1.11-SNAPSHOT")
     shadow("net.byteflux:libby-velocity:1.1.5")
     shadow("org.bstats:bstats-velocity:3.0.0")
