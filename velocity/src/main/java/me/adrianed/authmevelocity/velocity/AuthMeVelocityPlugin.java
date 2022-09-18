@@ -57,14 +57,14 @@ import java.util.UUID;
         )
     }
 )
-public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
+public class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     public static final ChannelIdentifier AUTHMEVELOCITY_CHANNEL
         = MinecraftChannelIdentifier.create("authmevelocity", "main");
     private final ProxyServer proxy;
     private final Logger logger;
     private final Path pluginDirectory;
     private final Metrics.Factory metricsFactory;
-    private ConfigurationContainer<ProxyConfiguration> config;
+    protected ConfigurationContainer<ProxyConfiguration> config;
 
     protected final Set<UUID> loggedPlayers = ConcurrentHashMap.newKeySet();
 

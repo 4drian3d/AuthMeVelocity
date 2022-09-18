@@ -21,7 +21,7 @@ public class AuthmeCommand {
                 .executes(cmd -> {
                     CommandSource source = cmd.getSource();
                     plugin.config().reload().thenAcceptAsync(result -> {
-                        if(result) {
+                        if (result.booleanValue()) {
                             plugin.sendInfoMessage();
                             source.sendMessage(MiniMessage.miniMessage().deserialize(
                                 "<aqua>AuthmeVelocity <green>has been successfully reloaded"));

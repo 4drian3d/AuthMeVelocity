@@ -17,6 +17,16 @@ dependencies {
     shadow("net.byteflux:libby-velocity:1.1.5")
     shadow("org.bstats:bstats-velocity:3.0.0")
     annotationProcessor("com.velocitypowered:velocity-api:3.1.2-SNAPSHOT")
+
+    testImplementation(platform("org.junit:junit-bom:5.8.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.assertj:assertj-core:3.23.1")
+    testImplementation("com.github.4drian3d:MiniPlaceholders:1.3.1")
+    testImplementation("com.velocitypowered:velocity-api:3.1.2-SNAPSHOT")
+    testImplementation("org.spongepowered:configurate-hocon:4.1.2")
+    testImplementation(project(":authmevelocity-common"))
+    testImplementation(project(":authmevelocity-api-velocity"))
+    testCompileOnly("org.bstats:bstats-velocity:3.0.0")
 }
 
 tasks {
@@ -25,6 +35,13 @@ tasks {
         relocate("net.byteflux.libby", "me.adrianed.authmevelocity.libs.libby")
         relocate("org.bstats", "me.adrianed.authmevelocity.libs.bstats")
         configurations = listOf(project.configurations.shadow.get())
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events("passed", "failed")
+        }
     }
 }
 
