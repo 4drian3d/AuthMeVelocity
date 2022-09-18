@@ -26,7 +26,9 @@ dependencies {
     testImplementation("org.spongepowered:configurate-hocon:4.1.2")
     testImplementation(project(":authmevelocity-common"))
     testImplementation(project(":authmevelocity-api-velocity"))
-    testCompileOnly("org.bstats:bstats-velocity:3.0.0")
+    // wtf junit???
+    testImplementation("org.bstats:bstats-velocity:3.0.0")
+    testImplementation("net.byteflux:libby-velocity:1.1.5")
 }
 
 tasks {
