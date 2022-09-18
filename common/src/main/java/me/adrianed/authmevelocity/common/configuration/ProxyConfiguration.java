@@ -1,5 +1,6 @@
 package me.adrianed.authmevelocity.common.configuration;
 
+import org.jetbrains.annotations.VisibleForTesting;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
@@ -120,6 +121,11 @@ public class ProxyConfiguration {
         private boolean ignoreSignedPlayers = false;
         public boolean ignoreSignedPlayers() {
             return this.ignoreSignedPlayers;
+        }
+
+        @VisibleForTesting
+        public void ignoreSignedPlayers(boolean ignore) {
+            this.ignoreSignedPlayers = ignore;
         }
     }
 
