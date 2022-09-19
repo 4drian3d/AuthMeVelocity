@@ -17,6 +17,7 @@ public class AuthmeCommand {
     public static void register(AuthMeVelocityPlugin plugin, CommandManager manager) {
         LiteralCommandNode<CommandSource> command = LiteralArgumentBuilder.<CommandSource>literal("authmevelocity")
             .requires(src -> src.hasPermission("authmevelocity.commands"))
+            //TODO: "authmevelocity" execution
             .then(LiteralArgumentBuilder.<CommandSource>literal("reload")
                 .executes(cmd -> {
                     CommandSource source = cmd.getSource();
