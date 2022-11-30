@@ -42,7 +42,7 @@ public final class PreSendLoginEvent extends PlayerEvent implements Cancellable 
      * Obtain the handlerlist of this event
      * @return the handlerlist
      */
-    public static HandlerList getHandlerList() {
+    public static @NotNull HandlerList getHandlerList() {
         return HANDLERS;
     }
 }

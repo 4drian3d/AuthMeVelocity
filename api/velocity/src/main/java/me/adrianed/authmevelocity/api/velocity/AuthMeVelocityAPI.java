@@ -30,14 +30,14 @@ public interface AuthMeVelocityAPI {
     /**
      * Adds a player to the list of logged in players
      * @param player the new logged player
-     * @return if the player was succesfully added
+     * @return if the player was successfully added
      */
     boolean addPlayer(@NotNull Player player);
 
     /**
      * Removes a player from the list of logged-in players
      * @param player the unlogged player
-     * @return if the player was succesfully removed
+     * @return if the player was successfully removed
      */
     boolean removePlayer(@NotNull Player player);
 
@@ -69,9 +69,9 @@ public interface AuthMeVelocityAPI {
     boolean isAuthServer(@NotNull ServerConnection connection);
 
     /**
-     * Checks if a string is an name of an auth server
+     * Checks if a string is a name of an auth server
      * @param server the server name
-     * @return if the server is an auth serverr
+     * @return if the server is an auth server
      */
     boolean isAuthServer(@NotNull String server);
 }

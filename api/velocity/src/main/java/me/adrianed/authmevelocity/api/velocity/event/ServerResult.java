@@ -30,7 +30,7 @@ public final class ServerResult implements Result {
      * @param server the resulted server
      * @return A ServerResult with allowed result and custom server result
      */
-    public static final ServerResult allowed(RegisteredServer server) {
+    public static ServerResult allowed(RegisteredServer server) {
         return new ServerResult(server);
     }
 
@@ -39,7 +39,7 @@ public final class ServerResult implements Result {
      * 
      * @return A ServerResult with denied result and null server
      */
-    public static final ServerResult denied() {
+    public static ServerResult denied() {
         return DENIED;
     }
     

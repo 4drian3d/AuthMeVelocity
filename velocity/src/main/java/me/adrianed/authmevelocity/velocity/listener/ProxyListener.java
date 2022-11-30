@@ -46,7 +46,7 @@ public final class ProxyListener {
         }
 
         if (canBeIgnored(player)) {
-            plugin.logDebug("CommandexecuteEvent | Ignored signed player");
+            plugin.logDebug("CommandExecuteEvent | Ignored signed player");
             continuation.resume();
             return;
         }
@@ -101,7 +101,7 @@ public final class ProxyListener {
             }
         }
 
-        plugin.logDebug("TabCompleteEvent | Not allowed tabcompletion");
+        plugin.logDebug("TabCompleteEvent | Not allowed tab-completion");
         event.getSuggestions().clear();
     }
 

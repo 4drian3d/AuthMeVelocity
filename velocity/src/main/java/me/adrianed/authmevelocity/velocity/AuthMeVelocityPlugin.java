@@ -28,6 +28,7 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import net.byteflux.libby.VelocityLibraryManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
@@ -66,7 +67,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     private final Metrics.Factory metricsFactory;
     private ConfigurationContainer<ProxyConfiguration> config;
 
-    protected final Set<UUID> loggedPlayers = ConcurrentHashMap.newKeySet();
+    final Set<UUID> loggedPlayers = ConcurrentHashMap.newKeySet();
 
     @Inject
     public AuthMeVelocityPlugin(
@@ -123,7 +124,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         this.sendInfoMessage();
     }
 
-    protected ProxyServer getProxy(){
+    ProxyServer getProxy(){
         return this.proxy;
     }
 
@@ -144,47 +145,47 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     }
 
     @Override
-    public boolean isLogged(Player player){
+    public boolean isLogged(@NotNull Player player){
         return loggedPlayers.contains(player.getUniqueId());
     }
 
     @Override
-    public boolean isNotLogged(Player player){
+    public boolean isNotLogged(@NotNull Player player){
         return !loggedPlayers.contains(player.getUniqueId());
     }
 
     @Override
-    public boolean addPlayer(Player player){
+    public boolean addPlayer(@NotNull Player player){
         return loggedPlayers.add(player.getUniqueId());
     }
 
     @Override
-    public boolean removePlayer(Player player){
+    public boolean removePlayer(@NotNull Player player){
         return loggedPlayers.remove(player.getUniqueId());
     }
 
     @Override
-    public void removePlayerIf(Predicate<Player> predicate){
+    public void removePlayerIf(@NotNull Predicate<Player> predicate){
         loggedPlayers.removeIf(uuid -> predicate.test(getProxy().getPlayer(uuid).orElse(null)));
     }
 
     @Override
-    public boolean isInAuthServer(Player player){
+    public boolean isInAuthServer(@NotNull Player player){
         return player.getCurrentServer().map(this::isAuthServer).orElse(false);
     }
 
     @Override
-    public boolean isAuthServer(RegisteredServer server){
-        return config.get().authServers().contains(server.getServerInfo().getName());
+    public boolean isAuthServer(@NotNull RegisteredServer server){
+        return isAuthServer(server.getServerInfo().getName());
     }
 
     @Override
-    public boolean isAuthServer(ServerConnection connection){
-        return config.get().authServers().contains(connection.getServerInfo().getName());
+    public boolean isAuthServer(@NotNull ServerConnection connection){
+        return isAuthServer(connection.getServerInfo().getName());
     }
 
     @Override
-    public boolean isAuthServer(String server){
+    public boolean isAuthServer(@NotNull String server){
         return config.get().authServers().contains(server);
     }
 

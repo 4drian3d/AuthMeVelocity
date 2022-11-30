@@ -10,9 +10,9 @@ repositories {
 
 dependencies {
     compileOnly("org.spongepowered:configurate-hocon:4.1.2")
-    compileOnly("org.slf4j:slf4j-api:2.0.4")
+    compileOnly("org.slf4j:slf4j-api:2.0.5")
     compileOnly("net.byteflux:libby-core:1.1.5")
-    compileOnly("net.kyori:adventure-api:4.11.0")
+    compileOnly("net.kyori:adventure-api:4.12.0")
 }
 
 tasks {

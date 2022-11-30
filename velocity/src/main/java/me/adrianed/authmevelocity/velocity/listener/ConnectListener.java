@@ -19,11 +19,11 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import me.adrianed.authmevelocity.velocity.AuthMeVelocityPlugin;
 import me.adrianed.authmevelocity.velocity.utils.AuthmeUtils;
 
-public class ConnectListener {
+public final class ConnectListener {
     private final ProxyServer proxy;
     private final Logger logger;
     private final AuthMeVelocityPlugin plugin;
-    
+
     public ConnectListener(AuthMeVelocityPlugin plugin, ProxyServer proxy, Logger logger) {
         this.plugin = plugin;
         this.logger = logger;
@@ -32,14 +32,14 @@ public class ConnectListener {
 
     @Subscribe(order = PostOrder.LATE)
     public void onInitialServer(PlayerChooseInitialServerEvent event, Continuation continuation){
-        if(!plugin.config().get().ensureAuthServer().ensureFirstServerIsAuthServer()) {
+        if (!plugin.config().get().ensureAuthServer().ensureFirstServerIsAuthServer()) {
             continuation.resume();
             plugin.logDebug("PlayerChooseInitialServerEvent | Not enabled");
             return;
         }
 
         Optional<RegisteredServer> optionalSV = event.getInitialServer();
-        if(optionalSV.isPresent() && plugin.isAuthServer(optionalSV.get())){
+        if (optionalSV.isPresent() && plugin.isAuthServer(optionalSV.get())){
             continuation.resume();
             plugin.logDebug("PlayerChooseInitialServerEvent | Player is in auth server");
             return;
@@ -66,13 +66,14 @@ public class ConnectListener {
         }
 
         // this should be present, "event.getResult().isAllowed()" is the "isPresent" check
-        if(!plugin.isAuthServer(event.getResult().getServer().orElse(null))) {
+        if (!plugin.isAuthServer(event.getResult().getServer().orElseThrow())) {
             plugin.logDebug("ServerPreConnectEvent | Server is not an auth server");
             event.setResult(ServerPreConnectEvent.ServerResult.denied());
         }
         continuation.resume();
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @Subscribe
     public void onServerPostConnect(ServerPostConnectEvent event) {
         final Player player = event.getPlayer();

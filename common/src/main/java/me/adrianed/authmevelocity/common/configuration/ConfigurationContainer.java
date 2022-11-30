@@ -1,7 +1,6 @@
 package me.adrianed.authmevelocity.common.configuration;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.spongepowered.configurate.CommentedConfigurationNode;
@@ -30,16 +29,11 @@ public class ConfigurationContainer<C> {
         return this.safeReload();
     }
 
-    public void setValues(Consumer<C> consumer) {
-        consumer.accept(this.config);
-        this.safeReload();
-    }
-
     public C get() {
         return this.config;
     }
 
-    private final CompletableFuture<Boolean> safeReload() {
+    private CompletableFuture<Boolean> safeReload() {
         return CompletableFuture.supplyAsync(() -> {
             C newConfig = null;
             try {

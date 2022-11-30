@@ -20,7 +20,7 @@ public class MessageListener implements PluginMessageListener {
     }
 
     @Override
-    public void onPluginMessageReceived(@NotNull String identifier, @NotNull Player player, @NotNull byte[] bytes) {
+    public void onPluginMessageReceived(@NotNull String identifier, @NotNull Player player, byte @NotNull [] bytes) {
         if (!identifier.equals("authmevelocity")) {
             plugin.logDebug("PluginMessage | Not AuthMeVelocity identifier");
             return;
@@ -28,10 +28,11 @@ public class MessageListener implements PluginMessageListener {
 
         plugin.logDebug("PluginMessage | AuthMeVelocity identifier");
 
+        @SuppressWarnings("UnstableApiUsage")
         final ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
-        final String subchannel = input.readUTF();
+        final String subChannel = input.readUTF();
 
-        if ("main".equals(subchannel)) {
+        if ("main".equals(subChannel)) {
             plugin.logDebug("PluginMessage | Main Subchannel");
             final String msg = input.readUTF();
             if ("LOGIN".equals(msg)) {
