@@ -25,7 +25,7 @@ public final class ProxyListener {
     @Subscribe
     public EventTask onDisconnect(final DisconnectEvent event) {
         if (event.getLoginStatus() == DisconnectEvent.LoginStatus.CONFLICTING_LOGIN) {
-            return EventTask.async(() -> {});
+            return null;
         }
 
         return EventTask.async(() -> plugin.removePlayer(event.getPlayer()));
