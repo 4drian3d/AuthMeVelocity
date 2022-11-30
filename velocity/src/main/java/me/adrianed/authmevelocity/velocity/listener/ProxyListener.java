@@ -24,6 +24,10 @@ public final class ProxyListener {
 
     @Subscribe
     public EventTask onDisconnect(final DisconnectEvent event) {
+        if (event.getLoginStatus() == DisconnectEvent.LoginStatus.CONFLICTING_LOGIN) {
+            return EventTask.async(() -> {});
+        }
+
         return EventTask.async(() -> plugin.removePlayer(event.getPlayer()));
     }
 
@@ -76,7 +80,7 @@ public final class ProxyListener {
         if (canBeIgnored(event.getPlayer())) {
             plugin.logDebug("PlayerChatEvent | Ignored signed player");
             continuation.resume();
-            return; 
+            return;
         }
 
         event.setResult(PlayerChatEvent.ChatResult.denied());
@@ -113,5 +117,5 @@ public final class ProxyListener {
             && player.getProtocolVersion().compareTo(ProtocolVersion.MINECRAFT_1_19_1) >= 0
             && plugin.config().get().advanced().ignoreSignedPlayers();
     }
-    
+
 }
