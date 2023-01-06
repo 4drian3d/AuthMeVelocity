@@ -10,6 +10,7 @@ import fr.xephi.authme.events.RegisterEvent;
 import fr.xephi.authme.events.UnregisterByAdminEvent;
 import fr.xephi.authme.events.UnregisterByPlayerEvent;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,9 +28,13 @@ public final class AuthMeListener implements Listener {
         final Player player = event.getPlayer();
         plugin.logDebug("LoginEvent | Start");
 
-        if (new PreSendLoginEvent(player).callEvent()) {
+        // I hate this, but... Spigot compatibility ¯\_(ツ)_/¯
+        final var preSendLoginEvent = new PreSendLoginEvent(player);
+        Bukkit.getPluginManager().callEvent(preSendLoginEvent);
+
+        if (!preSendLoginEvent.isCancelled()) {
             plugin.sendMessageToProxy(player, MessageType.LOGIN, player.getName());
-            plugin.getSLF4JLogger().info("LoginEvent | PreSendLoginEvent allowed");
+            plugin.getLogger().info("LoginEvent | PreSendLoginEvent allowed");
         }
     }
 

@@ -10,25 +10,28 @@ import com.velocitypowered.api.command.CommandSource;
 
 import me.adrianed.authmevelocity.velocity.AuthMeVelocityPlugin;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.slf4j.Logger;
 
 public class AuthmeCommand {
     private AuthmeCommand() {}
 
-    public static void register(AuthMeVelocityPlugin plugin, CommandManager manager) {
+    public static void register(AuthMeVelocityPlugin plugin, CommandManager manager, Logger logger) {
         LiteralCommandNode<CommandSource> command = LiteralArgumentBuilder.<CommandSource>literal("authmevelocity")
             .requires(src -> src.hasPermission("authmevelocity.commands"))
             .then(LiteralArgumentBuilder.<CommandSource>literal("reload")
                 .executes(cmd -> {
                     CommandSource source = cmd.getSource();
-                    plugin.config().reload().thenAcceptAsync(result -> {
-                        if(result) {
+                    plugin.config().reload().handleAsync((v, ex) -> {
+                        if (ex == null) {
                             plugin.sendInfoMessage();
                             source.sendMessage(MiniMessage.miniMessage().deserialize(
-                                "<aqua>AuthmeVelocity <green>has been successfully reloaded"));
+                                    "<aqua>AuthmeVelocity <green>has been successfully reloaded"));
                         } else {
                             source.sendMessage(MiniMessage.miniMessage().deserialize(
-                                "<dark_red>There was an error while reloading the configuration. <red>Check the server console"));
+                                    "<dark_red>There was an error while reloading the configuration. <red>Check the server console"));
+                            logger.error(ex.getMessage(), ex.getCause());
                         }
+                        return null;
                     });
                     return Command.SINGLE_SUCCESS;
                 })

@@ -3,6 +3,8 @@ package me.adrianed.authmevelocity.paper.listeners;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
+import me.adrianed.authmevelocity.common.MessageType;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
@@ -35,9 +37,9 @@ public class MessageListener implements PluginMessageListener {
         if ("main".equals(subChannel)) {
             plugin.logDebug("PluginMessage | Main Subchannel");
             final String msg = input.readUTF();
-            if ("LOGIN".equals(msg)) {
+            if (MessageType.LOGIN.toString().equals(msg)) {
                 plugin.logDebug("PluginMessage | Login Message");
-                new LoginByProxyEvent(player).callEvent();
+                Bukkit.getPluginManager().callEvent(new LoginByProxyEvent(player));
                 AuthMeApi.getInstance().forceLogin(player);
             }
         }

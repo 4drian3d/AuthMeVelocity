@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import net.byteflux.libby.BukkitLibraryManager;
 
+import java.util.logging.Level;
+
 public final class AuthMeVelocityPlugin extends JavaPlugin {
     private static final String CHANNEL = "authmevelocity:main";
 
@@ -24,11 +26,15 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        final LibsManager libraries
-            = new LibsManager(new BukkitLibraryManager(this));
-        libraries.loadLibraries();
+        new LibsManager(new BukkitLibraryManager(this)).loadLibraries();
 
-        this.config = Loader.loadMainConfig(getDataFolder().toPath(), PaperConfiguration.class, getSLF4JLogger());
+        try {
+            this.config = Loader.loadMainConfig(getDataFolder().toPath(), PaperConfiguration.class);
+        } catch (Exception e) {
+            getLogger().log(Level.SEVERE, "Could not load config.conf file", e);
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
         this.getServer().getMessenger().registerIncomingPluginChannel(this, CHANNEL, new MessageListener(this));
@@ -38,7 +44,7 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
             AuthmePlaceholders.getExpansion().register();
         }
 
-        this.getSLF4JLogger().info("AuthMeVelocity enabled");
+        this.getLogger().info("AuthMeVelocity enabled");
     }
 
     @Override
@@ -46,10 +52,11 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
         this.getServer().getMessenger().unregisterOutgoingPluginChannel(this, CHANNEL);
         this.getServer().getMessenger().unregisterIncomingPluginChannel(this, CHANNEL);
 
-        this.getSLF4JLogger().info("AuthmeVelocity disabled");
+        this.getLogger().info("AuthMeVelocity disabled");
     }
 
     public void sendMessageToProxy(final Player player, @NotNull MessageType type, @NotNull String playername) {
+        @SuppressWarnings("UnstableApiUsage")
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF(type.toString());
         out.writeUTF(playername);
@@ -63,13 +70,9 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
         }
     }
 
-    public ConfigurationContainer<PaperConfiguration> config() {
-        return this.config;
-    }
-
     public void logDebug(String debug) {
         if (config.get().debug()) {
-            getSLF4JLogger().info("[DEBUG] {}", debug);
+            getLogger().log(Level.INFO, "[DEBUG] {}", debug);
         }
     }
 }
