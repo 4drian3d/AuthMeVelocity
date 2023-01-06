@@ -90,7 +90,13 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
                     logger, pluginDirectory, proxy.getPluginManager(), this));
         libraries.loadLibraries();
 
-        this.config = Loader.loadMainConfig(pluginDirectory, ProxyConfiguration.class, logger);
+        try {
+            this.config = Loader.loadMainConfig(pluginDirectory, ProxyConfiguration.class);
+        } catch (Exception e) {
+            logger.error("Could not load config.conf file", e);
+            return;
+        }
+
         logDebug("Loaded plugin libraries");
 
         final int pluginId = 16128;
@@ -105,21 +111,21 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         ).forEach(listener ->
             proxy.getEventManager().register(this, listener));
 
-        boolean fastlogin = proxy.getPluginManager().isLoaded("fastlogin");
+        final boolean fastlogin = proxy.getPluginManager().isLoaded("fastlogin");
         metrics.addCustomChart(new SimplePie("fastlogin_compatibility", () -> Boolean.toString(fastlogin)));
         if (fastlogin) {
             logDebug("Register FastLogin compatibility");
             proxy.getEventManager().register(this, new FastLoginListener(proxy, this));
         }
 
-        boolean miniplaceholders = proxy.getPluginManager().isLoaded("miniplaceholders");
+        final boolean miniplaceholders = proxy.getPluginManager().isLoaded("miniplaceholders");
         metrics.addCustomChart(new SimplePie("miniplaceholders_compatibility", () -> Boolean.toString(miniplaceholders)));
         if (miniplaceholders) {
             logDebug("Register MiniPlaceholders compatibility");
             AuthMePlaceholders.getExpansion(this).register();
         }
 
-        AuthmeCommand.register(this, proxy.getCommandManager());
+        AuthmeCommand.register(this, proxy.getCommandManager(), logger);
 
         this.sendInfoMessage();
     }
