@@ -5,6 +5,6 @@ public final class Constants {
 
     public static final String VERSION = "{version}";
     public static final String DESCRIPTION = "{description}";
-    public static final String CONFIGURATE = "4.1.2";
-    public static final String GEANTYREF = "1.3.13";
+    public static final String CONFIGURATE = "{configurate}";
+    public static final String GEANTYREF = "{geantyref}";
 }

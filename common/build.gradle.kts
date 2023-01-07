@@ -1,6 +1,7 @@
 plugins {
-    id("net.kyori.blossom") version "1.3.1"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    alias(libs.plugins.blossom)
+    // Required to shadow packages
+    alias(libs.plugins.shadow)
 }
 
 repositories {
@@ -9,9 +10,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spongepowered:configurate-hocon:4.1.2")
-    compileOnly("net.byteflux:libby-core:1.1.5")
-    compileOnly("net.kyori:adventure-api:4.12.0")
+    compileOnly(libs.configurate.hocon)
+    compileOnly(libs.libby.core)
+    compileOnly(libs.adventure)
 }
 
 tasks {
@@ -26,4 +27,6 @@ blossom {
     replaceTokenIn("src/main/java/me/adrianed/authmevelocity/common/Constants.java")
     replaceToken("{version}", project.version)
     replaceToken("{description}", project.description)
+    replaceToken("{configurate}", libs.versions.configurate.get())
+    replaceToken("{geantyref}", libs.versions.geantyref.get())
 }

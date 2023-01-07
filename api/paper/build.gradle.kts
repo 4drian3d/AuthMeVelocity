@@ -8,17 +8,19 @@ java {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.19.1-R0.1-SNAPSHOT")
+    compileOnly(libs.paper)
 }
 
 tasks {
     javadoc {
-        options.encoding = Charsets.UTF_8.name()
-        (options as StandardJavadocDocletOptions).links(
-            "https://jd.adventure.kyori.net/api/4.11.0/",
-            "https://jd.adventure.kyori.net/text-minimessage/4.11.0/",
-            "https://jd.papermc.io/paper/1.19/"
-        )
+        (options as StandardJavadocDocletOptions).run {
+            encoding = Charsets.UTF_8.name()
+            links(
+                "https://jd.adventure.kyori.net/api/4.11.0/",
+                "https://jd.adventure.kyori.net/text-minimessage/4.11.0/",
+                "https://jd.papermc.io/paper/1.19/"
+            )
+        }
     }  
 }
 
