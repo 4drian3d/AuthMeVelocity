@@ -16,3 +16,6 @@ Check the plugin API [here](https://github.com/4drian3d/AuthMeVelocity/wiki/Plug
 
 ## Configuration
 Check the plugin configuration [here](https://github.com/4drian3d/AuthMeVelocity/wiki/Configuration)
+
+## Metrics
+[![metrics](https://bstats.org/signatures/velocity/AuthMeVelocity.svg)](https://bstats.org/plugin/velocity/AuthMeVelocity/16128)
