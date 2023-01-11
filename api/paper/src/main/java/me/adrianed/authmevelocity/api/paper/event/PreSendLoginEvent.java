@@ -1,6 +1,5 @@
 package me.adrianed.authmevelocity.api.paper.event;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -17,10 +16,10 @@ public final class PreSendLoginEvent extends PlayerEvent implements Cancellable 
 
     /**
      * Creates a new PreSendLoginEvent
-     * @param player the player to be sended
+     * @param player the player to be sent
      */
     public PreSendLoginEvent(@NotNull Player player) {
-        super(player, !Bukkit.isPrimaryThread());
+        super(player);
     }
 
     @Override
@@ -42,6 +41,7 @@ public final class PreSendLoginEvent extends PlayerEvent implements Cancellable 
      * Obtain the handlerlist of this event
      * @return the handlerlist
      */
+    @SuppressWarnings("unused")
     public static @NotNull HandlerList getHandlerList() {
         return HANDLERS;
     }
