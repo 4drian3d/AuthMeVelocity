@@ -53,7 +53,7 @@ public class PluginMessageListener {
 
         final ByteArrayDataInput input = event.dataAsDataStream();
         final String message = input.readUTF();
-        final MessageType type = MessageType.INDEX.valueOrThrow(
+        final MessageType type = MessageType.valueOf(
             message.toUpperCase(Locale.ROOT));
         final String name = input.readUTF();
         final @Nullable Player player = proxy.getPlayer(name).orElse(null);

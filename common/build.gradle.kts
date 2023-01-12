@@ -12,7 +12,6 @@ repositories {
 dependencies {
     compileOnly(libs.configurate.hocon)
     compileOnly(libs.libby.core)
-    compileOnly(libs.adventure)
 }
 
 tasks {

@@ -22,7 +22,7 @@ bukkit {
     name = "AuthMeVelocity"
     main = "me.adrianed.authmevelocity.paper.AuthMeVelocityPlugin"
     apiVersion = "1.13"
-    website = "https://github.com/4drian3d/AuthMeVelocity"
+    website = project.property("url") as String
     description = project.description as String
     authors = listOf("xQuickGlare", "4drian3d")
     softDepend = listOf("MiniPlaceholders")
