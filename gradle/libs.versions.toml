@@ -36,6 +36,9 @@ bstats-velocity = { group = "org.bstats", name = "bstats-velocity", version.ref 
 
 configurate-hocon = { group = "org.spongepowered", name = "configurate-hocon", version.ref = "configurate" }
 
+build-indra = { module = "net.kyori:indra-common", version.ref = "indra" }
+plugin-shadow = { group = "gradle.plugin.com.github.johnrengelman", name = "shadow", version.ref = "shadow" }
+
 [plugins]
 
 pluginyml-bukkit = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "pluginyml" }

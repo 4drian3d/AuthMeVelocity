@@ -9,3 +9,11 @@ listOf("paper", "velocity").forEach {
     include("authmevelocity-api-$it")
     project(":authmevelocity-api-$it").projectDir = file("api/$it")
 }
+
+pluginManagement {
+    includeBuild("build-logic")
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
