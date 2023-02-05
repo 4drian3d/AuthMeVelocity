@@ -3,9 +3,21 @@ plugins {
 }
 
 repositories {
-    maven("https://repo.codemc.org/repository/maven-public/")
-    maven("https://repo.alessiodp.com/releases/")
-    maven("https://jitpack.io")
+    maven("https://repo.codemc.org/repository/maven-public/") {
+        mavenContent {
+            includeGroup("com.github.games647")
+        }
+    }
+    maven("https://repo.alessiodp.com/releases/"){
+        mavenContent {
+            includeGroup("net.byteflux")
+        }
+    }
+    maven("https://jitpack.io") {
+        mavenContent {
+            includeGroup("com.github.4drian3d")
+        }
+    }
 }
 
 dependencies {

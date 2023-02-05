@@ -4,7 +4,11 @@ plugins {
 }
 
 repositories {
-    maven("https://repo.alessiodp.com/releases/")
+    maven("https://repo.alessiodp.com/releases/") {
+        mavenContent {
+            includeGroup("net.byteflux")
+        }
+    }
 }
 
 allprojects {
