@@ -9,8 +9,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly(project(":authmevelocity-common"))
-    compileOnly(project(":authmevelocity-api-velocity"))
+    compileOnly(projects.authmevelocityCommon)
+    compileOnly(projects.authmevelocityApiVelocity)
     compileOnly(libs.velocity)
     compileOnly(libs.miniplaceholders)
     compileOnly(libs.fastlogin.velocity)

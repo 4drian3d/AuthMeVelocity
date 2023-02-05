@@ -10,8 +10,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly(project(":authmevelocity-common"))
-    compileOnly(project(":authmevelocity-api-paper"))
+    compileOnly(projects.authmevelocityCommon)
+    compileOnly(projects.authmevelocityApiPaper)
     compileOnly(libs.paper)
     compileOnly(libs.authme)
     compileOnly(libs.miniplaceholders)
