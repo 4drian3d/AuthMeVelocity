@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.shadow)
+    id("authmevelocity.spotless")
 }
 
 repositories {

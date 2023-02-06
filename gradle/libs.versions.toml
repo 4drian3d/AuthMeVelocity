@@ -36,7 +36,8 @@ bstats-velocity = { group = "org.bstats", name = "bstats-velocity", version.ref 
 
 configurate-hocon = { group = "org.spongepowered", name = "configurate-hocon", version.ref = "configurate" }
 
-build-indra = { module = "net.kyori:indra-common", version.ref = "indra" }
+build-indra-common = { module = "net.kyori:indra-common", version.ref = "indra" }
+build-indra-spotless = { module = "net.kyori:indra-licenser-spotless", version.ref = "indra" }
 plugin-shadow = { group = "gradle.plugin.com.github.johnrengelman", name = "shadow", version.ref = "shadow" }
 
 [plugins]

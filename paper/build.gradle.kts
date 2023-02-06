@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.pluginyml.bukkit)
     alias(libs.plugins.shadow)
+    id("authmevelocity.spotless")
 }
 
 repositories {

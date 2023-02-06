@@ -4,7 +4,8 @@ plugins {
 
 dependencies {
     implementation(libs.plugin.shadow)
-    implementation(libs.build.indra)
+    implementation(libs.build.indra.common)
+    implementation(libs.build.indra.spotless)
 }
 
 repositories {
