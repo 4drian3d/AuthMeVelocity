@@ -4,11 +4,16 @@ plugins {
 }
 
 repositories {
-    maven("https://repo.alessiodp.com/releases/")
+    maven("https://repo.alessiodp.com/releases/") {
+        mavenContent {
+            includeGroup("net.byteflux")
+        }
+    }
 }
 
 allprojects {
     apply<JavaPlugin>()
+
     repositories {
         maven("https://repo.papermc.io/repository/maven-public/")
     }
@@ -24,8 +29,8 @@ allprojects {
 
 dependencies {
     shadow(project(":authmevelocity-common", "shadow"))
-    shadow(project(":authmevelocity-api-paper"))
-    shadow(project(":authmevelocity-api-velocity"))
+    shadow(projects.authmevelocityApiPaper)
+    shadow(projects.authmevelocityApiVelocity)
     shadow(project(":authmevelocity-velocity", "shadow"))
     shadow(project(":authmevelocity-paper", "shadow"))
 }

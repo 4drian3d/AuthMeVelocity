@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.blossom)
-    // Required to shadow packages
+    // Required to relocate packages
     alias(libs.plugins.shadow)
+    id("authmevelocity.spotless")
 }
 
 repositories {

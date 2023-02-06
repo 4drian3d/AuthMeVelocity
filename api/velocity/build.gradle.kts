@@ -1,5 +1,8 @@
 plugins {
-    `maven-publish`
+    `java-library`
+    alias(libs.plugins.indra)
+    id("authmevelocity.publishing")
+    id("authmevelocity.spotless")
 }
 
 dependencies {
@@ -13,22 +16,13 @@ java {
 
 tasks {
     javadoc {
-        options.encoding = Charsets.UTF_8.name()
-        (options as StandardJavadocDocletOptions).links(
-            "https://jd.adventure.kyori.net/api/4.11.0/",
-            "https://jd.adventure.kyori.net/text-minimessage/4.11.0/",
-            "https://jd.papermc.io/velocity/3.0.0/"
-        )
-    }   
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = project.group as String
-            artifactId = project.name
-            version = project.version as String
-            from(components["java"])
+        (options as? StandardJavadocDocletOptions)?.run{
+            encoding = Charsets.UTF_8.name()
+            links(
+                "https://jd.adventure.kyori.net/api/4.12.0/",
+                "https://jd.adventure.kyori.net/text-minimessage/4.12.0/",
+                "https://jd.papermc.io/velocity/3.0.0/"
+            )
         }
-    }
+    }   
 }

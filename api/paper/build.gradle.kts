@@ -1,5 +1,8 @@
 plugins {
-    `maven-publish`
+    `java-library`
+    alias(libs.plugins.indra)
+    id("authmevelocity.publishing")
+    id("authmevelocity.spotless")
 }
 
 java {
@@ -22,15 +25,4 @@ tasks {
             )
         }
     }  
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = project.group as String
-            artifactId = project.name
-            version = project.version as String
-            from(components["java"])
-        }
-    }
 }

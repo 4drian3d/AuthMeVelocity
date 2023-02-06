@@ -1,17 +1,30 @@
 plugins {
     alias(libs.plugins.pluginyml.bukkit)
     alias(libs.plugins.shadow)
+    id("authmevelocity.spotless")
 }
 
 repositories {
-    maven("https://jitpack.io")
-    maven("https://repo.codemc.org/repository/maven-public/")
-    maven("https://repo.alessiodp.com/releases/")
+    maven("https://repo.codemc.org/repository/maven-public/") {
+        mavenContent {
+            includeGroup("fr.xephi")
+        }
+    }
+    maven("https://repo.alessiodp.com/releases/"){
+        mavenContent {
+            includeGroup("net.byteflux")
+        }
+    }
+    maven("https://jitpack.io") {
+        mavenContent {
+            includeGroup("com.github.4drian3d")
+        }
+    }
 }
 
 dependencies {
-    compileOnly(project(":authmevelocity-common"))
-    compileOnly(project(":authmevelocity-api-paper"))
+    compileOnly(projects.authmevelocityCommon)
+    compileOnly(projects.authmevelocityApiPaper)
     compileOnly(libs.paper)
     compileOnly(libs.authme)
     compileOnly(libs.miniplaceholders)
