@@ -1,8 +1,12 @@
-# AuthMeVelocity [![WorkFlow Status](https://img.shields.io/github/actions/workflow/status/4drian3d/AuthMeVelocity/gradle.yml?branch=master&style=flat-square)](https://github.com/4drian3d/AuthmeVelocity/actions/workflows/maven.yml) [![Version](https://img.shields.io/github/v/release/4drian3d/AuthmeVelocity?color=FFF0&style=flat-square)](https://github.com/4drian3d/AuthmeVelocity/releases) [![Discord](https://img.shields.io/discord/899740810956910683?color=7289da&label=Discord)](https://discord.gg/5NMMzK5mAn)
+# AuthMeVelocity
+[![WorkFlow Status](https://img.shields.io/github/actions/workflow/status/4drian3d/AuthMeVelocity/gradle.yml?branch=master&style=flat-square)](https://github.com/4drian3d/AuthmeVelocity/actions/workflows/maven.yml)
+[![Version](https://img.shields.io/github/v/release/4drian3d/AuthmeVelocity?color=FFF0&style=flat-square)](https://github.com/4drian3d/AuthmeVelocity/releases)
+[![Discord](https://img.shields.io/discord/899740810956910683?color=7289da&label=Discord)](https://discord.gg/5NMMzK5mAn)
+
 This plugin adds the support for [Velocity](https://velocitypowered.com/) to [AuthMeReloaded](https://github.com/AuthMe/AuthMeReloaded)
 
 ## Requirements
-- Paper, Pufferfish or Purpur 1.13+
+- Spigot, Paper, Pufferfish or Purpur 1.8+
 - Velocity 3.1.2 or 3.2.0
 - Java 17+
 
