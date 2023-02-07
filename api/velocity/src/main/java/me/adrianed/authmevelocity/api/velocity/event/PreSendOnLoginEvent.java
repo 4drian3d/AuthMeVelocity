@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 public final class PreSendOnLoginEvent implements ResultedEvent<ServerResult> {
     private ServerResult result;
     private final Player player;
-    private final RegisteredServer actualserver;
+    private final RegisteredServer actualServer;
 
     /**
      * Create a new PreSendOnLoginEvent
@@ -47,7 +47,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<ServerResult> {
      */
     public PreSendOnLoginEvent(@NotNull Player player, @NotNull RegisteredServer actualServer, @NotNull RegisteredServer serverToSend){
         this.player = player;
-        this.actualserver = actualServer;
+        this.actualServer = actualServer;
         result = ServerResult.allowed(serverToSend);
     }
 
@@ -64,7 +64,7 @@ public final class PreSendOnLoginEvent implements ResultedEvent<ServerResult> {
      * @return the actual server of the player
      */
     public @NotNull RegisteredServer actualServer(){
-        return this.actualserver;
+        return this.actualServer;
     }
 
     @Override

@@ -53,12 +53,14 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
             return;
         }
 
-        this.getServer().getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
-        this.getServer().getMessenger().registerIncomingPluginChannel(this, CHANNEL, new MessageListener(this));
-        this.getServer().getPluginManager().registerEvents(new AuthMeListener(this), this);
+        final var server = this.getServer();
 
-        if (this.getServer().getPluginManager().isPluginEnabled("MiniPlaceholders")) {
-            AuthmePlaceholders.getExpansion().register();
+        server.getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
+        server.getMessenger().registerIncomingPluginChannel(this, CHANNEL, new MessageListener(this));
+        server.getPluginManager().registerEvents(new AuthMeListener(this), this);
+
+        if (server.getPluginManager().isPluginEnabled("MiniPlaceholders")) {
+            AuthMePlaceholders.getExpansion().register();
         }
 
         this.getLogger().info("AuthMeVelocity enabled");
@@ -72,19 +74,29 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
         this.getLogger().info("AuthMeVelocity disabled");
     }
 
-    public void sendMessageToProxy(final Player player, @NotNull MessageType type, @NotNull String playername) {
-        @SuppressWarnings("UnstableApiUsage")
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+    public void sendMessageToProxy(
+            final Player player,
+            final @NotNull MessageType type,
+            final @NotNull String playername
+    ) {
+        @SuppressWarnings("UnstableApiUsage") final ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF(type.toString());
         out.writeUTF(playername);
 
         if (player == null) {
-            logDebug("MessageToProxy | Null Player, Player Name: "+playername);
+            logDebug("MessageToProxy | Null Player, Player Name: " + playername);
             Bukkit.getServer().sendPluginMessage(this, CHANNEL, out.toByteArray());
         } else {
-            logDebug("MessageToProxy | Player Present: "+player.getName()+", Player Name: "+playername);
+            logDebug("MessageToProxy | Player Present: " + player.getName() + ", Player Name: " + playername);
             player.sendPluginMessage(this, CHANNEL, out.toByteArray());
         }
+    }
+
+    public void sendMessageToProxy(
+            final Player player,
+            final @NotNull MessageType type
+    ) {
+        sendMessageToProxy(player, type, player.getName());
     }
 
     public void logDebug(String debug) {

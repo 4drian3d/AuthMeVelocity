@@ -17,16 +17,14 @@
 
 package me.adrianed.authmevelocity.paper.listeners;
 
-import me.adrianed.authmevelocity.paper.AuthMeVelocityPlugin;
-import me.adrianed.authmevelocity.common.MessageType;
-import me.adrianed.authmevelocity.api.paper.event.PreSendLoginEvent;
-
 import fr.xephi.authme.events.LoginEvent;
 import fr.xephi.authme.events.LogoutEvent;
 import fr.xephi.authme.events.RegisterEvent;
 import fr.xephi.authme.events.UnregisterByAdminEvent;
 import fr.xephi.authme.events.UnregisterByPlayerEvent;
-
+import me.adrianed.authmevelocity.api.paper.event.PreSendLoginEvent;
+import me.adrianed.authmevelocity.common.MessageType;
+import me.adrianed.authmevelocity.paper.AuthMeVelocityPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,7 +39,7 @@ public final class AuthMeListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onLogin(LoginEvent event) {
+    public void onLogin(final LoginEvent event) {
         final Player player = event.getPlayer();
         plugin.logDebug("LoginEvent | Start");
 
@@ -56,25 +54,25 @@ public final class AuthMeListener implements Listener {
     }
 
     @EventHandler
-    public void onRegister(RegisterEvent event) {
+    public void onRegister(final RegisterEvent event) {
         plugin.logDebug("RegisterEvent | Executed");
-        plugin.sendMessageToProxy(event.getPlayer(), MessageType.REGISTER, event.getPlayer().getName());
+        plugin.sendMessageToProxy(event.getPlayer(), MessageType.REGISTER);
     }
 
     @EventHandler
-    public void onLogout(LogoutEvent event) {
+    public void onLogout(final LogoutEvent event) {
         plugin.logDebug("LogoutEvent | Executed");
-        plugin.sendMessageToProxy(event.getPlayer(), MessageType.LOGOUT, event.getPlayer().getName());
+        plugin.sendMessageToProxy(event.getPlayer(), MessageType.LOGOUT);
     }
 
     @EventHandler
-    public void onUnRegister(UnregisterByPlayerEvent event) {
+    public void onUnRegister(final UnregisterByPlayerEvent event) {
         plugin.logDebug("UnregisterByPlayerEvent | Executed");
-        plugin.sendMessageToProxy(event.getPlayer(), MessageType.UNREGISTER, event.getPlayer().getName());
+        plugin.sendMessageToProxy(event.getPlayer(), MessageType.UNREGISTER);
     }
 
     @EventHandler
-    public void onAdminUnRegister(UnregisterByAdminEvent event) {
+    public void onAdminUnRegister(final UnregisterByAdminEvent event) {
         plugin.logDebug("UnregisterByAdminEvent | Executed");
         plugin.sendMessageToProxy(event.getPlayer(), MessageType.FORCE_UNREGISTER, event.getPlayerName());
     }

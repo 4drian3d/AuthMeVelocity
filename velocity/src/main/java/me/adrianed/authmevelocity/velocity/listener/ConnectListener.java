@@ -17,10 +17,6 @@
 
 package me.adrianed.authmevelocity.velocity.listener;
 
-import java.util.Optional;
-
-import org.slf4j.Logger;
-
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.event.Continuation;
@@ -32,38 +28,47 @@ import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-
 import me.adrianed.authmevelocity.velocity.AuthMeVelocityPlugin;
 import me.adrianed.authmevelocity.velocity.utils.AuthmeUtils;
+import org.slf4j.Logger;
+
+import java.util.Optional;
 
 public final class ConnectListener {
     private final ProxyServer proxy;
     private final Logger logger;
     private final AuthMeVelocityPlugin plugin;
 
-    public ConnectListener(AuthMeVelocityPlugin plugin, ProxyServer proxy, Logger logger) {
+    public ConnectListener(
+            final AuthMeVelocityPlugin plugin,
+            final ProxyServer proxy,
+            final Logger logger
+    ) {
         this.plugin = plugin;
         this.logger = logger;
         this.proxy = proxy;
     }
 
     @Subscribe(order = PostOrder.LATE)
-    public void onInitialServer(PlayerChooseInitialServerEvent event, Continuation continuation){
+    public void onInitialServer(
+            final PlayerChooseInitialServerEvent event,
+            Continuation continuation
+    ) {
         if (!plugin.config().get().ensureAuthServer().ensureFirstServerIsAuthServer()) {
             continuation.resume();
             plugin.logDebug("PlayerChooseInitialServerEvent | Not enabled");
             return;
         }
 
-        Optional<RegisteredServer> optionalSV = event.getInitialServer();
-        if (optionalSV.isPresent() && plugin.isAuthServer(optionalSV.get())){
+        final Optional<RegisteredServer> optionalSV = event.getInitialServer();
+        if (optionalSV.isPresent() && plugin.isAuthServer(optionalSV.get())) {
             continuation.resume();
             plugin.logDebug("PlayerChooseInitialServerEvent | Player is in auth server");
             return;
         }
-        var config = plugin.config().get();
-        var server = AuthmeUtils.serverToSend(
-            config.ensureAuthServer().sendMode(), proxy, config.authServers(), config.advanced().randomAttempts());
+        final var config = plugin.config().get();
+        final var server = AuthmeUtils.serverToSend(
+                config.ensureAuthServer().sendMode(), proxy, config.authServers(), config.advanced().randomAttempts());
 
         // Velocity takes over in case the initial server is not present
         event.setInitialServer(server.object());
@@ -75,7 +80,10 @@ public final class ConnectListener {
     }
 
     @Subscribe
-    public void onServerPreConnect(ServerPreConnectEvent event, Continuation continuation) {
+    public void onServerPreConnect(
+            final ServerPreConnectEvent event,
+            final Continuation continuation
+    ) {
         if (!event.getResult().isAllowed() || plugin.isLogged(event.getPlayer())) {
             plugin.logDebug("ServerPreConnectEvent | Not allowed or player not logged");
             continuation.resume();
@@ -92,14 +100,14 @@ public final class ConnectListener {
 
     @SuppressWarnings("UnstableApiUsage")
     @Subscribe
-    public void onServerPostConnect(ServerPostConnectEvent event) {
+    public void onServerPostConnect(final ServerPostConnectEvent event) {
         final Player player = event.getPlayer();
         if (plugin.isLogged(player) && plugin.isInAuthServer(player)) {
             plugin.logDebug("ServerPostConnectEvent | Already logged player and connected to an Auth server");
             final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
             buf.writeUTF("LOGIN");
             player.getCurrentServer().ifPresent(sv ->
-                sv.sendPluginMessage(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL, buf.toByteArray()));
+                    sv.sendPluginMessage(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL, buf.toByteArray()));
         }
     }
 }

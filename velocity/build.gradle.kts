@@ -9,7 +9,7 @@ repositories {
             includeGroup("com.github.games647")
         }
     }
-    maven("https://repo.alessiodp.com/releases/"){
+    maven("https://repo.alessiodp.com/releases/") {
         mavenContent {
             includeGroup("net.byteflux")
         }

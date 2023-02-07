@@ -17,17 +17,15 @@
 
 package me.adrianed.authmevelocity.velocity.utils;
 
+import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
+import me.adrianed.authmevelocity.common.enums.SendMode;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
-
-import org.jetbrains.annotations.NotNull;
-
-import com.velocitypowered.api.proxy.ProxyServer;
-import com.velocitypowered.api.proxy.server.RegisteredServer;
-
-import me.adrianed.authmevelocity.common.enums.SendMode;
 
 public class AuthmeUtils {
     //Origin: https://github.com/4drian3d/ChatRegulator/blob/main/src/main/java/me/dreamerzero/chatregulator/utils/CommandUtils.java#L71

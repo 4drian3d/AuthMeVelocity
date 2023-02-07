@@ -17,15 +17,6 @@
 
 package me.adrianed.authmevelocity.velocity.listener;
 
-import java.util.Locale;
-
-import me.adrianed.authmevelocity.api.velocity.event.PreSendOnLoginEvent;
-import me.adrianed.authmevelocity.api.velocity.event.ProxyForcedUnregisterEvent;
-import me.adrianed.authmevelocity.api.velocity.event.ProxyLoginEvent;
-import me.adrianed.authmevelocity.api.velocity.event.ProxyLogoutEvent;
-import me.adrianed.authmevelocity.api.velocity.event.ProxyRegisterEvent;
-import me.adrianed.authmevelocity.api.velocity.event.ProxyUnregisterEvent;
-import me.adrianed.authmevelocity.common.MessageType;
 import com.google.common.io.ByteArrayDataInput;
 import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.Subscribe;
@@ -34,13 +25,15 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-
+import me.adrianed.authmevelocity.api.velocity.event.*;
+import me.adrianed.authmevelocity.common.MessageType;
 import me.adrianed.authmevelocity.velocity.AuthMeVelocityPlugin;
 import me.adrianed.authmevelocity.velocity.utils.AuthmeUtils;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
+
+import java.util.Locale;
 
 public class PluginMessageListener {
     private final ProxyServer proxy;
@@ -80,7 +73,9 @@ public class PluginMessageListener {
                 plugin.logDebug("PluginMessageEvent | Login type");
                 if (player != null && plugin.addPlayer(player)) {
                     proxy.getEventManager().fireAndForget(new ProxyLoginEvent(player));
-                    this.createServerConnectionRequest(player, connection);
+                    if (plugin.config().get().sendOnLogin().sendToServerOnLogin()) {
+                        this.createServerConnectionRequest(player, connection);
+                    }
                     plugin.logDebug("PluginMessageEvent | Player not null");
                 }
             }
@@ -115,15 +110,11 @@ public class PluginMessageListener {
     }
 
     private void createServerConnectionRequest(Player player, ServerConnection connection){
-        if (!plugin.config().get().sendOnLogin().sendToServerOnLogin()) {
-            return;
-        }
-
         final RegisteredServer loginServer = player.getCurrentServer().orElse(connection).getServer();
 
-        var config = plugin.config().get();
+        final var config = plugin.config().get();
 
-        var toSend = AuthmeUtils.serverToSend(
+        final var toSend = AuthmeUtils.serverToSend(
             config.sendOnLogin().sendMode(), proxy, config.sendOnLogin().teleportServers(), config.advanced().randomAttempts());
 
         if (toSend.isEmpty()) {

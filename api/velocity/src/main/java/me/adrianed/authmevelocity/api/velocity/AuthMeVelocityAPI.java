@@ -17,13 +17,12 @@
 
 package me.adrianed.authmevelocity.api.velocity;
 
-import java.util.function.Predicate;
-
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Predicate;
 
 /**
  * API provided to interact with logged players

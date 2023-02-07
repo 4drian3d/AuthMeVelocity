@@ -20,7 +20,6 @@ package me.adrianed.authmevelocity.velocity.listener;
 import com.github.games647.fastlogin.velocity.event.VelocityFastLoginAutoLoginEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.proxy.ProxyServer;
-
 import me.adrianed.authmevelocity.velocity.AuthMeVelocityPlugin;
 
 public class FastLoginListener {

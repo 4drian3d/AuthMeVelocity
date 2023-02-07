@@ -19,19 +19,16 @@ package me.adrianed.authmevelocity.paper.listeners;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-
+import fr.xephi.authme.api.v3.AuthMeApi;
+import me.adrianed.authmevelocity.api.paper.event.LoginByProxyEvent;
 import me.adrianed.authmevelocity.common.MessageType;
+import me.adrianed.authmevelocity.paper.AuthMeVelocityPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
-import me.adrianed.authmevelocity.api.paper.event.LoginByProxyEvent;
-import me.adrianed.authmevelocity.paper.AuthMeVelocityPlugin;
-
-import fr.xephi.authme.api.v3.AuthMeApi;
-
-public class MessageListener implements PluginMessageListener {
+public final class MessageListener implements PluginMessageListener {
     private final AuthMeVelocityPlugin plugin;
 
     public MessageListener(AuthMeVelocityPlugin plugin) {
@@ -39,7 +36,11 @@ public class MessageListener implements PluginMessageListener {
     }
 
     @Override
-    public void onPluginMessageReceived(@NotNull String identifier, @NotNull Player player, byte @NotNull [] bytes) {
+    public void onPluginMessageReceived(
+            final @NotNull String identifier,
+            final @NotNull Player player,
+            final byte @NotNull [] bytes
+    ) {
         if (!identifier.equals("authmevelocity")) {
             plugin.logDebug("PluginMessage | Not AuthMeVelocity identifier");
             return;

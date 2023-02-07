@@ -26,8 +26,8 @@ import net.kyori.adventure.text.minimessage.tag.Tag;
 
 import static me.dreamerzero.miniplaceholders.api.utils.Components.*;
 
-final class AuthmePlaceholders {
-    private AuthmePlaceholders() {}
+final class AuthMePlaceholders {
+    private AuthMePlaceholders() {}
 
     static Expansion getExpansion(){
         return Expansion.builder("authme")

@@ -32,11 +32,17 @@ public final class LibsManager {
 
     public void loadLibraries() {
         final Relocation configurateRelocation
-            = new Relocation("org{}spongepowered", "me.adrianed.authmevelocity.libs.sponge");
+            = new Relocation(
+                    "org{}spongepowered",
+                    "me.adrianed.authmevelocity.libs.sponge");
         final Relocation geantyrefRelocation =
-            new Relocation("io{}leangen{}geantyref", "me.adrianed.authmevelocity.libs.geantyref");
+            new Relocation(
+                    "io{}leangen{}geantyref",
+                    "me.adrianed.authmevelocity.libs.geantyref");
         final Relocation typesafeRelocation
-            = new Relocation("com{}typesafe", "me.adrianed.authmevelocity.libs.config");
+            = new Relocation(
+                    "com{}typesafe",
+                    "me.adrianed.authmevelocity.libs.config");
         final Library hocon = Library.builder()
             .groupId("org{}spongepowered")
             .artifactId("configurate-hocon")

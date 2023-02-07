@@ -17,8 +17,6 @@
 
 package me.adrianed.authmevelocity.velocity.listener;
 
-import me.adrianed.authmevelocity.velocity.utils.AuthmeUtils;
-import me.adrianed.authmevelocity.velocity.AuthMeVelocityPlugin;
 import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.PostOrder;
@@ -29,7 +27,8 @@ import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.player.TabCompleteEvent;
 import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
-
+import me.adrianed.authmevelocity.velocity.AuthMeVelocityPlugin;
+import me.adrianed.authmevelocity.velocity.utils.AuthmeUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public final class ProxyListener {

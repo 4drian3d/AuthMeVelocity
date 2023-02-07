@@ -18,7 +18,6 @@
 package me.adrianed.authmevelocity.api.velocity.event;
 
 import com.velocitypowered.api.proxy.Player;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
