@@ -28,7 +28,7 @@ import com.velocitypowered.api.event.player.TabCompleteEvent;
 import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
-import io.github._4drian3d.authmevelocity.velocity.utils.AuthmeUtils;
+import io.github._4drian3d.authmevelocity.velocity.utils.AuthMeUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public final class ProxyListener {
@@ -69,7 +69,7 @@ public final class ProxyListener {
 
         if (plugin.isInAuthServer(player)) {
             plugin.logDebug("CommandExecuteEvent | Player is in Auth Server");
-            String command = AuthmeUtils.getFirstArgument(event.getCommand());
+            String command = AuthMeUtils.getFirstArgument(event.getCommand());
             if (!plugin.config().get().commands().allowedCommands().contains(command)) {
                 plugin.logDebug("CommandExecuteEvent | Player executed an blocked command");
                 sendBlockedMessage(player);

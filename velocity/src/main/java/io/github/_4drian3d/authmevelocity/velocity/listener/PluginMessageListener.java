@@ -28,7 +28,7 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import io.github._4drian3d.authmevelocity.api.velocity.event.*;
 import io.github._4drian3d.authmevelocity.common.MessageType;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
-import io.github._4drian3d.authmevelocity.velocity.utils.AuthmeUtils;
+import io.github._4drian3d.authmevelocity.velocity.utils.AuthMeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -114,7 +114,7 @@ public class PluginMessageListener {
 
         final var config = plugin.config().get();
 
-        final var toSend = AuthmeUtils.serverToSend(
+        final var toSend = AuthMeUtils.serverToSend(
             config.sendOnLogin().sendMode(), proxy, config.sendOnLogin().teleportServers(), config.advanced().randomAttempts());
 
         if (toSend.isEmpty()) {

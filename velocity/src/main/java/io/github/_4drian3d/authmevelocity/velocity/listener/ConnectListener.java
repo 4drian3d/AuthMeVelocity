@@ -29,7 +29,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
-import io.github._4drian3d.authmevelocity.velocity.utils.AuthmeUtils;
+import io.github._4drian3d.authmevelocity.velocity.utils.AuthMeUtils;
 import org.slf4j.Logger;
 
 import java.util.Optional;
@@ -67,7 +67,7 @@ public final class ConnectListener {
             return;
         }
         final var config = plugin.config().get();
-        final var server = AuthmeUtils.serverToSend(
+        final var server = AuthMeUtils.serverToSend(
                 config.ensureAuthServer().sendMode(), proxy, config.authServers(), config.advanced().randomAttempts());
 
         // Velocity takes over in case the initial server is not present

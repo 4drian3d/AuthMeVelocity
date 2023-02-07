@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
-public class AuthmeUtils {
+public class AuthMeUtils {
     //Origin: https://github.com/4drian3d/ChatRegulator/blob/main/src/main/java/me/dreamerzero/chatregulator/utils/CommandUtils.java#L71
     /**
      * Get the first argument of a string
@@ -92,5 +92,5 @@ public class AuthmeUtils {
             }
         };
     }
-    private AuthmeUtils() {}
+    private AuthMeUtils() {}
 }
