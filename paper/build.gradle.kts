@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.pluginyml.bukkit)
     alias(libs.plugins.shadow)
+    alias(libs.plugins.runpaper)
     id("authmevelocity.spotless")
 }
 
@@ -23,17 +24,20 @@ repositories {
 }
 
 dependencies {
-    compileOnly(projects.authmevelocityCommon)
-    compileOnly(projects.authmevelocityApiPaper)
     compileOnly(libs.paper)
     compileOnly(libs.authme)
+
     compileOnly(libs.miniplaceholders)
-    shadow(libs.libby.bukkit)
+
+    implementation(projects.authmevelocityCommon)
+    implementation(projects.authmevelocityApiPaper)
+
+    implementation(libs.libby.bukkit)
 }
 
 bukkit {
     name = "AuthMeVelocity"
-    main = "me.adrianed.authmevelocity.paper.AuthMeVelocityPlugin"
+    main = "io.github._4drian3d.authmevelocity.paper.AuthMeVelocityPlugin"
     apiVersion = "1.13"
     website = project.property("url") as String
     description = project.description as String
@@ -45,9 +49,23 @@ bukkit {
 
 tasks {
     shadowJar {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        relocate("net.byteflux.libby", "me.adrianed.authmevelocity.libs.libby")
-        configurations = listOf(project.configurations.shadow.get())
+        archiveFileName.set("AuthMeVelocity-Paper-${project.version}.jar")
+        archiveClassifier.set("")
+
+        relocate("net.byteflux.libby", "io.github._4drian3d.authmevelocity.libs.libby")
+        relocate("org.spongepowered", "io.github._4drian3d.authmevelocity.libs.sponge")
+        relocate("io.leangen.geantyref", "io.github._4drian3d.authmevelocity.libs.geantyref")
+    }
+    build {
+        dependsOn(shadowJar)
+    }
+    compileJava {
+        options.encoding = Charsets.UTF_8.name()
+        options.release.set(17)
+    }
+    runServer {
+        minecraftVersion("1.19.3")
     }
 }
 
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))

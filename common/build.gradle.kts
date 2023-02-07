@@ -1,7 +1,5 @@
 plugins {
     alias(libs.plugins.blossom)
-    // Required to relocate packages
-    alias(libs.plugins.shadow)
     id("authmevelocity.spotless")
 }
 
@@ -15,16 +13,8 @@ dependencies {
     compileOnly(libs.libby.core)
 }
 
-tasks {
-    shadowJar {
-        relocate("net.byteflux.libby", "me.adrianed.authmevelocity.libs.libby")
-        relocate("org.spongepowered", "me.adrianed.authmevelocity.libs.sponge")
-        relocate("io.leangen.geantyref", "me.adrianed.authmevelocity.libs.geantyref")
-    }
-}
-
 blossom {
-    replaceTokenIn("src/main/java/me/adrianed/authmevelocity/common/Constants.java")
+    replaceTokenIn("src/main/java/io/github/_4drian3d/authmevelocity/common/Constants.java")
     replaceToken("{version}", project.version)
     replaceToken("{description}", project.description)
     replaceToken("{configurate}", libs.versions.configurate.get())

@@ -25,3 +25,5 @@ buildNumber.properties
 
 *.class
 .gitpod.yml
+
+*/run/
