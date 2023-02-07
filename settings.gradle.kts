@@ -1,5 +1,4 @@
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-enableFeaturePreview("VERSION_CATALOGS")
 
 rootProject.name = "authmevelocity-parent"
 
@@ -14,6 +13,7 @@ listOf("paper", "velocity").forEach {
 }
 
 pluginManagement {
+    @Suppress("UnstableApiUsage")
     includeBuild("build-logic")
     repositories {
         gradlePluginPortal()
