@@ -21,7 +21,6 @@ import net.byteflux.libby.Library;
 import net.byteflux.libby.LibraryManager;
 import net.byteflux.libby.relocation.Relocation;
 
-
 public final class LibsManager {
     private final LibraryManager manager;
 

@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.shadow)
+    alias(libs.plugins.runvelocity)
     id("authmevelocity.spotless")
 }
 
@@ -42,12 +43,16 @@ tasks {
         archiveFileName.set("AuthMeVelocity-Velocity-${project.version}.jar")
         archiveClassifier.set("")
 
-        relocate("net.byteflux.libby", "io.github._4drian3d.authmevelocity.libs.libby")
         relocate("org.bstats", "io.github._4drian3d.authmevelocity.libs.bstats")
+        relocate("net.byteflux.libby", "io.github._4drian3d.authmevelocity.libs.libby")
+        relocate("org.spongepowered", "io.github._4drian3d.authmevelocity.libs.sponge")
+        relocate("io.leangen.geantyref", "io.github._4drian3d.authmevelocity.libs.geantyref")
     }
-
     build {
         dependsOn(shadowJar)
+    }
+    runVelocity {
+        velocityVersion(libs.versions.velocity.get())
     }
 }
 
