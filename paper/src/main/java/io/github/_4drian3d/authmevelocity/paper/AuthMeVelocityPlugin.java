@@ -17,22 +17,20 @@
 
 package io.github._4drian3d.authmevelocity.paper;
 
-import io.github._4drian3d.authmevelocity.paper.listeners.AuthMeListener;
-import io.github._4drian3d.authmevelocity.paper.listeners.MessageListener;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import io.github._4drian3d.authmevelocity.common.LibsManager;
+import io.github._4drian3d.authmevelocity.common.MessageType;
 import io.github._4drian3d.authmevelocity.common.configuration.ConfigurationContainer;
 import io.github._4drian3d.authmevelocity.common.configuration.Loader;
 import io.github._4drian3d.authmevelocity.common.configuration.PaperConfiguration;
-import io.github._4drian3d.authmevelocity.common.MessageType;
-import io.github._4drian3d.authmevelocity.common.LibsManager;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-
+import io.github._4drian3d.authmevelocity.paper.listeners.AuthMeListener;
+import io.github._4drian3d.authmevelocity.paper.listeners.MessageListener;
+import net.byteflux.libby.BukkitLibraryManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-
-import net.byteflux.libby.BukkitLibraryManager;
 
 import java.util.logging.Level;
 

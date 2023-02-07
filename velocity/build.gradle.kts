@@ -22,22 +22,32 @@ repositories {
 }
 
 dependencies {
-    compileOnly(projects.authmevelocityCommon)
-    compileOnly(projects.authmevelocityApiVelocity)
     compileOnly(libs.velocity)
+    annotationProcessor(libs.velocity)
+
     compileOnly(libs.miniplaceholders)
     compileOnly(libs.fastlogin.velocity)
-    shadow(libs.libby.velocity)
-    shadow(libs.bstats.velocity)
-    annotationProcessor(libs.velocity)
+
+    implementation(projects.authmevelocityCommon)
+    implementation(projects.authmevelocityApiVelocity)
+
+    implementation(libs.libby.velocity)
+    implementation(libs.bstats.velocity)
 }
 
 tasks {
     shadowJar {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+        archiveFileName.set("AuthMeVelocity-Velocity-${project.version}.jar")
+        archiveClassifier.set("")
+
         relocate("net.byteflux.libby", "io.github._4drian3d.authmevelocity.libs.libby")
         relocate("org.bstats", "io.github._4drian3d.authmevelocity.libs.bstats")
-        configurations = listOf(project.configurations.shadow.get())
+    }
+
+    build {
+        dependsOn(shadowJar)
     }
 }
 

@@ -23,12 +23,15 @@ repositories {
 }
 
 dependencies {
-    compileOnly(projects.authmevelocityCommon)
-    compileOnly(projects.authmevelocityApiPaper)
     compileOnly(libs.paper)
     compileOnly(libs.authme)
+
     compileOnly(libs.miniplaceholders)
-    shadow(libs.libby.bukkit)
+
+    implementation(projects.authmevelocityCommon)
+    implementation(projects.authmevelocityApiPaper)
+
+    implementation(libs.libby.bukkit)
 }
 
 bukkit {
@@ -45,8 +48,20 @@ bukkit {
 
 tasks {
     shadowJar {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        //duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        archiveFileName.set("AuthMeVelocity-Paper-${project.version}.jar")
+        archiveClassifier.set("")
         relocate("net.byteflux.libby", "io.github._4drian3d.authmevelocity.libs.libby")
-        configurations = listOf(project.configurations.shadow.get())
+    }
+
+    build {
+        dependsOn(shadowJar)
     }
 }
+
+tasks.compileJava {
+    options.encoding = Charsets.UTF_8.name()
+    options.release.set(17)
+}
+
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
