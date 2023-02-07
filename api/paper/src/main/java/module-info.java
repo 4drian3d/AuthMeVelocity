@@ -1,7 +1,7 @@
 /**AuthMeVelocity Paper API Module */
 @SuppressWarnings({"requires-automatic", "requires-transitive-automatic"})
-module me.adrianed.authmevelocity.api.paper {
+module io.github._4drianed.authmevelocity.api.paper {
     requires transitive org.bukkit;
     requires static org.jetbrains.annotations;
-    exports me.adrianed.authmevelocity.api.paper.event;
+    exports io.github._4drian3d.authmevelocity.api.paper.event;
 }

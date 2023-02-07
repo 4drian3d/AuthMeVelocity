@@ -33,7 +33,7 @@ dependencies {
 
 bukkit {
     name = "AuthMeVelocity"
-    main = "me.adrianed.authmevelocity.paper.AuthMeVelocityPlugin"
+    main = "io.github._4drian3d.authmevelocity.paper.AuthMeVelocityPlugin"
     apiVersion = "1.13"
     website = project.property("url") as String
     description = project.description as String
@@ -46,8 +46,7 @@ bukkit {
 tasks {
     shadowJar {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        relocate("net.byteflux.libby", "me.adrianed.authmevelocity.libs.libby")
+        relocate("net.byteflux.libby", "io.github._4drian3d.authmevelocity.libs.libby")
         configurations = listOf(project.configurations.shadow.get())
     }
 }
-

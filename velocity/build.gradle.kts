@@ -35,8 +35,8 @@ dependencies {
 tasks {
     shadowJar {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        relocate("net.byteflux.libby", "me.adrianed.authmevelocity.libs.libby")
-        relocate("org.bstats", "me.adrianed.authmevelocity.libs.bstats")
+        relocate("net.byteflux.libby", "io.github._4drian3d.authmevelocity.libs.libby")
+        relocate("org.bstats", "io.github._4drian3d.authmevelocity.libs.bstats")
         configurations = listOf(project.configurations.shadow.get())
     }
 }

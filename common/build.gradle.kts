@@ -17,9 +17,9 @@ dependencies {
 
 tasks {
     shadowJar {
-        relocate("net.byteflux.libby", "me.adrianed.authmevelocity.libs.libby")
-        relocate("org.spongepowered", "me.adrianed.authmevelocity.libs.sponge")
-        relocate("io.leangen.geantyref", "me.adrianed.authmevelocity.libs.geantyref")
+        relocate("net.byteflux.libby", "io.github._4drian3d.authmevelocity.libs.libby")
+        relocate("org.spongepowered", "io.github._4drian3d.authmevelocity.libs.sponge")
+        relocate("io.leangen.geantyref", "io.github._4drian3d.authmevelocity.libs.geantyref")
     }
 }
 
