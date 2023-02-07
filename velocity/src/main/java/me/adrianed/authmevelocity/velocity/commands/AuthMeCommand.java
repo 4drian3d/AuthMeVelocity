@@ -19,7 +19,6 @@ package me.adrianed.authmevelocity.velocity.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
@@ -38,7 +37,7 @@ public class AuthMeCommand {
             final CommandManager manager,
             final Logger logger
     ) {
-        LiteralCommandNode<CommandSource> command = LiteralArgumentBuilder.<CommandSource>literal("authmevelocity")
+        final var command = LiteralArgumentBuilder.<CommandSource>literal("authmevelocity")
                 .requires(src -> src.hasPermission("authmevelocity.commands"))
                 .then(LiteralArgumentBuilder.<CommandSource>literal("reload")
                         .executes(cmd -> {

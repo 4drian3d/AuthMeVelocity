@@ -10,6 +10,14 @@ This plugin adds the support for [Velocity](https://velocitypowered.com/) to [Au
 - Velocity 3.1.2 or 3.2.0
 - Java 17+
 
+## Features
+- Prevent your players from executing commands or typing in the chat before they are logged in
+- Forces the first server that players enter to be an Auth server
+- Send players to another server when logging in natively (AuthMeReloaded has bugs with this functionality on its own)
+- Prevents players from having to re-login each time they join a server with AuthMe installed
+- Get access to the AuthMe API from Velocity
+- Compatibility with [FastLogin](https://github.com/games647/FastLogin) (AutoLogin support in the proxy) and [MiniPlaceholders](https://modrinth.com/plugin/miniplaceholders) (use AuthMeVelocity placeholders in any other plugin and vice versa)
+
 ## Setup
 1. Download the latest release of the plugin [link](https://github.com/4drian3d/AuthMeVelocity/releases)
 2. Put the plugin in the Velocity plugins folder and on all your Auth servers that have AuthMe installed.
@@ -17,6 +25,10 @@ This plugin adds the support for [Velocity](https://velocitypowered.com/) to [Au
 
 ## Plugin API
 Check the plugin API [here](https://github.com/4drian3d/AuthMeVelocity/wiki/Plugin-API)
+
+### Javadocs
+- Paper API [Javadocs](https://javadoc.jitpack.io/com/github/4drian3d/AuthMeVelocity/api-paper/latest/javadoc/)
+- Velocity API [Javadocs](https://javadoc.jitpack.io/com/github/4drian3d/AuthMeVelocity/api-velocity/latest/javadoc/)
 
 ## Configuration
 Check the plugin configuration [here](https://github.com/4drian3d/AuthMeVelocity/wiki/Configuration)
