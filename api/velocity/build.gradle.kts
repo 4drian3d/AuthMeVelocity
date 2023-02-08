@@ -1,6 +1,5 @@
 plugins {
     `java-library`
-    alias(libs.plugins.indra)
     id("authmevelocity.publishing")
     id("authmevelocity.spotless")
 }
@@ -24,5 +23,5 @@ tasks {
                 "https://jd.papermc.io/velocity/3.0.0/"
             )
         }
-    }   
+    }
 }

@@ -1,6 +1,5 @@
 plugins {
     `java-library`
-    alias(libs.plugins.indra)
     id("authmevelocity.publishing")
     id("authmevelocity.spotless")
 }

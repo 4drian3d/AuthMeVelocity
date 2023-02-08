@@ -13,17 +13,20 @@ indra {
 
     gpl3OrLaterLicense()
 
+    publishReleasesTo("maven central", "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+    publishSnapshotsTo("sonatype snapshots", "https://s01.oss.sonatype.org/content/repositories/snapshots/")
+
     configurePublications {
-        groupId = project.group as String
-        artifactId = project.name.replaceFirst("authmevelocity-", "")
-        version = project.version as String
+        artifactId = project.name
+
         from(components["java"])
 
         pom {
             developers {
                 developer {
                     id.set("4drian3d")
-                    name.set("Adrian")
+                    name.set("Adrian Gonzales")
+                    email.set("adriangonzalesval@gmail.com")
                 }
             }
         }
