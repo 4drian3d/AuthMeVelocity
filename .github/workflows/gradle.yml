@@ -28,4 +28,6 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: AuthMeVelocity
-        path: build/libs/AuthMeVelocity.jar
+        path: |-
+          velocity/build/libs/AuthMeVelocity-Velocity-*.jar
+          paper/build/libs/AuthMeVelocity-Paper-*.jar

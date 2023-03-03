@@ -1,13 +1,6 @@
 plugins {
-    `java-library`
-    alias(libs.plugins.indra)
     id("authmevelocity.publishing")
     id("authmevelocity.spotless")
-}
-
-java {
-    withSourcesJar()
-    withJavadocJar()
 }
 
 dependencies {
@@ -19,8 +12,8 @@ tasks {
         (options as StandardJavadocDocletOptions).run {
             encoding = Charsets.UTF_8.name()
             links(
-                "https://jd.adventure.kyori.net/api/4.11.0/",
-                "https://jd.adventure.kyori.net/text-minimessage/4.11.0/",
+                "https://jd.advntr.dev/api/4.12.0/",
+                "https://jd.advntr.dev/text-minimessage/4.12.0/",
                 "https://jd.papermc.io/paper/1.19/"
             )
         }

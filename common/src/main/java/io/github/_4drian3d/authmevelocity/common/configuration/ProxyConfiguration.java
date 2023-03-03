@@ -24,6 +24,7 @@ import io.github._4drian3d.authmevelocity.common.enums.SendMode;
 
 import java.util.List;
 
+@SuppressWarnings("FieldMayBeFinal")
 @ConfigSerializable
 public class ProxyConfiguration {
     @Comment("List of login/registration servers")
@@ -128,18 +129,5 @@ public class ProxyConfiguration {
         public int randomAttempts() {
             return this.randomAttempts;
         }
-
-        @Comment("""
-            Ignore blocking of commands and chat messages to 1.19.1 clients with a valid signed key
-            When trying to block these executions, the proxy will kick the player out.
-            This option allows you to prevent the plugin from trying to block these executions,
-            avoiding the player to be kicked out""")
-        private boolean ignoreSignedPlayers = false;
-        public boolean ignoreSignedPlayers() {
-            return this.ignoreSignedPlayers;
-        }
     }
-
-    
-    
 }
