@@ -25,7 +25,6 @@ import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.player.TabCompleteEvent;
-import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
 import io.github._4drian3d.authmevelocity.velocity.utils.AuthMeUtils;
@@ -61,12 +60,6 @@ public final class ProxyListener {
             return;
         }
 
-        if (canBeIgnored(player)) {
-            plugin.logDebug("CommandExecuteEvent | Ignored signed player");
-            continuation.resume();
-            return;
-        }
-
         if (plugin.isInAuthServer(player)) {
             plugin.logDebug("CommandExecuteEvent | Player is in Auth Server");
             String command = AuthMeUtils.getFirstArgument(event.getCommand());
@@ -92,12 +85,6 @@ public final class ProxyListener {
         }
 
         plugin.logDebug("PlayerChatEvent | Player is not logged");
-
-        if (canBeIgnored(event.getPlayer())) {
-            plugin.logDebug("PlayerChatEvent | Ignored signed player");
-            continuation.resume();
-            return;
-        }
 
         event.setResult(PlayerChatEvent.ChatResult.denied());
         continuation.resume();
@@ -126,12 +113,6 @@ public final class ProxyListener {
         if (!blockedMessage.isBlank()){
             player.sendMessage(MiniMessage.miniMessage().deserialize(blockedMessage));
         }
-    }
-
-    boolean canBeIgnored(Player player) {
-        return player.getIdentifiedKey() != null
-            && player.getProtocolVersion().compareTo(ProtocolVersion.MINECRAFT_1_19_1) >= 0
-            && plugin.config().get().advanced().ignoreSignedPlayers();
     }
 
 }
