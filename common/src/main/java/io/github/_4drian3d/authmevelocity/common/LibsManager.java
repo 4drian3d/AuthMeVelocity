@@ -24,7 +24,7 @@ import net.byteflux.libby.relocation.Relocation;
 public final class LibsManager {
     private final LibraryManager manager;
 
-    public LibsManager(LibraryManager manager) {
+    public LibsManager(final LibraryManager manager) {
         this.manager = manager;
         manager.addMavenCentral();
     }
