@@ -50,7 +50,8 @@ public class PluginMessageListener {
     public void onPluginMessage(final PluginMessageEvent event, Continuation continuation) {
         final boolean cancelled = !event.getResult().isAllowed()
             || !(event.getSource() instanceof ServerConnection)
-            || !event.getIdentifier().equals(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL);
+            || !(event.getIdentifier().equals(AuthMeVelocityPlugin.MODERN_CHANNEL)
+                || event.getIdentifier().equals(AuthMeVelocityPlugin.LEGACY_CHANNEL));
         if (cancelled) {
             continuation.resume();
             plugin.logDebug("PluginMessageEvent | Not allowed");

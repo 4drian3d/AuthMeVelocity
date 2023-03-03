@@ -106,8 +106,14 @@ public final class ConnectListener {
             plugin.logDebug("ServerPostConnectEvent | Already logged player and connected to an Auth server");
             final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
             buf.writeUTF("LOGIN");
-            player.getCurrentServer().ifPresent(sv ->
-                    sv.sendPluginMessage(AuthMeVelocityPlugin.AUTHMEVELOCITY_CHANNEL, buf.toByteArray()));
+            player.getCurrentServer().ifPresent(sv -> {
+                var byteArray = buf.toByteArray();
+                if (!sv.sendPluginMessage(AuthMeVelocityPlugin.MODERN_CHANNEL, byteArray)) {
+                    plugin.logDebug("ServerPostConnectEvent | Failed to send on Modern Channel");
+                    var legacyResult = sv.sendPluginMessage(AuthMeVelocityPlugin.LEGACY_CHANNEL, byteArray);
+                    if(!legacyResult) plugin.logDebug("ServerPostConnectEvent | Failed to send on Legacy Channel");
+                }
+            });
         }
     }
 }

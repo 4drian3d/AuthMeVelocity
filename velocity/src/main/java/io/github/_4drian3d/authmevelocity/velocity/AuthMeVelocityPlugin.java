@@ -28,6 +28,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
+import com.velocitypowered.api.proxy.messages.LegacyChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import io.github._4drian3d.authmevelocity.api.velocity.AuthMeVelocityAPI;
@@ -74,8 +75,10 @@ import java.util.function.Predicate;
     }
 )
 public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
-    public static final ChannelIdentifier AUTHMEVELOCITY_CHANNEL
+    public static final ChannelIdentifier MODERN_CHANNEL
         = MinecraftChannelIdentifier.create("authmevelocity", "main");
+    public static final ChannelIdentifier LEGACY_CHANNEL
+            = new LegacyChannelIdentifier("authmevelocity:main");
     @Inject
     private ProxyServer proxy;
     @Inject
@@ -109,7 +112,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         final int pluginId = 16128;
         final Metrics metrics = metricsFactory.make(this, pluginId);
 
-        proxy.getChannelRegistrar().register(AUTHMEVELOCITY_CHANNEL);
+        proxy.getChannelRegistrar().register(MODERN_CHANNEL, LEGACY_CHANNEL);
 
         List.of(
             new ProxyListener(this),
