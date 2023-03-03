@@ -18,11 +18,11 @@
 package io.github._4drian3d.authmevelocity.velocity;
 
 import com.velocitypowered.api.proxy.Player;
-import me.dreamerzero.miniplaceholders.api.Expansion;
+import io.github.miniplaceholders.api.Expansion;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 
-import static me.dreamerzero.miniplaceholders.api.utils.Components.FALSE_COMPONENT;
-import static me.dreamerzero.miniplaceholders.api.utils.Components.TRUE_COMPONENT;
+import static io.github.miniplaceholders.api.utils.Components.FALSE_COMPONENT;
+import static io.github.miniplaceholders.api.utils.Components.TRUE_COMPONENT;
 
 final class AuthMePlaceholders {
     private AuthMePlaceholders() {

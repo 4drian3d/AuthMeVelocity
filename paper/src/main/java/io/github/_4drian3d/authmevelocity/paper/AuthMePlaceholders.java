@@ -21,10 +21,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import fr.xephi.authme.api.v3.AuthMeApi;
-import me.dreamerzero.miniplaceholders.api.Expansion;
+import io.github.miniplaceholders.api.Expansion;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 
-import static me.dreamerzero.miniplaceholders.api.utils.Components.*;
+import static io.github.miniplaceholders.api.utils.Components.*;
 
 final class AuthMePlaceholders {
     private AuthMePlaceholders() {}

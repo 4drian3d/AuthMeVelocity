@@ -15,11 +15,6 @@ repositories {
             includeGroup("net.byteflux")
         }
     }
-    maven("https://jitpack.io") {
-        mavenContent {
-            includeGroup("com.github.4drian3d")
-        }
-    }
 }
 
 dependencies {
