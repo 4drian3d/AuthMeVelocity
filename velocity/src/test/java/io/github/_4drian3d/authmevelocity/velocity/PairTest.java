@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PairTest {
+class PairTest {
     @Test
     void pairTest() {
         Pair<Object> pair = Pair.of("survival", null);

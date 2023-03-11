@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Path;
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,5 +60,16 @@ class ConfigurationTest {
                 .extracting(PaperConfiguration::debug)
                 .isEqualTo(false);
 
+    }
+
+    @Test
+    void reloadTest() {
+        final ConfigurationContainer<PaperConfiguration> proxyConfiguration =
+                assertDoesNotThrow(
+                        () -> ConfigurationContainer.load(path, PaperConfiguration.class)
+                );
+
+        assertThat(proxyConfiguration.reload())
+                .succeedsWithin(Duration.ofMillis(50));
     }
 }
