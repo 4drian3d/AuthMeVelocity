@@ -7,7 +7,7 @@ This plugin adds the support for [Velocity](https://velocitypowered.com/) to [Au
 
 ## Requirements
 - Spigot, Paper, Pufferfish or Purpur 1.8+
-- Velocity 3.1.2 or 3.2.0
+- Velocity 3.1.2+
 - Java 17+
 
 ## Features
@@ -27,8 +27,8 @@ This plugin adds the support for [Velocity](https://velocitypowered.com/) to [Au
 Check the plugin API [here](https://github.com/4drian3d/AuthMeVelocity/wiki/Plugin-API)
 
 ### Javadocs
-- Paper API [Javadocs](https://s01.oss.sonatype.org/service/local/repositories/snapshots/archive/io/github/4drian3d/authmevelocity-api-paper/4.0.0-SNAPSHOT/authmevelocity-api-paper-4.0.0-20230224.155043-1-javadoc.jar/!/io.github._4drianed.authmevelocity.api.paper/module-summary.html)
-- Velocity API [Javadocs](https://s01.oss.sonatype.org/service/local/repositories/snapshots/archive/io/github/4drian3d/authmevelocity-api-velocity/4.0.0-SNAPSHOT/authmevelocity-api-velocity-4.0.0-20230224.155043-1-javadoc.jar/!/io.github._4drian3d.authmevelocity.api.velocity/module-summary.html)
+- Paper API [Javadocs](https://javadoc.io/doc/io.github.4drian3d/authmevelocity-api-paper)
+- Velocity API [Javadocs](https://javadoc.io/doc/io.github.4drian3d/authmevelocity-api-velocity)
 
 ## Configuration
 Check the plugin configuration [here](https://github.com/4drian3d/AuthMeVelocity/wiki/Configuration)
