@@ -19,6 +19,7 @@ package io.github._4drian3d.authmevelocity.velocity.listener;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.google.inject.Inject;
 import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
@@ -35,19 +36,12 @@ import org.slf4j.Logger;
 import java.util.Optional;
 
 public final class ConnectListener {
-    private final ProxyServer proxy;
-    private final Logger logger;
-    private final AuthMeVelocityPlugin plugin;
-
-    public ConnectListener(
-            final AuthMeVelocityPlugin plugin,
-            final ProxyServer proxy,
-            final Logger logger
-    ) {
-        this.plugin = plugin;
-        this.logger = logger;
-        this.proxy = proxy;
-    }
+    @Inject
+    private ProxyServer proxy;
+    @Inject
+    private Logger logger;
+    @Inject
+    private AuthMeVelocityPlugin plugin;
 
     @Subscribe(order = PostOrder.LATE)
     public void onInitialServer(

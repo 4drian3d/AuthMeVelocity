@@ -18,7 +18,9 @@
 package io.github._4drian3d.authmevelocity.velocity.listener;
 
 import com.google.common.io.ByteArrayDataInput;
+import com.google.inject.Inject;
 import com.velocitypowered.api.event.Continuation;
+import com.velocitypowered.api.event.EventManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.proxy.Player;
@@ -29,22 +31,20 @@ import io.github._4drian3d.authmevelocity.api.velocity.event.*;
 import io.github._4drian3d.authmevelocity.common.MessageType;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
 import io.github._4drian3d.authmevelocity.velocity.utils.AuthMeUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.Locale;
 
 public class PluginMessageListener {
-    private final ProxyServer proxy;
-    private final Logger logger;
-    private final AuthMeVelocityPlugin plugin;
-
-    public PluginMessageListener(@NotNull ProxyServer proxy, @NotNull Logger logger, AuthMeVelocityPlugin plugin) {
-        this.proxy = proxy;
-        this.logger = logger;
-        this.plugin = plugin;
-    }
+    @Inject
+    private ProxyServer proxy;
+    @Inject
+    private EventManager eventManager;
+    @Inject
+    private Logger logger;
+    @Inject
+    private AuthMeVelocityPlugin plugin;
 
     @Subscribe
     public void onPluginMessage(final PluginMessageEvent event, Continuation continuation) {
@@ -73,7 +73,7 @@ public class PluginMessageListener {
             case LOGIN -> {
                 plugin.logDebug("PluginMessageEvent | Login type");
                 if (player != null && plugin.addPlayer(player)) {
-                    proxy.getEventManager().fireAndForget(new ProxyLoginEvent(player));
+                    eventManager.fireAndForget(new ProxyLoginEvent(player));
                     if (plugin.config().get().sendOnLogin().sendToServerOnLogin()) {
                         this.createServerConnectionRequest(player, connection);
                     }
@@ -83,14 +83,14 @@ public class PluginMessageListener {
             case LOGOUT -> {
                 plugin.logDebug("PluginMessageEvent | Logout type");
                 if (player != null && plugin.removePlayer(player)){
-                    proxy.getEventManager().fireAndForget(new ProxyLogoutEvent(player));
+                    eventManager.fireAndForget(new ProxyLogoutEvent(player));
                     plugin.logDebug("PluginMessageEvent | Player not null");
                 }
             }
             case REGISTER -> {
                 plugin.logDebug("PluginMessageEvent | Register");
                 if (player != null) {
-                    proxy.getEventManager().fireAndForget(new ProxyRegisterEvent(player));
+                    eventManager.fireAndForget(new ProxyRegisterEvent(player));
                     plugin.logDebug("PluginMessageEvent | Player not null");
                 }
             }
@@ -98,11 +98,11 @@ public class PluginMessageListener {
                 plugin.logDebug("PluginMessageEvent | Unregister type");
                 if (player != null) {
                     plugin.logDebug("PluginMessageEvent | Player not null");
-                    proxy.getEventManager().fireAndForget(new ProxyUnregisterEvent(player));
+                    eventManager.fireAndForget(new ProxyUnregisterEvent(player));
                 } 
             }
             case FORCE_UNREGISTER -> {
-                proxy.getEventManager().fireAndForget(new ProxyForcedUnregisterEvent(player));
+                eventManager.fireAndForget(new ProxyForcedUnregisterEvent(player));
                 plugin.logDebug("PluginMessageEvent | Forced Unregister type");
             }
                 
@@ -127,7 +127,7 @@ public class PluginMessageListener {
             return;
         }
 
-        proxy.getEventManager().fire(new PreSendOnLoginEvent(player, loginServer, toSend.object()))
+        eventManager.fire(new PreSendOnLoginEvent(player, loginServer, toSend.object()))
                 .thenAccept(event -> {
                     if (!event.getResult().isAllowed()) {
                         return;

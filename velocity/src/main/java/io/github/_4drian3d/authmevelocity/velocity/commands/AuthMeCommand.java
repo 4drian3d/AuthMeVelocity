@@ -17,6 +17,7 @@
 
 package io.github._4drian3d.authmevelocity.velocity.commands;
 
+import com.google.inject.Inject;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
@@ -29,14 +30,14 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.slf4j.Logger;
 
 public class AuthMeCommand {
-    private AuthMeCommand() {
-    }
+    @Inject
+    private AuthMeVelocityPlugin plugin;
+    @Inject
+    private CommandManager manager;
+    @Inject
+    private Logger logger;
 
-    public static void register(
-            final AuthMeVelocityPlugin plugin,
-            final CommandManager manager,
-            final Logger logger
-    ) {
+    public void register() {
         final var command = LiteralArgumentBuilder.<CommandSource>literal("authmevelocity")
                 .requires(src -> src.hasPermission("authmevelocity.commands"))
                 .then(LiteralArgumentBuilder.<CommandSource>literal("reload")

@@ -75,17 +75,17 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
     public void sendMessageToProxy(
             final Player player,
             final @NotNull MessageType type,
-            final @NotNull String playername
+            final @NotNull String playerName
     ) {
         @SuppressWarnings("UnstableApiUsage") final ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF(type.toString());
-        out.writeUTF(playername);
+        out.writeUTF(playerName);
 
         if (player == null) {
-            logDebug("MessageToProxy | Null Player, Player Name: " + playername);
+            logDebug("MessageToProxy | Null Player, Player Name: " + playerName);
             Bukkit.getServer().sendPluginMessage(this, CHANNEL, out.toByteArray());
         } else {
-            logDebug("MessageToProxy | Player Present: " + player.getName() + ", Player Name: " + playername);
+            logDebug("MessageToProxy | Player Present: " + player.getName() + ", Player Name: " + playerName);
             player.sendPluginMessage(this, CHANNEL, out.toByteArray());
         }
     }

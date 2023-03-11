@@ -24,7 +24,7 @@ import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
-public class ConfigurationContainer<C> {
+public final class ConfigurationContainer<C> {
     private C config;
     private final HoconConfigurationLoader loader;
     private final Class<C> clazz;
@@ -45,16 +45,11 @@ public class ConfigurationContainer<C> {
 
     public CompletableFuture<Void> reload() {
         return CompletableFuture.runAsync(() -> {
-            C newConfig = null;
             try {
                 final CommentedConfigurationNode node = loader.load();
-                newConfig = node.get(clazz);
+                config = node.get(clazz);
             } catch (ConfigurateException exception) {
                 throw new CompletionException("Could not load config.conf file", exception);
-            } finally {
-                if (newConfig != null) {
-                    config = newConfig;
-                }
             }
         });
     }

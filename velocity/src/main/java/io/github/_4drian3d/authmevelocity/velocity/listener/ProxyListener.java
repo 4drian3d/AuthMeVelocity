@@ -17,6 +17,7 @@
 
 package io.github._4drian3d.authmevelocity.velocity.listener;
 
+import com.google.inject.Inject;
 import com.velocitypowered.api.event.Continuation;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.PostOrder;
@@ -31,11 +32,8 @@ import io.github._4drian3d.authmevelocity.velocity.utils.AuthMeUtils;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public final class ProxyListener {
-    private final AuthMeVelocityPlugin plugin;
-
-    public ProxyListener(AuthMeVelocityPlugin plugin) {
-        this.plugin = plugin;
-    }
+    @Inject
+    private AuthMeVelocityPlugin plugin;
 
     @Subscribe
     public EventTask onDisconnect(final DisconnectEvent event) {

@@ -18,11 +18,14 @@
 package io.github._4drian3d.authmevelocity.velocity;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.event.EventManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.PluginManager;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -50,11 +53,11 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 @Plugin(
     id = "authmevelocity",
@@ -82,12 +85,18 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     @Inject
     private ProxyServer proxy;
     @Inject
+    private EventManager eventManager;
+    @Inject
+    private PluginManager pluginManager;
+    @Inject
     private Logger logger;
     @Inject
     @DataDirectory
     private Path pluginDirectory;
     @Inject
     private Metrics.Factory metricsFactory;
+    @Inject
+    private Injector injector;
     private ConfigurationContainer<ProxyConfiguration> config;
 
     final Set<UUID> loggedPlayers = ConcurrentHashMap.newKeySet();
@@ -97,7 +106,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         final LibsManager libraries
             = new LibsManager(
                 new VelocityLibraryManager<>(
-                    logger, pluginDirectory, proxy.getPluginManager(), this));
+                    logger, pluginDirectory, pluginManager, this));
         libraries.loadLibraries();
 
         try {
@@ -114,34 +123,30 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
 
         proxy.getChannelRegistrar().register(MODERN_CHANNEL, LEGACY_CHANNEL);
 
-        List.of(
-            new ProxyListener(this),
-            new ConnectListener(this, proxy, logger),
-            new PluginMessageListener(proxy, logger, this)
-        ).forEach(listener ->
-            proxy.getEventManager().register(this, listener));
+        Stream.of(
+            ProxyListener.class,
+            ConnectListener.class,
+            PluginMessageListener.class
+        ).map(injector::getInstance)
+        .forEach(listener -> eventManager.register(this, listener));
 
-        final boolean fastlogin = proxy.getPluginManager().isLoaded("fastlogin");
+        final boolean fastlogin = pluginManager.isLoaded("fastlogin");
         metrics.addCustomChart(new SimplePie("fastlogin_compatibility", () -> Boolean.toString(fastlogin)));
         if (fastlogin) {
             logDebug("Register FastLogin compatibility");
-            proxy.getEventManager().register(this, new FastLoginListener(proxy, this));
+            eventManager.register(this, injector.getInstance(FastLoginListener.class));
         }
 
-        final boolean miniplaceholders = proxy.getPluginManager().isLoaded("miniplaceholders");
+        final boolean miniplaceholders = pluginManager.isLoaded("miniplaceholders");
         metrics.addCustomChart(new SimplePie("miniplaceholders_compatibility", () -> Boolean.toString(miniplaceholders)));
         if (miniplaceholders) {
             logDebug("Register MiniPlaceholders compatibility");
-            AuthMePlaceholders.getExpansion(this).register();
+            injector.getInstance(AuthMePlaceholders.class).getExpansion().register();
         }
 
-        AuthMeCommand.register(this, proxy.getCommandManager(), logger);
+        injector.getInstance(AuthMeCommand.class).register();
 
         this.sendInfoMessage();
-    }
-
-    ProxyServer getProxy(){
-        return this.proxy;
     }
 
     public void sendInfoMessage() {
@@ -182,7 +187,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
 
     @Override
     public void removePlayerIf(@NotNull Predicate<Player> predicate){
-        loggedPlayers.removeIf(uuid -> predicate.test(getProxy().getPlayer(uuid).orElse(null)));
+        loggedPlayers.removeIf(uuid -> predicate.test(proxy.getPlayer(uuid).orElse(null)));
     }
 
     @Override

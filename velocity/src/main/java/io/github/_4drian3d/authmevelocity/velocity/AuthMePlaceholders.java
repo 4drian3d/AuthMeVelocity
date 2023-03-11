@@ -17,7 +17,9 @@
 
 package io.github._4drian3d.authmevelocity.velocity;
 
+import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.Player;
+import com.velocitypowered.api.proxy.ProxyServer;
 import io.github.miniplaceholders.api.Expansion;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 
@@ -25,10 +27,12 @@ import static io.github.miniplaceholders.api.utils.Components.FALSE_COMPONENT;
 import static io.github.miniplaceholders.api.utils.Components.TRUE_COMPONENT;
 
 final class AuthMePlaceholders {
-    private AuthMePlaceholders() {
-    }
+    @Inject
+    private AuthMeVelocityPlugin plugin;
+    @Inject
+    private ProxyServer proxyServer;
 
-    static Expansion getExpansion(AuthMeVelocityPlugin plugin) {
+    Expansion getExpansion() {
         return Expansion.builder("authme")
                 .filter(Player.class)
                 // Logged Placeholders
@@ -37,7 +41,7 @@ final class AuthMePlaceholders {
                 .globalPlaceholder("is_player_logged", (queue, ctx) -> {
                     String playerName = queue.popOr(() -> "you need to provide a player").value();
                     return Tag.selfClosingInserting(
-                            plugin.getProxy().getPlayer(playerName)
+                            proxyServer.getPlayer(playerName)
                                     .map(plugin::isLogged)
                                     .orElse(false) ? TRUE_COMPONENT : FALSE_COMPONENT
                     );
@@ -48,7 +52,7 @@ final class AuthMePlaceholders {
                 .globalPlaceholder("player_in_auth_server", (queue, ctx) -> {
                     String playerName = queue.popOr(() -> "you need to provide a player").value();
                     return Tag.selfClosingInserting(
-                            plugin.getProxy().getPlayer(playerName)
+                            proxyServer.getPlayer(playerName)
                                     .map(plugin::isInAuthServer)
                                     .orElse(false) ? TRUE_COMPONENT : FALSE_COMPONENT
                     );
