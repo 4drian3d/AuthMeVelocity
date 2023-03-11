@@ -29,6 +29,10 @@ dependencies {
 
     implementation(libs.libby.velocity)
     implementation(libs.bstats.velocity)
+
+    testImplementation(platform("org.junit:junit-bom:5.9.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation(libs.assertj)
 }
 
 tasks {
@@ -49,5 +53,10 @@ tasks {
     runVelocity {
         velocityVersion(libs.versions.velocity.get())
     }
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events("passed", "failed")
+        }
+    }
 }
-

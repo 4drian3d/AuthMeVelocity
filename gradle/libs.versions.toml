@@ -18,6 +18,9 @@ geantyref = "1.3.13"
 indra = "3.0.1"
 runtask = "2.0.1"
 
+# Test versions
+assertj = "3.24.2"
+
 [libraries]
 
 adventure = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
@@ -40,6 +43,8 @@ configurate-hocon = { group = "org.spongepowered", name = "configurate-hocon", v
 build-indra-common = { module = "net.kyori:indra-common", version.ref = "indra" }
 build-indra-spotless = { module = "net.kyori:indra-licenser-spotless", version.ref = "indra" }
 plugin-shadow = { group = "com.github.johnrengelman", name = "shadow", version.ref = "shadow" }
+
+assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 
 [plugins]
 

@@ -11,6 +11,11 @@ repositories {
 dependencies {
     compileOnly(libs.configurate.hocon)
     compileOnly(libs.libby.core)
+
+    testImplementation(libs.configurate.hocon)
+    testImplementation(platform("org.junit:junit-bom:5.9.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation(libs.assertj)
 }
 
 blossom {
@@ -19,4 +24,13 @@ blossom {
     replaceToken("{description}", project.description)
     replaceToken("{configurate}", libs.versions.configurate.get())
     replaceToken("{geantyref}", libs.versions.geantyref.get())
+}
+
+tasks {
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events("passed", "failed")
+        }
+    }
 }
