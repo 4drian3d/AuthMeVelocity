@@ -17,40 +17,68 @@
 
 package io.github._4drian3d.authmevelocity.common.configuration;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
 public final class ConfigurationContainer<C> {
-    private C config;
+    private final AtomicReference<C> config;
     private final HoconConfigurationLoader loader;
     private final Class<C> clazz;
 
-    public ConfigurationContainer(
+    private ConfigurationContainer(
         final C config,
         final Class<C> clazz,
         final HoconConfigurationLoader loader
     ) {
-        this.config = config;
+        this.config = new AtomicReference<>(config);
         this.loader = loader;
         this.clazz = clazz;
     }
 
     public C get() {
-        return this.config;
+        return this.config.get();
     }
 
     public CompletableFuture<Void> reload() {
         return CompletableFuture.runAsync(() -> {
             try {
                 final CommentedConfigurationNode node = loader.load();
-                config = node.get(clazz);
+                config.set(node.get(clazz));
             } catch (ConfigurateException exception) {
                 throw new CompletionException("Could not load config.conf file", exception);
             }
         });
+    }
+
+    public static <C> ConfigurationContainer<C> load(Path path, Class<C> clazz) throws IOException {
+        path = path.resolve("config.conf");
+        final boolean firstCreation = Files.notExists(path);
+        final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
+                .defaultOptions(opts -> opts
+                        .shouldCopyDefaults(true)
+                        .header("""
+                    AuthMeVelocity | by Glyart & 4drian3d
+                    """)
+                )
+                .path(path)
+                .build();
+
+
+        final CommentedConfigurationNode node = loader.load();
+        final C config = node.get(clazz);
+        if (firstCreation) {
+            node.set(clazz, config);
+            loader.save(node);
+        }
+
+        return new ConfigurationContainer<>(config, clazz, loader);
     }
 }

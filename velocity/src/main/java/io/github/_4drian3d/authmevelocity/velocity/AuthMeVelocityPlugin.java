@@ -38,7 +38,6 @@ import io.github._4drian3d.authmevelocity.api.velocity.AuthMeVelocityAPI;
 import io.github._4drian3d.authmevelocity.common.Constants;
 import io.github._4drian3d.authmevelocity.common.LibsManager;
 import io.github._4drian3d.authmevelocity.common.configuration.ConfigurationContainer;
-import io.github._4drian3d.authmevelocity.common.configuration.Loader;
 import io.github._4drian3d.authmevelocity.common.configuration.ProxyConfiguration;
 import io.github._4drian3d.authmevelocity.velocity.commands.AuthMeCommand;
 import io.github._4drian3d.authmevelocity.velocity.listener.ConnectListener;
@@ -110,7 +109,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         libraries.loadLibraries();
 
         try {
-            this.config = Loader.loadMainConfig(pluginDirectory, ProxyConfiguration.class);
+            this.config = ConfigurationContainer.load(pluginDirectory, ProxyConfiguration.class);
         } catch (Exception e) {
             logger.error("Could not load config.conf file", e);
             return;

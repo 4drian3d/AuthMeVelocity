@@ -22,7 +22,6 @@ import com.google.common.io.ByteStreams;
 import io.github._4drian3d.authmevelocity.common.LibsManager;
 import io.github._4drian3d.authmevelocity.common.MessageType;
 import io.github._4drian3d.authmevelocity.common.configuration.ConfigurationContainer;
-import io.github._4drian3d.authmevelocity.common.configuration.Loader;
 import io.github._4drian3d.authmevelocity.common.configuration.PaperConfiguration;
 import io.github._4drian3d.authmevelocity.paper.listeners.AuthMeListener;
 import io.github._4drian3d.authmevelocity.paper.listeners.MessageListener;
@@ -44,7 +43,7 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
         new LibsManager(new BukkitLibraryManager(this)).loadLibraries();
 
         try {
-            this.config = Loader.loadMainConfig(getDataFolder().toPath(), PaperConfiguration.class);
+            this.config = ConfigurationContainer.load(getDataFolder().toPath(), PaperConfiguration.class);
         } catch (Exception e) {
             getLogger().log(Level.SEVERE, "Could not load config.conf file", e);
             getServer().getPluginManager().disablePlugin(this);
