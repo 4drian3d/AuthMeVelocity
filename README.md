@@ -20,8 +20,9 @@ This plugin adds the support for [Velocity](https://velocitypowered.com/) to [Au
 
 ## Setup
 1. Download the latest release of the plugin [link](https://modrinth.com/plugin/authmevelocity)
-2. Put the plugin in the Velocity plugins folder and on all your Auth servers that have AuthMe installed.
-3. Start the Velocity proxy and set up the config.conf with the auth servers.
+2. Install AuthMeVelocity-Proxy on your Velocity Proxy
+3. Install AuthMeVelocity-Paper on your Spigot/Paper servers that have AuthMeReloaded installed
+4. Start the Velocity proxy and set up the config.conf with the auth servers.
 
 ## Plugin API
 Check the plugin API [here](https://github.com/4drian3d/AuthMeVelocity/wiki/Plugin-API)
