@@ -1,5 +1,4 @@
 plugins {
-    alias(libs.plugins.pluginyml.bukkit)
     alias(libs.plugins.shadow)
     alias(libs.plugins.runpaper)
     id("authmevelocity.spotless")
@@ -28,18 +27,7 @@ dependencies {
     implementation(projects.authmevelocityApiPaper)
 
     implementation(libs.libby.bukkit)
-}
-
-bukkit {
-    name = "AuthMeVelocity"
-    main = "io.github._4drian3d.authmevelocity.paper.AuthMeVelocityPlugin"
-    apiVersion = "1.13"
-    website = project.property("url") as String
-    description = project.description as String
-    authors = listOf("xQuickGlare", "4drian3d")
-    softDepend = listOf("MiniPlaceholders")
-    depend = listOf("AuthMe")
-    version = project.version as String
+    //implementation(libs.libby.paper)
 }
 
 tasks {
@@ -59,7 +47,12 @@ tasks {
         options.release.set(17)
     }
     runServer {
-        minecraftVersion("1.19.3")
+        minecraftVersion("1.19.4")
+    }
+    processResources {
+        filesMatching(listOf("paper-plugin.yml", "plugin.yml")) {
+            expand("version" to project.version)
+        }
     }
 }
 

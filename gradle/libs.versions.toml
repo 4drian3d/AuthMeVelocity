@@ -31,6 +31,7 @@ authme = { module = "fr.xephi:authme", version.ref = "authme" }
 
 libby-core = { group = "net.byteflux", name = "libby-core", version.ref = "libby" }
 libby-bukkit = { group = "net.byteflux", name = "libby-bukkit", version.ref = "libby" }
+#libby-paper = "TODO"
 libby-velocity = { group = "net.byteflux", name = "libby-velocity", version.ref = "libby" }
 
 miniplaceholders = { group = "io.github.miniplaceholders", name = "miniplaceholders-api", version.ref = "miniplaceholders" }
