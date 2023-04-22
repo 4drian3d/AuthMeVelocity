@@ -61,7 +61,7 @@ public interface AuthMeVelocityAPI {
      * Removes players who meet the established condition
      * @param predicate the condition
      */
-    void removePlayerIf(@NotNull Predicate<Player> predicate);
+    void removePlayerIf(@NotNull Predicate<@NotNull Player> predicate);
 
     /**
      * Check if the player is on a login server

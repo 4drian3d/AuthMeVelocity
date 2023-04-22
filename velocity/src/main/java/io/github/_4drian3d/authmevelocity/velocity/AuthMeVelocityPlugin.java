@@ -186,7 +186,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
 
     @Override
     public void removePlayerIf(@NotNull Predicate<Player> predicate){
-        loggedPlayers.removeIf(uuid -> predicate.test(proxy.getPlayer(uuid).orElse(null)));
+        loggedPlayers.removeIf(uuid -> proxy.getPlayer(uuid).filter(predicate).isPresent());
     }
 
     @Override
