@@ -29,8 +29,10 @@ import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import io.github._4drian3d.authmevelocity.common.configuration.ProxyConfiguration;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
 import io.github._4drian3d.authmevelocity.velocity.utils.AuthMeUtils;
+import io.github._4drian3d.authmevelocity.velocity.utils.Pair;
 import org.slf4j.Logger;
 
 import java.util.Optional;
@@ -60,8 +62,8 @@ public final class ConnectListener {
             plugin.logDebug("PlayerChooseInitialServerEvent | Player is in auth server");
             return;
         }
-        final var config = plugin.config().get();
-        final var server = AuthMeUtils.serverToSend(
+        final ProxyConfiguration config = plugin.config().get();
+        final Pair<RegisteredServer> server = AuthMeUtils.serverToSend(
                 config.ensureAuthServer().sendMode(), proxy, config.authServers(), config.advanced().randomAttempts());
 
         // Velocity takes over in case the initial server is not present
@@ -96,18 +98,26 @@ public final class ConnectListener {
     @Subscribe
     public void onServerPostConnect(final ServerPostConnectEvent event) {
         final Player player = event.getPlayer();
-        if (plugin.isLogged(player) && plugin.isInAuthServer(player)) {
-            plugin.logDebug("ServerPostConnectEvent | Already logged player and connected to an Auth server");
-            final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
-            buf.writeUTF("LOGIN");
-            player.getCurrentServer().ifPresent(sv -> {
-                var byteArray = buf.toByteArray();
-                if (!sv.sendPluginMessage(AuthMeVelocityPlugin.MODERN_CHANNEL, byteArray)) {
-                    plugin.logDebug("ServerPostConnectEvent | Failed to send on Modern Channel");
-                    var legacyResult = sv.sendPluginMessage(AuthMeVelocityPlugin.LEGACY_CHANNEL, byteArray);
-                    if(!legacyResult) plugin.logDebug("ServerPostConnectEvent | Failed to send on Legacy Channel");
-                }
-            });
+
+        final boolean isLogged = plugin.isLogged(player);
+        plugin.logDebug("ServerPostConnectEvent | Player "+player.getUsername()+" is logged: " + isLogged);
+        final boolean isInAuthServer = plugin.isInAuthServer(player);
+        plugin.logDebug("ServerPostConnectEvent | Player "+player.getUsername()+" is in AuthServer: " + isInAuthServer);
+
+        if (!(isLogged && isInAuthServer)) {
+            return;
         }
+
+        plugin.logDebug("ServerPostConnectEvent | Already logged player and connected to an Auth server");
+        final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
+        buf.writeUTF("LOGIN");
+        player.getCurrentServer().ifPresent(server -> {
+            final byte[] byteArray = buf.toByteArray();
+            if (!server.sendPluginMessage(AuthMeVelocityPlugin.MODERN_CHANNEL, byteArray)) {
+                plugin.logDebug("ServerPostConnectEvent | Failed to send on Modern Channel");
+                final boolean legacyResult = server.sendPluginMessage(AuthMeVelocityPlugin.LEGACY_CHANNEL, byteArray);
+                if (!legacyResult) plugin.logDebug("ServerPostConnectEvent | Failed to send on Legacy Channel");
+            }
+        });
     }
 }

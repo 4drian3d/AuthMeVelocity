@@ -29,8 +29,10 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import io.github._4drian3d.authmevelocity.api.velocity.event.*;
 import io.github._4drian3d.authmevelocity.common.MessageType;
+import io.github._4drian3d.authmevelocity.common.configuration.ProxyConfiguration;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
 import io.github._4drian3d.authmevelocity.velocity.utils.AuthMeUtils;
+import io.github._4drian3d.authmevelocity.velocity.utils.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -113,9 +115,9 @@ public class PluginMessageListener {
     private void createServerConnectionRequest(Player player, ServerConnection connection){
         final RegisteredServer loginServer = player.getCurrentServer().orElse(connection).getServer();
 
-        final var config = plugin.config().get();
+        final ProxyConfiguration config = plugin.config().get();
 
-        final var toSend = AuthMeUtils.serverToSend(
+        final Pair<RegisteredServer> toSend = AuthMeUtils.serverToSend(
             config.sendOnLogin().sendMode(), proxy, config.sendOnLogin().teleportServers(), config.advanced().randomAttempts());
 
         if (toSend.isEmpty()) {
