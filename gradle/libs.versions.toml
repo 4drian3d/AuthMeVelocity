@@ -4,7 +4,7 @@ metadata.format.version = "1.1"
 
 velocity = "3.2.0-SNAPSHOT"
 paper = "1.19.3-R0.1-SNAPSHOT"
-miniplaceholders = "2.1.0"
+miniplaceholders = "2.2.0"
 fastlogin = "1.12-SNAPSHOT"
 authme = "5.6.0-SNAPSHOT"
 libby = "1.2.0"
