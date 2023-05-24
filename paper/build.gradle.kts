@@ -32,7 +32,7 @@ dependencies {
 
 tasks {
     shadowJar {
-        archiveFileName.set("AuthMeVelocity-Paper-${project.version}.jar")
+        archiveBaseName.set("AuthMeVelocity-Paper")
         archiveClassifier.set("")
 
         relocate("net.byteflux.libby", "io.github._4drian3d.authmevelocity.libs.libby")

@@ -1,6 +1,7 @@
 name: AuthMeVelocity
 version: '${version}'
 main: io.github._4drian3d.authmevelocity.paper.AuthMeVelocityPlugin
+bootstrapper: io.github._4drian3d.authmevelocity.paper.AuthMeVelocityBootstrap
 description: AuthMeReloaded Support for Velocity
 authors:
   - xQuickGlare

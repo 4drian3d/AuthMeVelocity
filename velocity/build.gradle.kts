@@ -39,7 +39,7 @@ tasks {
     shadowJar {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-        archiveFileName.set("AuthMeVelocity-Proxy-${project.version}.jar")
+        archiveBaseName.set("AuthMeVelocity-Velocity")
         archiveClassifier.set("")
 
         relocate("org.bstats", "io.github._4drian3d.authmevelocity.libs.bstats")

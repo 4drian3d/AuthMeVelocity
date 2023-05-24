@@ -20,7 +20,6 @@ package io.github._4drian3d.authmevelocity.velocity;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.event.EventManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Dependency;
@@ -40,10 +39,16 @@ import io.github._4drian3d.authmevelocity.common.LibsManager;
 import io.github._4drian3d.authmevelocity.common.configuration.ConfigurationContainer;
 import io.github._4drian3d.authmevelocity.common.configuration.ProxyConfiguration;
 import io.github._4drian3d.authmevelocity.velocity.commands.AuthMeCommand;
-import io.github._4drian3d.authmevelocity.velocity.listener.ConnectListener;
-import io.github._4drian3d.authmevelocity.velocity.listener.FastLoginListener;
-import io.github._4drian3d.authmevelocity.velocity.listener.PluginMessageListener;
-import io.github._4drian3d.authmevelocity.velocity.listener.ProxyListener;
+import io.github._4drian3d.authmevelocity.velocity.listener.Listener;
+import io.github._4drian3d.authmevelocity.velocity.listener.compat.FastLoginListener;
+import io.github._4drian3d.authmevelocity.velocity.listener.connection.DisconnectListener;
+import io.github._4drian3d.authmevelocity.velocity.listener.connection.InitialServerListener;
+import io.github._4drian3d.authmevelocity.velocity.listener.connection.PostConnectListener;
+import io.github._4drian3d.authmevelocity.velocity.listener.connection.PreConnectListener;
+import io.github._4drian3d.authmevelocity.velocity.listener.data.PluginMessageListener;
+import io.github._4drian3d.authmevelocity.velocity.listener.input.ChatListener;
+import io.github._4drian3d.authmevelocity.velocity.listener.input.CommandListener;
+import io.github._4drian3d.authmevelocity.velocity.listener.input.TabCompleteListener;
 import net.byteflux.libby.VelocityLibraryManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.charts.SimplePie;
@@ -84,8 +89,6 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     @Inject
     private ProxyServer proxy;
     @Inject
-    private EventManager eventManager;
-    @Inject
     private PluginManager pluginManager;
     @Inject
     private Logger logger;
@@ -123,17 +126,22 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         proxy.getChannelRegistrar().register(MODERN_CHANNEL, LEGACY_CHANNEL);
 
         Stream.of(
-            ProxyListener.class,
-            ConnectListener.class,
-            PluginMessageListener.class
+                PluginMessageListener.class,
+                DisconnectListener.class,
+                InitialServerListener.class,
+                PostConnectListener.class,
+                PreConnectListener.class,
+                ChatListener.class,
+                CommandListener.class,
+                TabCompleteListener.class
         ).map(injector::getInstance)
-        .forEach(listener -> eventManager.register(this, listener));
+        .forEach(Listener::register);
 
         final boolean fastlogin = pluginManager.isLoaded("fastlogin");
         metrics.addCustomChart(new SimplePie("fastlogin_compatibility", () -> Boolean.toString(fastlogin)));
         if (fastlogin) {
             logDebug("Register FastLogin compatibility");
-            eventManager.register(this, injector.getInstance(FastLoginListener.class));
+            injector.getInstance(FastLoginListener.class).register();
         }
 
         final boolean miniplaceholders = pluginManager.isLoaded("miniplaceholders");
