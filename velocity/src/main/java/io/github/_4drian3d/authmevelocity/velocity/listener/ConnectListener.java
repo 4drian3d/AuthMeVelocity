@@ -28,6 +28,7 @@ import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import io.github._4drian3d.authmevelocity.common.configuration.ProxyConfiguration;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
@@ -80,16 +81,24 @@ public final class ConnectListener {
             final ServerPreConnectEvent event,
             final Continuation continuation
     ) {
-        if (!event.getResult().isAllowed() || plugin.isLogged(event.getPlayer())) {
-            plugin.logDebug("ServerPreConnectEvent | Not allowed or player not logged");
+        if (plugin.isLogged(event.getPlayer())) {
+            plugin.logDebug("ServerPreConnectEvent | Player already logged");
             continuation.resume();
             return;
         }
 
+        final RegisteredServer server = event.getResult().getServer().orElse(null);
+        if (server == null) {
+            plugin.logDebug("ServerPreConnectEvent | Null Server");
+            continuation.resume();
+            return;
+        }
         // this should be present, "event.getResult().isAllowed()" is the "isPresent" check
-        if (!plugin.isAuthServer(event.getResult().getServer().orElseThrow())) {
-            plugin.logDebug("ServerPreConnectEvent | Server is not an auth server");
+        if (!plugin.isAuthServer(server)) {
+            plugin.logDebug("ServerPreConnectEvent | Server "+server.getServerInfo().getName()+" is not an auth server");
             event.setResult(ServerPreConnectEvent.ServerResult.denied());
+        } else {
+            plugin.logDebug("ServerPreConnectEvent | Server "+server.getServerInfo().getName()+" is an auth server");
         }
         continuation.resume();
     }
@@ -101,6 +110,11 @@ public final class ConnectListener {
 
         final boolean isLogged = plugin.isLogged(player);
         plugin.logDebug("ServerPostConnectEvent | Player "+player.getUsername()+" is logged: " + isLogged);
+        final RegisteredServer server = player.getCurrentServer().map(ServerConnection::getServer).orElse(null);
+        if (server == null) {
+            plugin.logDebug("ServerPostConnectEvent | Player "+player.getUsername()+" is not in a server");
+            return;
+        }
         final boolean isInAuthServer = plugin.isInAuthServer(player);
         plugin.logDebug("ServerPostConnectEvent | Player "+player.getUsername()+" is in AuthServer: " + isInAuthServer);
 
@@ -111,13 +125,13 @@ public final class ConnectListener {
         plugin.logDebug("ServerPostConnectEvent | Already logged player and connected to an Auth server");
         final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
         buf.writeUTF("LOGIN");
-        player.getCurrentServer().ifPresent(server -> {
-            final byte[] byteArray = buf.toByteArray();
-            if (!server.sendPluginMessage(AuthMeVelocityPlugin.MODERN_CHANNEL, byteArray)) {
-                plugin.logDebug("ServerPostConnectEvent | Failed to send on Modern Channel");
-                final boolean legacyResult = server.sendPluginMessage(AuthMeVelocityPlugin.LEGACY_CHANNEL, byteArray);
-                if (!legacyResult) plugin.logDebug("ServerPostConnectEvent | Failed to send on Legacy Channel");
-            }
-        });
+
+        final byte[] byteArray = buf.toByteArray();
+        plugin.logDebug("ServerPostConnectEvent | Sending LOGIN data");
+        if (server.sendPluginMessage(AuthMeVelocityPlugin.MODERN_CHANNEL, byteArray)) {
+            plugin.logDebug("ServerPostConnectEvent | Correctly send data");
+        } else {
+            plugin.logDebug("ServerPostConnectEvent | Failed to send data");
+        }
     }
 }

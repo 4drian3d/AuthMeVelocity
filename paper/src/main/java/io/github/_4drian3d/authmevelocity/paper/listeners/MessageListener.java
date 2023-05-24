@@ -41,25 +41,21 @@ public final class MessageListener implements PluginMessageListener {
             final @NotNull Player player,
             final byte @NotNull [] bytes
     ) {
-        if (!identifier.equals("authmevelocity")) {
-            plugin.logDebug("PluginMessage | Not AuthMeVelocity identifier");
-            return;
+        if (identifier.equals("authmevelocity:main")) {
+            @SuppressWarnings("UnstableApiUsage")
+            final ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
+
+            final String data = input.readUTF();
+            processData(player, data);
+            plugin.logDebug("PluginMessage | AuthMeVelocity identifier processed");
         }
+    }
 
-        plugin.logDebug("PluginMessage | AuthMeVelocity identifier");
-
-        @SuppressWarnings("UnstableApiUsage")
-        final ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
-        final String subChannel = input.readUTF();
-
-        if ("main".equals(subChannel)) {
-            plugin.logDebug("PluginMessage | Main Subchannel");
-            final String msg = input.readUTF();
-            if (MessageType.LOGIN.toString().equals(msg)) {
-                plugin.logDebug("PluginMessage | Login Message");
-                Bukkit.getPluginManager().callEvent(new LoginByProxyEvent(player));
-                AuthMeApi.getInstance().forceLogin(player);
-            }
+    private void processData(Player player, String data) {
+        if (MessageType.LOGIN.toString().equals(data)) {
+            plugin.logDebug("PluginMessage | Login Message");
+            Bukkit.getPluginManager().callEvent(new LoginByProxyEvent(player));
+            AuthMeApi.getInstance().forceLogin(player);
         }
     }
 }
