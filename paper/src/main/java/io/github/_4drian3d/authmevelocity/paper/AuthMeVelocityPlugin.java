@@ -26,25 +26,44 @@ import io.github._4drian3d.authmevelocity.common.configuration.PaperConfiguratio
 import io.github._4drian3d.authmevelocity.paper.listeners.AuthMeListener;
 import io.github._4drian3d.authmevelocity.paper.listeners.MessageListener;
 import net.byteflux.libby.BukkitLibraryManager;
+import net.byteflux.libby.LibraryManager;
+import net.byteflux.libby.PaperLibraryManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.file.Path;
 import java.util.logging.Level;
 
 public final class AuthMeVelocityPlugin extends JavaPlugin {
     private static final String CHANNEL = "authmevelocity:main";
-
+    private final Path dataFolder;
     private ConfigurationContainer<PaperConfiguration> config;
+
+    @SuppressWarnings("unused")
+    public AuthMeVelocityPlugin() {
+        this.dataFolder = getDataFolder().toPath();
+    }
+
+    public AuthMeVelocityPlugin(final Path dataFolder) {
+        this.dataFolder = dataFolder;
+    }
 
     @Override
     public void onEnable() {
-        new LibsManager(new BukkitLibraryManager(this)).loadLibraries();
+        LibraryManager libraryManager;
+        try {
+            Class.forName("io.papermc.paper.plugin.bootstrap.PluginBootstrap");
+            libraryManager = new PaperLibraryManager(this);
+        } catch (ClassNotFoundException e) {
+            libraryManager = new BukkitLibraryManager(this);
+        }
+        new LibsManager(libraryManager).loadLibraries();
 
         try {
-            this.config = ConfigurationContainer.load(getDataFolder().toPath(), PaperConfiguration.class);
-        } catch (Exception e) {
+            this.config = ConfigurationContainer.load(dataFolder, PaperConfiguration.class);
+        } catch (Throwable e) {
             getLogger().log(Level.SEVERE, "Could not load config.conf file", e);
             getServer().getPluginManager().disablePlugin(this);
             return;

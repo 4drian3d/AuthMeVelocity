@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 public final class MessageListener implements PluginMessageListener {
     private final AuthMeVelocityPlugin plugin;
 
-    public MessageListener(AuthMeVelocityPlugin plugin) {
+    public MessageListener(final AuthMeVelocityPlugin plugin) {
         this.plugin = plugin;
     }
 

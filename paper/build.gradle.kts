@@ -27,7 +27,7 @@ dependencies {
     implementation(projects.authmevelocityApiPaper)
 
     implementation(libs.libby.bukkit)
-    //implementation(libs.libby.paper)
+    implementation(libs.libby.paper)
 }
 
 tasks {

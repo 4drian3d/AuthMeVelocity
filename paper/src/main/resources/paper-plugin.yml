@@ -1,0 +1,17 @@
+name: AuthMeVelocity
+version: '${version}'
+main: io.github._4drian3d.authmevelocity.paper.AuthMeVelocityPlugin
+description: AuthMeReloaded Support for Velocity
+authors:
+  - xQuickGlare
+  - 4drian3d
+website: https://modrinth.com/plugin/authmevelocity
+api-version: '1.19'
+folia-supported: true
+dependencies:
+  - name: MiniPlaceholders
+    required: false
+    bootstrap: false
+  - name: AuthMe
+    required: true
+    bootstrap: false
