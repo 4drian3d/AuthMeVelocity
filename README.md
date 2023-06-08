@@ -6,8 +6,8 @@
 This plugin adds the support for [Velocity](https://velocitypowered.com/) to [AuthMeReloaded](https://github.com/AuthMe/AuthMeReloaded)
 
 ## Requirements
-- Spigot, Paper, Pufferfish or Purpur 1.8+
-- Velocity 3.1.2+
+- Spigot, Paper, Pufferfish or Purpur 1.8-1.19.2 && 1.19.4+
+- Velocity 3.2.0+
 - Java 17+
 
 ## Features
