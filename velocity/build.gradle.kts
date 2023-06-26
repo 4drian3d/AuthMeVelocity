@@ -15,14 +15,17 @@ repositories {
             includeGroup("net.byteflux")
         }
     }
+    maven("https://maven.elytrium.net/repo/")
 }
 
 dependencies {
-    compileOnly(libs.velocity)
-    annotationProcessor(libs.velocity)
+    compileOnly(libs.velocity.api)
+    compileOnly(libs.velocity.proxy)
+    annotationProcessor(libs.velocity.api)
 
     compileOnly(libs.miniplaceholders)
     compileOnly(libs.fastlogin.velocity)
+    compileOnly(libs.vpacketevents)
 
     implementation(projects.authmevelocityCommon)
     implementation(projects.authmevelocityApiVelocity)
