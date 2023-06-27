@@ -1,6 +1,7 @@
 plugins {
     id("authmevelocity.publishing")
     id("authmevelocity.spotless")
+    id("authmevelocity.java")
 }
 
 dependencies {
@@ -17,5 +18,5 @@ tasks {
                 "https://jd.papermc.io/paper/1.19/"
             )
         }
-    }  
+    }
 }

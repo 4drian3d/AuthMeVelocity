@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.blossom)
     id("authmevelocity.spotless")
+    id("authmevelocity.java")
 }
 
 repositories {

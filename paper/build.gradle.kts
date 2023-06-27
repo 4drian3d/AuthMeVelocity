@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.runpaper)
     id("authmevelocity.spotless")
+    id("authmevelocity.java")
 }
 
 repositories {

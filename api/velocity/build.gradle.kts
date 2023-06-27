@@ -1,6 +1,7 @@
 plugins {
     id("authmevelocity.publishing")
     id("authmevelocity.spotless")
+    id("authmevelocity.java")
 }
 
 dependencies {
