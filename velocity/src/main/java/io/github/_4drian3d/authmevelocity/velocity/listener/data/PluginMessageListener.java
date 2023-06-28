@@ -141,7 +141,7 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
                     }
                     player.createConnectionRequest(event.getResult().getServer())
                             .connect()
-                            .thenAcceptAsync(result -> {
+                            .thenAccept(result -> {
                                 if (!result.isSuccessful()) {
                                     logger.info("Unable to connect the player {} to the server {}",
                                             player.getUsername(),

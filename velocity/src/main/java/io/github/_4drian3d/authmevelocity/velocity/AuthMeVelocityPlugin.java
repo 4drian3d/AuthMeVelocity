@@ -157,6 +157,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         }
 
         final boolean vpacketevents = pluginManager.isLoaded("vpacketevents");
+        metrics.addCustomChart(new SimplePie("vpacketevents_listener", () -> Boolean.toString(vpacketevents)));
         if (vpacketevents) {
             injector.getInstance(CompletionPacketListener.class).register();
         }

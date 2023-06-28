@@ -6,7 +6,7 @@
 This plugin adds the support for [Velocity](https://velocitypowered.com/) to [AuthMeReloaded](https://github.com/AuthMe/AuthMeReloaded)
 
 ## Requirements
-- Spigot, Paper, Pufferfish or Purpur 1.8-1.19.2 && 1.19.4+
+- Paper, Pufferfish or Purpur 1.8-1.19.2 && 1.19.4+
 - Velocity 3.2.0+
 - Java 17+
 
@@ -21,7 +21,7 @@ This plugin adds the support for [Velocity](https://velocitypowered.com/) to [Au
 ## Setup
 1. Download the latest release of the plugin [link](https://modrinth.com/plugin/authmevelocity)
 2. Install AuthMeVelocity-Proxy on your Velocity Proxy
-3. Install AuthMeVelocity-Paper on your Spigot/Paper servers that have AuthMeReloaded installed
+3. Install AuthMeVelocity-Paper on your Paper servers that have AuthMeReloaded installed
 4. Start the Velocity proxy and set up the config.conf with the auth servers.
 
 ## Plugin API
