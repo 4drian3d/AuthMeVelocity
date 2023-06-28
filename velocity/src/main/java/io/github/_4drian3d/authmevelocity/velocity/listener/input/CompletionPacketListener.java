@@ -20,7 +20,6 @@ package io.github._4drian3d.authmevelocity.velocity.listener.input;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.EventManager;
 import com.velocitypowered.api.event.EventTask;
-import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.proxy.protocol.packet.TabCompleteResponse;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
@@ -45,9 +44,6 @@ public final class CompletionPacketListener implements Listener<PacketSendEvent>
             return null;
         }
         final Player player = event.getPlayer();
-        if (player.getProtocolVersion().compareTo(ProtocolVersion.MINECRAFT_1_13) < 0) {
-            return null;
-        }
         return EventTask.async(() -> {
             if (plugin.isLogged(player)) {
                 plugin.logDebug("PacketSendEvent | TabCompleteResponse | Player is already logged");
