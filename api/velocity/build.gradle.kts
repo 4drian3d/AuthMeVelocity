@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    compileOnly(libs.velocity)
+    compileOnly(libs.velocity.api)
 }
 
 tasks {

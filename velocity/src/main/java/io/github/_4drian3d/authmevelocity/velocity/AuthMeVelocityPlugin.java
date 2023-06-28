@@ -48,6 +48,7 @@ import io.github._4drian3d.authmevelocity.velocity.listener.connection.PreConnec
 import io.github._4drian3d.authmevelocity.velocity.listener.data.PluginMessageListener;
 import io.github._4drian3d.authmevelocity.velocity.listener.input.ChatListener;
 import io.github._4drian3d.authmevelocity.velocity.listener.input.CommandListener;
+import io.github._4drian3d.authmevelocity.velocity.listener.input.CompletionPacketListener;
 import io.github._4drian3d.authmevelocity.velocity.listener.input.TabCompleteListener;
 import net.byteflux.libby.VelocityLibraryManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -77,6 +78,10 @@ import java.util.stream.Stream;
         ),
         @Dependency(
             id = "fastlogin",
+            optional = true
+        ),
+        @Dependency(
+            id = "vpacketevents",
             optional = true
         )
     }
@@ -149,6 +154,11 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         if (miniplaceholders) {
             logDebug("Register MiniPlaceholders compatibility");
             injector.getInstance(AuthMePlaceholders.class).getExpansion().register();
+        }
+
+        final boolean vpacketevents = pluginManager.isLoaded("vpacketevents");
+        if (vpacketevents) {
+            injector.getInstance(CompletionPacketListener.class).register();
         }
 
         injector.getInstance(AuthMeCommand.class).register();
