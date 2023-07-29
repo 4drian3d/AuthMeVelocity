@@ -38,7 +38,7 @@ public final class MessageListener implements PluginMessageListener {
     @Override
     public void onPluginMessageReceived(
             final @NotNull String identifier,
-            final @NotNull Player player,
+            final @NotNull Player $,
             final byte @NotNull [] bytes
     ) {
         if (identifier.equals("authmevelocity:main")) {
@@ -46,13 +46,18 @@ public final class MessageListener implements PluginMessageListener {
             final ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
 
             final String data = input.readUTF();
-            processData(player, data);
+            final String username = input.readUTF();
+            processData(username, data);
             plugin.logDebug("PluginMessage | AuthMeVelocity identifier processed");
         }
     }
 
-    private void processData(Player player, String data) {
+    private void processData(String name, String data) {
         if (MessageType.LOGIN.toString().equals(data)) {
+            final Player player = this.plugin.getServer().getPlayer(name);
+            if (player == null) {
+                return;
+            }
             plugin.logDebug("PluginMessage | Login Message");
             Bukkit.getPluginManager().callEvent(new LoginByProxyEvent(player));
             AuthMeApi.getInstance().forceLogin(player);

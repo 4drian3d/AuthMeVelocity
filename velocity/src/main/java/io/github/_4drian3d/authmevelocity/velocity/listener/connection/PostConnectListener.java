@@ -62,6 +62,7 @@ public final class PostConnectListener implements Listener<ServerPostConnectEven
             plugin.logDebug("ServerPostConnectEvent | Already logged player and connected to an Auth server");
             final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
             buf.writeUTF("LOGIN");
+            buf.writeUTF(player.getUsername());
 
             final byte[] byteArray = buf.toByteArray();
             plugin.logDebug("ServerPostConnectEvent | Sending LOGIN data");

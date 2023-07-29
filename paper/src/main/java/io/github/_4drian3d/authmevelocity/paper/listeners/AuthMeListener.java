@@ -49,7 +49,7 @@ public final class AuthMeListener implements Listener {
 
         if (!preSendLoginEvent.isCancelled()) {
             plugin.sendMessageToProxy(player, MessageType.LOGIN, player.getName());
-            plugin.getLogger().info("LoginEvent | PreSendLoginEvent allowed");
+            plugin.logDebug("LoginEvent | PreSendLoginEvent allowed");
         }
     }
 
