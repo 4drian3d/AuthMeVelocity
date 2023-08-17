@@ -15,24 +15,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package io.github._4drian3d.authmevelocity.velocity;
+package io.github._4drian3d.authmevelocity.velocity.hooks;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
 import io.github.miniplaceholders.api.Expansion;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 
 import static io.github.miniplaceholders.api.utils.Components.FALSE_COMPONENT;
 import static io.github.miniplaceholders.api.utils.Components.TRUE_COMPONENT;
 
-final class AuthMePlaceholders {
+public final class AuthMePlaceholders {
     @Inject
     private AuthMeVelocityPlugin plugin;
     @Inject
     private ProxyServer proxyServer;
 
-    Expansion getExpansion() {
+    public Expansion getExpansion() {
         return Expansion.builder("authme")
                 .filter(Player.class)
                 // Logged Placeholders

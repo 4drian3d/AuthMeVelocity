@@ -39,6 +39,8 @@ import io.github._4drian3d.authmevelocity.common.LibsManager;
 import io.github._4drian3d.authmevelocity.common.configuration.ConfigurationContainer;
 import io.github._4drian3d.authmevelocity.common.configuration.ProxyConfiguration;
 import io.github._4drian3d.authmevelocity.velocity.commands.AuthMeCommand;
+import io.github._4drian3d.authmevelocity.velocity.hooks.AuthMeContexts;
+import io.github._4drian3d.authmevelocity.velocity.hooks.AuthMePlaceholders;
 import io.github._4drian3d.authmevelocity.velocity.listener.Listener;
 import io.github._4drian3d.authmevelocity.velocity.listener.compat.FastLoginListener;
 import io.github._4drian3d.authmevelocity.velocity.listener.connection.DisconnectListener;
@@ -82,6 +84,10 @@ import java.util.stream.Stream;
         ),
         @Dependency(
             id = "vpacketevents",
+            optional = true
+        ),
+        @Dependency(
+            id = "luckperms",
             optional = true
         )
     }
@@ -160,6 +166,10 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         metrics.addCustomChart(new SimplePie("vpacketevents_listener", () -> Boolean.toString(vpacketevents)));
         if (vpacketevents) {
             injector.getInstance(CompletionPacketListener.class).register();
+        }
+
+        if (pluginManager.isLoaded("luckperms")) {
+            this.injector.getInstance(AuthMeContexts.class).register();
         }
 
         injector.getInstance(AuthMeCommand.class).register();

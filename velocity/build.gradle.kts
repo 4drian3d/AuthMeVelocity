@@ -26,6 +26,7 @@ dependencies {
     compileOnly(libs.miniplaceholders)
     compileOnly(libs.fastlogin.velocity)
     compileOnly(libs.vpacketevents)
+    compileOnly(libs.luckperms)
 
     implementation(projects.authmevelocityCommon)
     implementation(projects.authmevelocityApiVelocity)
