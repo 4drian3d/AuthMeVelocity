@@ -22,7 +22,7 @@ jobs:
       with:
         timeout_minutes: 5
         max_attempts: 2
-        command: gradle clean build
+        command: ./gradlew clean build
 
     - name: Upload artifact
       uses: actions/upload-artifact@v3
