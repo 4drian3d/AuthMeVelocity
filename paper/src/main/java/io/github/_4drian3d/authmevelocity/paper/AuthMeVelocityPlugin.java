@@ -58,14 +58,16 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
             libraryManager = new PaperLibraryManager(this);
         } catch (ClassNotFoundException e) {
             libraryManager = new BukkitLibraryManager(this);
+            this.getLogger().warning("You are using Spigot or a very old version of the platform you are using."
+                    +"\nIn the future AuthMeVelocity will no longer support this version. Consider upgrading to Paper 1.19.4+.");
         }
         new LibsManager(libraryManager).loadLibraries();
 
         try {
             this.config = ConfigurationContainer.load(dataFolder, PaperConfiguration.class);
         } catch (Throwable e) {
-            getLogger().log(Level.SEVERE, "Could not load config.conf file", e);
-            getServer().getPluginManager().disablePlugin(this);
+            this.getLogger().log(Level.SEVERE, "Could not load config.conf file", e);
+            this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
