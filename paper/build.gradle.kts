@@ -42,10 +42,6 @@ tasks {
     build {
         dependsOn(shadowJar)
     }
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
-    }
     runServer {
         minecraftVersion("1.19.4")
     }
@@ -55,5 +51,3 @@ tasks {
         }
     }
 }
-
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))

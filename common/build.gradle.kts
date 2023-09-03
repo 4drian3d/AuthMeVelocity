@@ -4,7 +4,6 @@ plugins {
 }
 
 repositories {
-    mavenCentral()
     maven("https://repo.alessiodp.com/releases/")
 }
 
