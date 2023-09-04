@@ -70,7 +70,7 @@ import java.util.stream.Stream;
     id = "authmevelocity",
     name = "AuthMeVelocity",
     url = "https://modrinth.com/plugin/authmevelocity",
-    description = Constants.DESCRIPTION,
+    description = "AuthMeReloaded Support for Velocity",
     version = Constants.VERSION,
     authors = {"xQuickGlare", "4drian3d"},
     dependencies = {

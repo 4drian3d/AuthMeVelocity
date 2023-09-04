@@ -17,12 +17,16 @@ dependencies {
     testImplementation(libs.assertj)
 }
 
-blossom {
-    replaceTokenIn("src/main/java/io/github/_4drian3d/authmevelocity/common/Constants.java")
-    replaceToken("{version}", project.version)
-    replaceToken("{description}", project.description)
-    replaceToken("{configurate}", libs.versions.configurate.get())
-    replaceToken("{geantyref}", libs.versions.geantyref.get())
+sourceSets {
+    main {
+        blossom {
+            javaSources {
+                property("version", project.version.toString())
+                property("configurate", libs.versions.configurate.get())
+                property("geantyref", libs.versions.geantyref.get())
+            }
+        }
+    }
 }
 
 tasks {
