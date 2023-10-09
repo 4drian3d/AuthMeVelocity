@@ -134,6 +134,10 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
             return;
         }
 
+        if (plugin.config().get().sendOnLogin().isRequirePermission() && !player.hasPermission("authmevelocity.send-on-login")) {
+            return;
+        }
+
         eventManager.fire(new PreSendOnLoginEvent(player, loginServer, toSend.object()))
                 .thenAccept(event -> {
                     if (!event.getResult().isAllowed()) {

@@ -80,6 +80,12 @@ public class ProxyConfiguration {
             return this.sendOnLogin;
         }
 
+        @Comment("Require players to have the authmevelocity.send-on-login permission?")
+        private boolean requirePermission = false;
+        public boolean isRequirePermission() {
+            return this.requirePermission;
+        }
+
         @Comment("""
             List of servers to send
             One of these servers will be chosen at random""")
