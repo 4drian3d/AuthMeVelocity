@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.ideaext)
     alias(libs.plugins.blossom)
     id("authmevelocity.spotless")
 }

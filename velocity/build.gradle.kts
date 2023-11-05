@@ -15,7 +15,7 @@ repositories {
             includeGroup("net.byteflux")
         }
     }
-    maven("https://mvn.exceptionflug.de/repository/exceptionflug-public/")
+    maven("https://maven.elytrium.net/repo/")
 }
 
 dependencies {
