@@ -34,7 +34,7 @@ dependencies {
     implementation(libs.libby.velocity)
     implementation(libs.bstats.velocity)
 
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation(platform("org.junit:junit-bom:5.10.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation(libs.assertj)
 }
