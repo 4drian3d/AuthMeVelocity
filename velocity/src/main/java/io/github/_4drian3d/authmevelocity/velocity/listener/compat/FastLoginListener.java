@@ -20,9 +20,12 @@ package io.github._4drian3d.authmevelocity.velocity.listener.compat;
 import com.github.games647.fastlogin.velocity.event.VelocityFastLoginAutoLoginEvent;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.EventTask;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
 import io.github._4drian3d.authmevelocity.velocity.listener.Listener;
+
+import java.util.Optional;
 
 public final class FastLoginListener implements Listener<VelocityFastLoginAutoLoginEvent> {
     @Inject
@@ -38,8 +41,15 @@ public final class FastLoginListener implements Listener<VelocityFastLoginAutoLo
     @Override
     public EventTask executeAsync(final VelocityFastLoginAutoLoginEvent event) {
         return EventTask.async(() -> {
-            plugin.logDebug("VelocityFastLoginAutoLoginEvent | Attempt to auto register player");
-            proxy.getPlayer(event.getProfile().getName()).ifPresent(plugin::addPlayer);
+            plugin.logDebug(() -> "VelocityFastLoginAutoLoginEvent | Attempt to auto register player");
+            final Optional<Player> optionalPlayer = proxy.getPlayer(event.getProfile().getName());
+            if (optionalPlayer.isPresent()) {
+                final Player player = optionalPlayer.get();
+                plugin.logDebug(() -> "VelocityFastLoginAutoLoginEvent | Auto registering player " + player.getUsername());
+                plugin.addPlayer(player);
+            } else {
+                plugin.logDebug(() -> "VelocityFastLoginAutoLoginEvent | Player " + event.getProfile().getName() + " could not be registered");
+            }
         });
     }
 }

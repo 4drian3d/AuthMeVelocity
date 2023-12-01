@@ -29,7 +29,7 @@ import static io.github.miniplaceholders.api.utils.Components.*;
 final class AuthMePlaceholders {
     private AuthMePlaceholders() {}
 
-    static Expansion getExpansion(){
+    static Expansion getExpansion() {
         return Expansion.builder("authme")
             .filter(Player.class)
             .audiencePlaceholder("is_logged", (aud, queue, ctx) -> 

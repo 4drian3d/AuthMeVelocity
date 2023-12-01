@@ -40,7 +40,7 @@ public class TabCompleteListener implements Listener<TabCompleteEvent> {
     public EventTask executeAsync(final TabCompleteEvent event) {
         return EventTask.async(() -> {
             if (plugin.isLogged(event.getPlayer())) {
-                plugin.logDebug("TabCompleteEvent | Player is already logged");
+                plugin.logDebug("TabCompleteEvent | Player " + event.getPlayer().getUsername() + " is already logged");
                 return;
             }
 
@@ -51,7 +51,7 @@ public class TabCompleteListener implements Listener<TabCompleteEvent> {
                 }
             }
 
-            plugin.logDebug("TabCompleteEvent | Not allowed tab-completion");
+            plugin.logDebug("TabCompleteEvent | " + event.getPlayer().getUsername() + " | Not allowed tab-completion");
             event.getSuggestions().clear();
         });
     }

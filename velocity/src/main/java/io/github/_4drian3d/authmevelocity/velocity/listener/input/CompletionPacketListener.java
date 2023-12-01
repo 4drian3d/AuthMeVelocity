@@ -46,7 +46,7 @@ public final class CompletionPacketListener implements Listener<PacketSendEvent>
         final Player player = event.getPlayer();
         return EventTask.async(() -> {
             if (plugin.isLogged(player)) {
-                plugin.logDebug("PacketSendEvent | TabCompleteResponse | Player is already logged");
+                plugin.logDebug(() -> "PacketSendEvent | TabCompleteResponse | Player " + player.getUsername() + " is already logged");
                 return;
             }
             responsePacket.getOffers().clear();

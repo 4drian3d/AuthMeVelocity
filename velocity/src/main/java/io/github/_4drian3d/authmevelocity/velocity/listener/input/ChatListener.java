@@ -40,12 +40,12 @@ public final class ChatListener implements Listener<PlayerChatEvent> {
     public EventTask executeAsync(final PlayerChatEvent event) {
         return EventTask.withContinuation(continuation -> {
             if (plugin.isLogged(event.getPlayer())) {
-                plugin.logDebug("PlayerChatEvent | Player is already logged");
+                plugin.logDebug(() -> "PlayerChatEvent | Player " + event.getPlayer().getUsername() + " is already logged");
                 continuation.resume();
                 return;
             }
 
-            plugin.logDebug("PlayerChatEvent | Player is not logged");
+            plugin.logDebug(() -> "PlayerChatEvent | Player " + event.getPlayer().getUsername() + " is not logged");
 
             event.setResult(PlayerChatEvent.ChatResult.denied());
             continuation.resume();

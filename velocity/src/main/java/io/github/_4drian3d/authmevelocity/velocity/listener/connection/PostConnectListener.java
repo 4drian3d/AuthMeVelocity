@@ -29,6 +29,7 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
 import io.github._4drian3d.authmevelocity.velocity.listener.Listener;
 
+@SuppressWarnings("UnstableApiUsage")
 public final class PostConnectListener implements Listener<ServerPostConnectEvent> {
     @Inject
     private AuthMeVelocityPlugin plugin;
@@ -46,7 +47,7 @@ public final class PostConnectListener implements Listener<ServerPostConnectEven
             final Player player = event.getPlayer();
 
             final boolean isLogged = plugin.isLogged(player);
-            plugin.logDebug("ServerPostConnectEvent | Player "+player.getUsername()+" is logged: " + isLogged);
+            plugin.logDebug(() -> "ServerPostConnectEvent | Player "+player.getUsername()+" is logged: " + isLogged);
             final RegisteredServer server = player.getCurrentServer().map(ServerConnection::getServer).orElse(null);
             if (server == null) {
                 plugin.logDebug("ServerPostConnectEvent | Player "+player.getUsername()+" is not in a server");
@@ -65,9 +66,9 @@ public final class PostConnectListener implements Listener<ServerPostConnectEven
             buf.writeUTF(player.getUsername());
 
             final byte[] byteArray = buf.toByteArray();
-            plugin.logDebug("ServerPostConnectEvent | Sending LOGIN data");
+            plugin.logDebug(() -> "ServerPostConnectEvent | " + player.getUsername() + " | Sending LOGIN data");
             if (server.sendPluginMessage(AuthMeVelocityPlugin.MODERN_CHANNEL, byteArray)) {
-                plugin.logDebug("ServerPostConnectEvent | Correctly send data");
+                plugin.logDebug(() -> "ServerPostConnectEvent | " + player.getUsername() + " | Correctly send data");
             } else {
                 plugin.logDebug("ServerPostConnectEvent | Failed to send data");
             }

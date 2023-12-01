@@ -91,26 +91,26 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
                     plugin.logDebug("PluginMessageEvent | Logout type");
                     if (player != null && plugin.removePlayer(player)){
                         eventManager.fireAndForget(new ProxyLogoutEvent(player));
-                        plugin.logDebug("PluginMessageEvent | Player not null");
+                        plugin.logDebug(() -> "PluginMessageEvent | Player " + name + " not null");
                     }
                 }
                 case REGISTER -> {
                     plugin.logDebug("PluginMessageEvent | Register");
                     if (player != null) {
                         eventManager.fireAndForget(new ProxyRegisterEvent(player));
-                        plugin.logDebug("PluginMessageEvent | Player not null");
+                        plugin.logDebug(() -> "PluginMessageEvent | Player " + name + " not null");
                     }
                 }
                 case UNREGISTER -> {
                     plugin.logDebug("PluginMessageEvent | Unregister type");
                     if (player != null) {
-                        plugin.logDebug("PluginMessageEvent | Player not null");
+                        plugin.logDebug(() -> "PluginMessageEvent | Player " + name + " not null");
                         eventManager.fireAndForget(new ProxyUnregisterEvent(player));
                     }
                 }
                 case FORCE_UNREGISTER -> {
                     eventManager.fireAndForget(new ProxyForcedUnregisterEvent(player));
-                    plugin.logDebug("PluginMessageEvent | Forced Unregister type");
+                    plugin.logDebug(() -> "PluginMessageEvent | Forced Unregister type, player " + name);
                 }
 
             }
@@ -135,6 +135,7 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
         }
 
         if (plugin.config().get().sendOnLogin().isRequirePermission() && !player.hasPermission("authmevelocity.send-on-login")) {
+            plugin.logDebug(() -> "PluginMessageEvent # createServerConnectionRequest | The player does not have permission " + player.getUsername());
             return;
         }
 

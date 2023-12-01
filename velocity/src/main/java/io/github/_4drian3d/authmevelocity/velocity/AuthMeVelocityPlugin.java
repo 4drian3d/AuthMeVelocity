@@ -64,6 +64,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @Plugin(
@@ -241,6 +242,12 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     public void logDebug(String msg) {
         if (config.get().advanced().debug()) {
             logger.info("[DEBUG] {}", msg);
+        }
+    }
+
+    public void logDebug(Supplier<String> msg) {
+        if (config.get().advanced().debug()) {
+            logger.info("[DEBUG] {}", msg.get());
         }
     }
 }

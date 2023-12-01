@@ -40,14 +40,14 @@ public final class PreConnectListener implements Listener<ServerPreConnectEvent>
     public EventTask executeAsync(final ServerPreConnectEvent event) {
         return EventTask.withContinuation(continuation -> {
             if (plugin.isLogged(event.getPlayer())) {
-                plugin.logDebug("ServerPreConnectEvent | Player already logged");
+                plugin.logDebug(() -> "ServerPreConnectEvent | Player " + event.getPlayer().getUsername() + " is already logged");
                 continuation.resume();
                 return;
             }
 
             final RegisteredServer server = event.getResult().getServer().orElse(null);
             if (server == null) {
-                plugin.logDebug("ServerPreConnectEvent | Null Server");
+                plugin.logDebug(() -> "ServerPreConnectEvent | " + event.getPlayer().getUsername() + " | Null Server");
                 continuation.resume();
                 return;
             }

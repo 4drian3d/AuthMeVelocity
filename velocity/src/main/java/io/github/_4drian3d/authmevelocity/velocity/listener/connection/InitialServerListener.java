@@ -61,7 +61,7 @@ public final class InitialServerListener implements Listener<PlayerChooseInitial
             final Optional<RegisteredServer> optionalSV = event.getInitialServer();
             if (optionalSV.isPresent() && plugin.isAuthServer(optionalSV.get())) {
                 continuation.resume();
-                plugin.logDebug("PlayerChooseInitialServerEvent | Player is in auth server");
+                plugin.logDebug(() -> "PlayerChooseInitialServerEvent | " + event.getPlayer().getUsername() + " | Player is in auth server");
                 return;
             }
 
@@ -72,7 +72,7 @@ public final class InitialServerListener implements Listener<PlayerChooseInitial
             event.setInitialServer(server.object());
             continuation.resume();
             if (server.isEmpty()) {
-                plugin.logDebug("PlayerChooseInitialServerEvent | Null server");
+                plugin.logDebug(() -> "PlayerChooseInitialServerEvent | " + event.getPlayer().getUsername() + " | Null server");
                 logger.error("Cannot send the player {} to an auth server", event.getPlayer().getUsername());
             }
         });

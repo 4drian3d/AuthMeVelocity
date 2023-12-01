@@ -43,27 +43,27 @@ public final class CommandListener implements Listener<CommandExecuteEvent> {
     public EventTask executeAsync(final CommandExecuteEvent event) {
         return EventTask.withContinuation(continuation -> {
             if (!(event.getCommandSource() instanceof final Player player)) {
-                plugin.logDebug("CommandExecuteEvent | CommandSource is not a player");
+                plugin.logDebug(() -> "CommandExecuteEvent | CommandSource is not a player");
                 continuation.resume();
                 return;
             }
 
             if (plugin.isLogged(player)) {
-                plugin.logDebug("CommandExecuteEvent | Player is already logged");
+                plugin.logDebug(() -> "CommandExecuteEvent | Player "+ player.getUsername() +" is already logged");
                 continuation.resume();
                 return;
             }
 
             if (plugin.isInAuthServer(player)) {
-                plugin.logDebug("CommandExecuteEvent | Player is in Auth Server");
+                plugin.logDebug(() -> "CommandExecuteEvent | Player "+ player.getUsername() +" is in Auth Server");
                 final String command = AuthMeUtils.getFirstArgument(event.getCommand());
                 if (!plugin.config().get().commands().allowedCommands().contains(command)) {
-                    plugin.logDebug("CommandExecuteEvent | Player executed an blocked command");
+                    plugin.logDebug(() -> "CommandExecuteEvent | Player "+ player.getUsername() +" executed an blocked command");
                     sendBlockedMessage(player);
                     event.setResult(CommandExecuteEvent.CommandResult.denied());
                 }
             } else {
-                plugin.logDebug("CommandExecuteEven | Player is not in auth server");
+                plugin.logDebug(() -> "CommandExecuteEvent | Player "+ player.getUsername() +" is not in auth server");
                 sendBlockedMessage(player);
                 event.setResult(CommandExecuteEvent.CommandResult.denied());
             }
