@@ -17,11 +17,7 @@
 
 package io.github._4drian3d.authmevelocity.paper.listeners;
 
-import fr.xephi.authme.events.LoginEvent;
-import fr.xephi.authme.events.LogoutEvent;
-import fr.xephi.authme.events.RegisterEvent;
-import fr.xephi.authme.events.UnregisterByAdminEvent;
-import fr.xephi.authme.events.UnregisterByPlayerEvent;
+import fr.xephi.authme.events.*;
 import io.github._4drian3d.authmevelocity.api.paper.event.PreSendLoginEvent;
 import io.github._4drian3d.authmevelocity.common.MessageType;
 import io.github._4drian3d.authmevelocity.paper.AuthMeVelocityPlugin;
@@ -50,6 +46,21 @@ public final class AuthMeListener implements Listener {
         if (!preSendLoginEvent.isCancelled()) {
             plugin.sendMessageToProxy(player, MessageType.LOGIN, player.getName());
             plugin.logDebug("LoginEvent | PreSendLoginEvent allowed");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onSessionRestored(RestoreSessionEvent event) {
+        final Player player = event.getPlayer();
+        plugin.logDebug("RestoreSessionEvent | Start");
+
+        // I hate this, but... Spigot compatibility ¯\_(ツ)_/¯
+        final var preSendLoginEvent = new PreSendLoginEvent(player);
+        Bukkit.getPluginManager().callEvent(preSendLoginEvent);
+
+        if (!preSendLoginEvent.isCancelled()) {
+            plugin.sendMessageToProxy(player, MessageType.LOGIN, player.getName());
+            plugin.logDebug("RestoreSessionEvent | PreSendLoginEvent allowed");
         }
     }
 
