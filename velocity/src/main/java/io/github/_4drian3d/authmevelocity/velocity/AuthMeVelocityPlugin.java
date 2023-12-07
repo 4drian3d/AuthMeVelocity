@@ -239,13 +239,13 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         return config.get().authServers().contains(server);
     }
 
-    public void logDebug(String msg) {
+    public void logDebug(final String msg) {
         if (config.get().advanced().debug()) {
             logger.info("[DEBUG] {}", msg);
         }
     }
 
-    public void logDebug(Supplier<String> msg) {
+    public void logDebug(final Supplier<String> msg) {
         if (config.get().advanced().debug()) {
             logger.info("[DEBUG] {}", msg.get());
         }

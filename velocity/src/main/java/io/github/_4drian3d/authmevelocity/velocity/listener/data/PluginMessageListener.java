@@ -57,11 +57,7 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
     @Override
     public EventTask executeAsync(final PluginMessageEvent event) {
         return EventTask.async(() -> {
-            final boolean cancelled = !event.getResult().isAllowed()
-                    || !(event.getSource() instanceof ServerConnection)
-                    || !(event.getIdentifier().equals(AuthMeVelocityPlugin.MODERN_CHANNEL)
-                    || event.getIdentifier().equals(AuthMeVelocityPlugin.LEGACY_CHANNEL));
-            if (cancelled) {
+            if (notAllowedEvent(event)) {
                 plugin.logDebug("PluginMessageEvent | Not allowed");
                 return;
             }
@@ -115,6 +111,24 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
 
             }
         });
+    }
+
+    private boolean notAllowedEvent(PluginMessageEvent event) {
+        if (!event.getResult().isAllowed()) {
+            plugin.logDebug("PluginMessageEvent | Result not allowed");
+            return true;
+        }
+        if (!(event.getSource() instanceof ServerConnection)) {
+            plugin.logDebug("PluginMessageEvent | Not ServerConnection");
+            return true;
+        }
+        final var identifier = event.getIdentifier();
+        if (!(identifier.equals(AuthMeVelocityPlugin.MODERN_CHANNEL)
+                || identifier.equals(AuthMeVelocityPlugin.LEGACY_CHANNEL))) {
+            plugin.logDebug("PluginMessageEvent | Not AuthMeVelocity Identifier");
+            return true;
+        }
+        return false;
     }
 
     private void createServerConnectionRequest(final Player player, final ServerConnection connection){
