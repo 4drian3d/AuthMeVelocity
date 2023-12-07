@@ -125,7 +125,7 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
         final var identifier = event.getIdentifier();
         if (!(identifier.equals(AuthMeVelocityPlugin.MODERN_CHANNEL)
                 || identifier.equals(AuthMeVelocityPlugin.LEGACY_CHANNEL))) {
-            plugin.logDebug("PluginMessageEvent | Not AuthMeVelocity Identifier");
+            plugin.logDebug(() -> "PluginMessageEvent | Not AuthMeVelocity Identifier: " + identifier.getId());
             return true;
         }
         return false;
