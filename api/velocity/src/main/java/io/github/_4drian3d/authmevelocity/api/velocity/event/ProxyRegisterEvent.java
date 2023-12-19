@@ -20,5 +20,8 @@ package io.github._4drian3d.authmevelocity.api.velocity.event;
 import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
 
-/**Event executed in case the player has register itself*/
+/**
+ * Event executed in case the player has register itself
+ * @param player the player registered
+ * */
 public record ProxyRegisterEvent(@NotNull Player player) {}

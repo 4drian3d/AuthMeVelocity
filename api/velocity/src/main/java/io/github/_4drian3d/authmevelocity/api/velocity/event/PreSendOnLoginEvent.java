@@ -67,6 +67,10 @@ public final class PreSendOnLoginEvent implements ResultedEvent<ServerResult> {
         return this.actualServer;
     }
 
+    /**
+     * Obtain the result of the event
+     * @return the event server result
+     */
     @Override
     public @NotNull ServerResult getResult() {
         return this.result;

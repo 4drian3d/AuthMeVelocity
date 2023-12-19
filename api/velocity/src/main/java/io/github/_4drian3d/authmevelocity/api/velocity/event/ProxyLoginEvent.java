@@ -22,5 +22,6 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Event executed in case the player is successfully logged in
+ * @param player the player who has logged in
  */
 public record ProxyLoginEvent(@NotNull Player player) {}

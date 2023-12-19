@@ -17,6 +17,7 @@
 
 package io.github._4drian3d.authmevelocity.api.paper.event;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
@@ -36,7 +37,7 @@ public final class LoginByProxyEvent extends PlayerEvent {
      * @param who the player to be logged in
      */
     public LoginByProxyEvent(@NotNull Player who) {
-        super(who);
+        super(who, !Bukkit.isPrimaryThread());
     }
 
     @Override
