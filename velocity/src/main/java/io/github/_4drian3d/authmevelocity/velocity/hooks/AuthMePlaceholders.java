@@ -40,7 +40,7 @@ public final class AuthMePlaceholders {
                 .audiencePlaceholder("is_logged", (aud, queue, ctx) ->
                         Tag.selfClosingInserting(plugin.isLogged((Player) aud) ? TRUE_COMPONENT : FALSE_COMPONENT))
                 .globalPlaceholder("is_player_logged", (queue, ctx) -> {
-                    String playerName = queue.popOr(() -> "you need to provide a player").value();
+                    final String playerName = queue.popOr(() -> "you need to provide a player").value();
                     return Tag.selfClosingInserting(
                             proxyServer.getPlayer(playerName)
                                     .map(plugin::isLogged)

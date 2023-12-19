@@ -65,8 +65,8 @@ public final class ConfigurationContainer<C> {
                 .defaultOptions(opts -> opts
                         .shouldCopyDefaults(true)
                         .header("""
-                    AuthMeVelocity | by Glyart & 4drian3d
-                    """)
+                                AuthMeVelocity | by Glyart & 4drian3d
+                                """)
                 )
                 .path(path)
                 .build();

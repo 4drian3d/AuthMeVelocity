@@ -71,8 +71,8 @@ public final class CommandListener implements Listener<CommandExecuteEvent> {
         });
     }
 
-    private void sendBlockedMessage(Player player){
-        String blockedMessage = plugin.config().get().commands().blockedCommandMessage();
+    private void sendBlockedMessage(final Player player){
+        final String blockedMessage = plugin.config().get().commands().blockedCommandMessage();
         if (!blockedMessage.isBlank()){
             player.sendMessage(MiniMessage.miniMessage().deserialize(blockedMessage));
         }
