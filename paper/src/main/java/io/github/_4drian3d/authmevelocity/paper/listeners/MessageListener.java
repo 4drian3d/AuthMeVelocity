@@ -42,7 +42,6 @@ public final class MessageListener implements PluginMessageListener {
             final byte @NotNull [] bytes
     ) {
         if (identifier.equals("authmevelocity:main")) {
-            @SuppressWarnings("UnstableApiUsage")
             final ByteArrayDataInput input = ByteStreams.newDataInput(bytes);
 
             final String data = input.readUTF();

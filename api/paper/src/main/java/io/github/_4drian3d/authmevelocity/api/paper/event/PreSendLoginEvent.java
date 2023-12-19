@@ -17,6 +17,7 @@
 
 package io.github._4drian3d.authmevelocity.api.paper.event;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -36,7 +37,7 @@ public final class PreSendLoginEvent extends PlayerEvent implements Cancellable 
      * @param player the player to be sent
      */
     public PreSendLoginEvent(@NotNull Player player) {
-        super(player);
+        super(player, !Bukkit.isPrimaryThread());
     }
 
     @Override

@@ -25,26 +25,23 @@ import io.github._4drian3d.authmevelocity.common.configuration.ConfigurationCont
 import io.github._4drian3d.authmevelocity.common.configuration.PaperConfiguration;
 import io.github._4drian3d.authmevelocity.paper.listeners.AuthMeListener;
 import io.github._4drian3d.authmevelocity.paper.listeners.MessageListener;
-import net.byteflux.libby.BukkitLibraryManager;
 import net.byteflux.libby.LibraryManager;
 import net.byteflux.libby.PaperLibraryManager;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
-import java.util.logging.Level;
+
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
 public final class AuthMeVelocityPlugin extends JavaPlugin {
     private static final String CHANNEL = "authmevelocity:main";
     private final Path dataFolder;
+    private ComponentLogger componentLogger;
     private ConfigurationContainer<PaperConfiguration> config;
-
-    @SuppressWarnings("unused")
-    public AuthMeVelocityPlugin() {
-        this.dataFolder = getDataFolder().toPath();
-    }
 
     public AuthMeVelocityPlugin(final Path dataFolder) {
         this.dataFolder = dataFolder;
@@ -52,21 +49,14 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        LibraryManager libraryManager;
-        try {
-            Class.forName("io.papermc.paper.plugin.bootstrap.PluginBootstrap");
-            libraryManager = new PaperLibraryManager(this);
-        } catch (ClassNotFoundException e) {
-            libraryManager = new BukkitLibraryManager(this);
-            this.getLogger().warning("You are using Spigot or a very old version of the platform you are using."
-                    +"\nIn the future AuthMeVelocity will no longer support this version. Consider upgrading to Paper 1.19.4+.");
-        }
+        this.componentLogger = getComponentLogger();
+        final LibraryManager libraryManager = new PaperLibraryManager(this);
         new LibsManager(libraryManager).loadLibraries();
 
         try {
             this.config = ConfigurationContainer.load(dataFolder, PaperConfiguration.class);
         } catch (Throwable e) {
-            this.getLogger().log(Level.SEVERE, "Could not load config.conf file", e);
+            componentLogger.error("Could not load config.conf file", e);
             this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -81,7 +71,7 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
             AuthMePlaceholders.getExpansion().register();
         }
 
-        this.getLogger().info("AuthMeVelocity enabled");
+        componentLogger.info(miniMessage().deserialize("<gradient:aqua:dark_aqua>AuthMeVelocity</gradient> <aqua>enabled"));
     }
 
     @Override
@@ -89,7 +79,7 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
         this.getServer().getMessenger().unregisterOutgoingPluginChannel(this, CHANNEL);
         this.getServer().getMessenger().unregisterIncomingPluginChannel(this, CHANNEL);
 
-        this.getLogger().info("AuthMeVelocity disabled");
+        componentLogger.info(miniMessage().deserialize("<gradient:aqua:dark_aqua>AuthMeVelocity</gradient> <red>disabled"));
     }
 
     public void sendMessageToProxy(
@@ -97,16 +87,16 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
             final @NotNull MessageType type,
             final @NotNull String playerName
     ) {
-        @SuppressWarnings("UnstableApiUsage") final ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        final ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF(type.toString());
         out.writeUTF(playerName);
 
         if (player == null) {
-            logDebug("MessageToProxy | Null Player, Player Name: " + playerName);
             Bukkit.getServer().sendPluginMessage(this, CHANNEL, out.toByteArray());
+            logDebug("MessageToProxy | Null Player, Player Name: " + playerName);
         } else {
-            logDebug("MessageToProxy | Player Present: " + player.getName() + ", Player Name: " + playerName);
             player.sendPluginMessage(this, CHANNEL, out.toByteArray());
+            logDebug("MessageToProxy | Player Present: " + player.getName() + ", Player Name: " + playerName);
         }
     }
 
@@ -119,7 +109,7 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
 
     public void logDebug(String debug) {
         if (config.get().debug()) {
-            getLogger().info("[DEBUG] " + debug);
+            componentLogger.info("[DEBUG] " + debug);
         }
     }
 }

@@ -4,10 +4,6 @@ plugins {
     id("authmevelocity.spotless")
 }
 
-repositories {
-    maven("https://repo.alessiodp.com/releases/")
-}
-
 dependencies {
     compileOnly(libs.configurate.hocon)
     compileOnly(libs.libby.core)

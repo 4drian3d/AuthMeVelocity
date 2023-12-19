@@ -19,7 +19,6 @@ package io.github._4drian3d.authmevelocity.velocity;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Dependency;
@@ -35,7 +34,6 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import io.github._4drian3d.authmevelocity.api.velocity.AuthMeVelocityAPI;
 import io.github._4drian3d.authmevelocity.common.Constants;
-import io.github._4drian3d.authmevelocity.common.LibsManager;
 import io.github._4drian3d.authmevelocity.common.configuration.ConfigurationContainer;
 import io.github._4drian3d.authmevelocity.common.configuration.ProxyConfiguration;
 import io.github._4drian3d.authmevelocity.velocity.commands.AuthMeCommand;
@@ -52,12 +50,10 @@ import io.github._4drian3d.authmevelocity.velocity.listener.input.ChatListener;
 import io.github._4drian3d.authmevelocity.velocity.listener.input.CommandListener;
 import io.github._4drian3d.authmevelocity.velocity.listener.input.CompletionPacketListener;
 import io.github._4drian3d.authmevelocity.velocity.listener.input.TabCompleteListener;
-import net.byteflux.libby.VelocityLibraryManager;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 
 import java.nio.file.Path;
 import java.util.Set;
@@ -66,6 +62,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+
+import static net.kyori.adventure.text.minimessage.MiniMessage.miniMessage;
 
 @Plugin(
     id = "authmevelocity",
@@ -103,7 +101,7 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     @Inject
     private PluginManager pluginManager;
     @Inject
-    private Logger logger;
+    private ComponentLogger logger;
     @Inject
     @DataDirectory
     private Path pluginDirectory;
@@ -117,12 +115,6 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        final LibsManager libraries
-            = new LibsManager(
-                new VelocityLibraryManager<>(
-                    logger, pluginDirectory, pluginManager, this));
-        libraries.loadLibraries();
-
         try {
             this.config = ConfigurationContainer.load(pluginDirectory, ProxyConfiguration.class);
         } catch (Exception e) {
@@ -179,13 +171,10 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     }
 
     public void sendInfoMessage() {
-        final CommandSource source = proxy.getConsoleCommandSource();
-        source.sendMessage(MiniMessage.miniMessage().deserialize(
-            " <gray>--- <aqua>AuthMeVelocity</aqua> ---"));
-        source.sendMessage(MiniMessage.miniMessage().deserialize(
-            "<gray>AuthServers: <green>" + config.get().authServers()));
+        logger.info(miniMessage().deserialize(" <gray>--- <gradient:aqua:dark_aqua>AuthMeVelocity</gradient> ---"));
+        logger.info(miniMessage().deserialize("<gray>AuthServers: <green>" + config.get().authServers()));
         if (config.get().sendOnLogin().sendToServerOnLogin()) {
-            source.sendMessage(MiniMessage.miniMessage().deserialize(
+            logger.info(miniMessage().deserialize(
                 "<gray>LobbyServers: <green>" + config.get().sendOnLogin().teleportServers()));
         }
     }

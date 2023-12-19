@@ -1,3 +1,4 @@
+@file:Suppress("UnstableApiUsage")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "authmevelocity-parent"
@@ -18,5 +19,25 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+        maven("https://repo.codemc.org/repository/maven-public/") {
+            mavenContent {
+                includeGroup("com.github.games647")
+                includeGroup("fr.xephi")
+            }
+        }
+        maven("https://repo.alessiodp.com/releases/") {
+            mavenContent {
+                includeGroup("net.byteflux")
+            }
+        }
+        maven("https://maven.elytrium.net/repo/")
     }
 }

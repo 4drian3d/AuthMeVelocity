@@ -4,19 +4,6 @@ plugins {
     id("authmevelocity.spotless")
 }
 
-repositories {
-    maven("https://repo.codemc.org/repository/maven-public/") {
-        mavenContent {
-            includeGroup("fr.xephi")
-        }
-    }
-    maven("https://repo.alessiodp.com/releases/"){
-        mavenContent {
-            includeGroup("net.byteflux")
-        }
-    }
-}
-
 dependencies {
     compileOnly(libs.paper)
     compileOnly(libs.authme)
@@ -26,7 +13,6 @@ dependencies {
     implementation(projects.authmevelocityCommon)
     implementation(projects.authmevelocityApiPaper)
 
-    implementation(libs.libby.bukkit)
     implementation(libs.libby.paper)
 }
 
@@ -43,10 +29,10 @@ tasks {
         dependsOn(shadowJar)
     }
     runServer {
-        minecraftVersion("1.19.4")
+        minecraftVersion("1.20.4")
     }
     processResources {
-        filesMatching(listOf("paper-plugin.yml", "plugin.yml")) {
+        filesMatching("paper-plugin.yml") {
             expand("version" to project.version)
         }
     }
