@@ -57,8 +57,9 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
     @Override
     public EventTask executeAsync(final PluginMessageEvent event) {
         return EventTask.async(() -> {
+            plugin.logDebug(() -> "PluginMessageEvent | Start");
             if (notAllowedEvent(event)) {
-                plugin.logDebug("PluginMessageEvent | Not allowed");
+                plugin.logDebug(() -> "PluginMessageEvent | Not allowed");
                 return;
             }
 

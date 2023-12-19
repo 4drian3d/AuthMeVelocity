@@ -2,8 +2,8 @@ metadata.format.version = "1.1"
 
 [versions]
 
-velocity = "3.2.0-SNAPSHOT"
-paper = "1.20-R0.1-SNAPSHOT"
+velocity = "3.3.0-SNAPSHOT"
+paper = "1.20.4-R0.1-SNAPSHOT"
 miniplaceholders = "2.2.3"
 fastlogin = "1.12-SNAPSHOT"
 authme = "5.6.0-SNAPSHOT"
@@ -29,7 +29,7 @@ adventure = { group = "net.kyori", name = "adventure-api", version.ref = "advent
 
 paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
 velocity-api = { group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity" }
-velocity-proxy = { group = "com.velocitypowered", name = "velocity-proxy", version.ref = "velocity" }
+velocity-proxy = { group = "com.velocitypowered", name = "velocity-proxy", version = "3.2.0-SNAPSHOT" }
 authme = { module = "fr.xephi:authme", version.ref = "authme" }
 
 libby-core = { group = "net.byteflux", name = "libby-core", version.ref = "libby" }

@@ -10,9 +10,10 @@ website: https://modrinth.com/plugin/authmevelocity
 api-version: '1.19'
 folia-supported: true
 dependencies:
-  - name: MiniPlaceholders
-    required: false
-    bootstrap: false
-  - name: AuthMe
-    required: true
-    bootstrap: false
+  server:
+    MiniPlaceholders:
+      required: false
+      load: BEFORE
+    AuthMe:
+      required: true
+      load: BEFORE
