@@ -29,7 +29,7 @@ adventure = { group = "net.kyori", name = "adventure-api", version.ref = "advent
 
 paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
 velocity-api = { group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity" }
-velocity-proxy = { group = "com.velocitypowered", name = "velocity-proxy", version = "3.2.0-SNAPSHOT" }
+velocity-proxy = { group = "com.velocitypowered", name = "velocity-proxy", version.ref = "velocity" }
 authme = { module = "fr.xephi:authme", version.ref = "authme" }
 
 libby-core = { group = "net.byteflux", name = "libby-core", version.ref = "libby" }

@@ -26,6 +26,7 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://repo.william278.net/velocity/")
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
         maven("https://repo.codemc.org/repository/maven-public/") {
             mavenContent {
@@ -38,6 +39,5 @@ dependencyResolutionManagement {
                 includeGroup("net.byteflux")
             }
         }
-        maven("https://maven.elytrium.net/repo/")
     }
 }
