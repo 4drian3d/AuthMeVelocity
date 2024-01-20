@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 AuthMeVelocity Contributors
+ * Copyright (C) 2024 AuthMeVelocity Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.event.EventManager;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.proxy.protocol.packet.TabCompleteResponse;
+import com.velocitypowered.proxy.protocol.packet.TabCompleteResponsePacket;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
 import io.github._4drian3d.authmevelocity.velocity.listener.Listener;
 import io.github._4drian3d.vpacketevents.api.event.PacketSendEvent;
@@ -40,7 +40,7 @@ public final class CompletionPacketListener implements Listener<PacketSendEvent>
 
     @Override
     public @Nullable EventTask executeAsync(final PacketSendEvent event) {
-        if (!(event.getPacket() instanceof final TabCompleteResponse responsePacket)) {
+        if (!(event.getPacket() instanceof final TabCompleteResponsePacket responsePacket)) {
             return null;
         }
         final Player player = event.getPlayer();
