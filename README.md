@@ -6,7 +6,7 @@
 This plugin adds the support for [Velocity](https://velocitypowered.com/) to [AuthMeReloaded](https://github.com/AuthMe/AuthMeReloaded)
 
 ## Requirements
-- Paper, Folia or Purpur 1.19.4+
+- Paper or Folia 1.20+
 - Velocity 3.3.0+
 - Java 17+
 
