@@ -9,7 +9,7 @@ dependencies {
     compileOnly(libs.libby.core)
 
     testImplementation(libs.configurate.hocon)
-    testImplementation(platform("org.junit:junit-bom:5.10.1"))
+    testImplementation(platform("org.junit:junit-bom:5.10.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation(libs.assertj)
 }
