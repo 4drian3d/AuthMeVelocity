@@ -90,4 +90,22 @@ public interface AuthMeVelocityAPI {
      * @return if the server is an auth server
      */
     boolean isAuthServer(@NotNull String server);
+
+    /**
+     * Adds a server to the list of auth servers
+     * @param server the server name
+     */
+    void addAuthServer(@NotNull String server);
+
+    /**
+     * Removes a server from the list of auth servers
+     * @param server the server name
+     */
+    void removeAuthServer(@NotNull String server);
+
+    /**
+     * Removes servers that meet the established condition
+     * @param predicate the condition
+     */
+    void removeAuthServerIf(@NotNull Predicate<String> predicate);
 }

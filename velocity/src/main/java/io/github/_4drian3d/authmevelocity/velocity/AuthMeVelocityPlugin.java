@@ -33,6 +33,8 @@ import com.velocitypowered.api.proxy.messages.LegacyChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import io.github._4drian3d.authmevelocity.api.velocity.AuthMeVelocityAPI;
+import io.github._4drian3d.authmevelocity.api.velocity.event.AuthServerAddEvent;
+import io.github._4drian3d.authmevelocity.api.velocity.event.AuthServerRemoveEvent;
 import io.github._4drian3d.authmevelocity.common.Constants;
 import io.github._4drian3d.authmevelocity.common.configuration.ConfigurationContainer;
 import io.github._4drian3d.authmevelocity.common.configuration.ProxyConfiguration;
@@ -56,6 +58,7 @@ import org.bstats.velocity.Metrics;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -111,12 +114,14 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
     private Injector injector;
     private ConfigurationContainer<ProxyConfiguration> config;
 
+    final Set<String> authServers = ConcurrentHashMap.newKeySet();
     final Set<UUID> loggedPlayers = ConcurrentHashMap.newKeySet();
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         try {
             this.config = ConfigurationContainer.load(pluginDirectory, ProxyConfiguration.class);
+            authServers.addAll(config.get().authServers());
         } catch (Exception e) {
             logger.error("Could not load config.conf file", e);
             return;
@@ -179,6 +184,11 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
         }
     }
 
+    public void setAuthServers(List<String> servers) {
+        authServers.clear();
+        authServers.addAll(servers);
+    }
+
     public ConfigurationContainer<ProxyConfiguration> config() {
         return this.config;
     }
@@ -225,7 +235,27 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
 
     @Override
     public boolean isAuthServer(@NotNull String server){
-        return config.get().authServers().contains(server);
+        return authServers.contains(server);
+    }
+
+    @Override
+    public void addAuthServer(@NotNull String server) {
+        authServers.add(server);
+        proxy.getEventManager().fire(new AuthServerAddEvent(server));
+    }
+
+    @Override
+    public void removeAuthServer(@NotNull String server) {
+        authServers.remove(server);
+        proxy.getEventManager().fire(new AuthServerRemoveEvent(server));
+    }
+
+    @Override
+    public void removeAuthServerIf(@NotNull Predicate<String> predicate) {
+        boolean removed = authServers.removeIf(predicate);
+        if (removed) {
+            proxy.getEventManager().fire(new AuthServerRemoveEvent(predicate.toString()));
+        }
     }
 
     public void logDebug(final String msg) {
