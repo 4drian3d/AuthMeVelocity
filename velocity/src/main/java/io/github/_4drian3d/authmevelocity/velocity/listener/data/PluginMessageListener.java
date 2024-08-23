@@ -58,14 +58,19 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
     public EventTask executeAsync(final PluginMessageEvent event) {
         return EventTask.async(() -> {
             plugin.logDebug(() -> "PluginMessageEvent | Start");
-            if (notAllowedEvent(event)) {
-                plugin.logDebug(() -> "PluginMessageEvent | Not allowed");
+            if (notHandledEvent(event)) {
+                plugin.logDebug(() -> "PluginMessageEvent | Not handled");
                 return;
             }
 
-            final ServerConnection connection = (ServerConnection) event.getSource();
-
+            // Set the result to handled, the message is dropped at the proxy
             event.setResult(PluginMessageEvent.ForwardResult.handled());
+
+            // Make sure the message is S -> P, NOT P -> S
+            if (!(event.getSource() instanceof ServerConnection connection)) {
+                plugin.logDebug("PluginMessageEvent | Not ServerConnection");
+                return;
+            }
 
             final ByteArrayDataInput input = event.dataAsDataStream();
             final String message = input.readUTF();
@@ -114,13 +119,9 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
         });
     }
 
-    private boolean notAllowedEvent(PluginMessageEvent event) {
+    private boolean notHandledEvent(PluginMessageEvent event) {
         if (!event.getResult().isAllowed()) {
             plugin.logDebug("PluginMessageEvent | Result not allowed");
-            return true;
-        }
-        if (!(event.getSource() instanceof ServerConnection)) {
-            plugin.logDebug("PluginMessageEvent | Not ServerConnection");
             return true;
         }
         final var identifier = event.getIdentifier();
