@@ -63,9 +63,14 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
                 return;
             }
 
-            final ServerConnection connection = (ServerConnection) event.getSource();
-
+            // Good, this is our channel, lets set it to handled so no message gets smuggled from server to client and vice versa
             event.setResult(PluginMessageEvent.ForwardResult.handled());
+
+            // The message must be from the server not the player
+            if (!(event.getSource() instanceof ServerConnection connection)) {
+                plugin.logDebug("PluginMessageEvent | Not ServerConnection");
+                return;
+            }
 
             final ByteArrayDataInput input = event.dataAsDataStream();
             final String message = input.readUTF();
@@ -117,10 +122,6 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
     private boolean notAllowedEvent(PluginMessageEvent event) {
         if (!event.getResult().isAllowed()) {
             plugin.logDebug("PluginMessageEvent | Result not allowed");
-            return true;
-        }
-        if (!(event.getSource() instanceof ServerConnection)) {
-            plugin.logDebug("PluginMessageEvent | Not ServerConnection");
             return true;
         }
         final var identifier = event.getIdentifier();
