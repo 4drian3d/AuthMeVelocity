@@ -17,8 +17,6 @@
 
 package io.github._4drian3d.authmevelocity.velocity.listener.connection;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.EventManager;
 import com.velocitypowered.api.event.EventTask;
@@ -61,13 +59,13 @@ public final class PostConnectListener implements Listener<ServerPostConnectEven
             }
 
             plugin.logDebug("ServerPostConnectEvent | Already logged player and connected to an Auth server");
-            final ByteArrayDataOutput buf = ByteStreams.newDataOutput();
-            buf.writeUTF("LOGIN");
-            buf.writeUTF(player.getUsername());
-
-            final byte[] byteArray = buf.toByteArray();
-            plugin.logDebug(() -> "ServerPostConnectEvent | " + player.getUsername() + " | Sending LOGIN data");
-            if (server.sendPluginMessage(AuthMeVelocityPlugin.MODERN_CHANNEL, byteArray)) {
+            final boolean messageResult = server.sendPluginMessage(AuthMeVelocityPlugin.MODERN_CHANNEL, (encoder) -> {
+                plugin.logDebug(() -> "ServerPostConnectEvent | " + player.getUsername() + " | Encoding LOGIN data");
+                encoder.writeUTF("LOGIN");
+                encoder.writeUTF(player.getUsername());
+                plugin.logDebug(() -> "ServerPostConnectEvent | " + player.getUsername() + " | Sending LOGIN data");
+            });
+            if (messageResult) {
                 plugin.logDebug(() -> "ServerPostConnectEvent | " + player.getUsername() + " | Correctly send data");
             } else {
                 plugin.logDebug("ServerPostConnectEvent | Failed to send data");
