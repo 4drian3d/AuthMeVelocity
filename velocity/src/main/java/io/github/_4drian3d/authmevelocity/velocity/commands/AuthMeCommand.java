@@ -45,6 +45,7 @@ public class AuthMeCommand {
                             final CommandSource source = cmd.getSource();
                             plugin.config().reload().handleAsync((v, ex) -> {
                                 if (ex == null) {
+                                    plugin.setAuthServers(plugin.config().get().authServers());
                                     plugin.sendInfoMessage();
                                     source.sendMessage(MiniMessage.miniMessage().deserialize(
                                             "<aqua>AuthmeVelocity <green>has been successfully reloaded"));
