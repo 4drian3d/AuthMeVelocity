@@ -62,4 +62,4 @@ indra = { id = "net.kyori.indra.publishing", version.ref = "indra" }
 
 runvelocity = { id = "xyz.jpenilla.run-velocity", version.ref = "runtask" }
 runpaper = { id = "xyz.jpenilla.run-paper", version.ref = "runtask" }
-ideaext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.8" }
+ideaext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.9" }
