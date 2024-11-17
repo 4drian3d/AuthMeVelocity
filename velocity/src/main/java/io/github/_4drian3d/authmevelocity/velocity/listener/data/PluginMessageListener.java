@@ -121,7 +121,7 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
 
     private boolean notHandledEvent(PluginMessageEvent event) {
         if (!event.getResult().isAllowed()) {
-            plugin.logDebug("PluginMessageEvent | Result not allowed");
+            plugin.logDebug("PluginMessageEvent | Plugin Message already handled");
             return true;
         }
         final var identifier = event.getIdentifier();
