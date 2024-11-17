@@ -1,7 +1,9 @@
 # AuthMeVelocity
-[![WorkFlow Status](https://img.shields.io/github/actions/workflow/status/4drian3d/AuthMeVelocity/gradle.yml?branch=master&style=flat-square)](https://github.com/4drian3d/AuthmeVelocity/actions/workflows/gradle.yml)
+[![GitHub Build](https://img.shields.io/github/actions/workflow/status/4drian3d/AuthMeVelocity/gradle.yml?branch=master&style=flat-square)](https://github.com/4drian3d/AuthmeVelocity/actions/workflows/gradle.yml)
 [![Version](https://img.shields.io/github/v/release/4drian3d/AuthmeVelocity?color=FFF0&style=flat-square)](https://modrinth.com/plugin/authmevelocity)
 [![Discord](https://img.shields.io/discord/899740810956910683?color=7289da&label=Discord)](https://discord.gg/5NMMzK5mAn)
+[![Jenkins Build](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fci.codemc.io%2Fjob%2F4drian3d%2Fjob%2FAuthMeVelocity%2F&style=flat-square&label=Jenkins%20Build)
+](https://ci.codemc.io/job/4drian3d/job/AuthMeVelocity/)
 
 This plugin adds the support for [Velocity](https://velocitypowered.com/) to [AuthMeReloaded](https://github.com/AuthMe/AuthMeReloaded)
 
