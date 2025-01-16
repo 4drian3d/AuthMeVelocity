@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 AuthMeVelocity Contributors
+ * Copyright (C) 2025 AuthMeVelocity Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
