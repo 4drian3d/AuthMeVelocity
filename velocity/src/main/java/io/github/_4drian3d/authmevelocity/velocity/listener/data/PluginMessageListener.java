@@ -74,7 +74,13 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
 
             final ByteArrayDataInput input = event.dataAsDataStream();
             final String message = input.readUTF();
-            final MessageType type = TYPES.valueOrThrow(message.toUpperCase(Locale.ROOT));
+            final MessageType type;
+            try {
+                type = TYPES.valueOrThrow(message.toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException ex) {
+                plugin.logDebug(() -> "PluginMessageEvent | Unknown MessageType: " + message);
+                return;
+            }
             final String name = input.readUTF();
             final Player player = proxy.getPlayer(name).orElse(null);
 
