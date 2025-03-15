@@ -60,25 +60,34 @@ public final class ConfigurationContainer<C> {
 
     public static <C> ConfigurationContainer<C> load(Path path, Class<C> clazz) throws IOException {
         path = path.resolve("config.conf");
-        final boolean firstCreation = Files.notExists(path);
         final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
                 .defaultOptions(opts -> opts
                         .shouldCopyDefaults(true)
                         .header("""
-                                AuthMeVelocity | by Glyart & 4drian3d
-                                """)
+                            AuthMeVelocity | by Glyart & 4drian3d
+                            """)
                 )
                 .path(path)
                 .build();
 
-
         final CommentedConfigurationNode node = loader.load();
-        final C config = node.get(clazz);
-        if (firstCreation) {
-            node.set(clazz, config);
-            loader.save(node);
+        C config = node.get(clazz);
+
+        if (config == null) {
+            config = instantiateConfig(clazz);
         }
 
+        node.set(clazz, config);
+        loader.save(node);
+
         return new ConfigurationContainer<>(config, clazz, loader);
+    }
+
+    private static <C> C instantiateConfig(Class<C> clazz) {
+        try {
+            return clazz.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Error while trying to create instance of: " + clazz.getName(), e);
+        }
     }
 }

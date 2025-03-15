@@ -73,10 +73,17 @@ public final class PluginMessageListener implements Listener<PluginMessageEvent>
             }
 
             final ByteArrayDataInput input = event.dataAsDataStream();
+            final String secret = input.readUTF();
             final String message = input.readUTF();
             final MessageType type = TYPES.valueOrThrow(message.toUpperCase(Locale.ROOT));
             final String name = input.readUTF();
             final Player player = proxy.getPlayer(name).orElse(null);
+
+            // Verify the secret sent from Paper
+            if(!plugin.config().get().secret().equals(secret)){
+                logger.error(name + " tried to send a message with an invalid secret provided or the secret is not matching with the secret set on Paper server");
+                return;
+            }
 
             switch (type) {
                 case LOGIN -> {

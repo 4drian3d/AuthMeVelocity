@@ -61,6 +61,17 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
             return;
         }
 
+        // Check if the secret is the default one. If it is, shut down the server to prevent security issues.
+        if(config.get().secret().equals("changeme")) {
+            componentLogger.error("------ AuthMeVelocity ------");
+            componentLogger.error("You must change the secret in the config file!");
+            componentLogger.error("The secret must match with the secret set in AuthMeVelocity!");
+            componentLogger.error("Shutting down server to prevent security issues.");
+            componentLogger.error("------ AuthMeVelocity ------");
+            this.getServer().shutdown();
+            return;
+        }
+
         final var server = this.getServer();
 
         server.getMessenger().registerOutgoingPluginChannel(this, CHANNEL);
@@ -88,6 +99,9 @@ public final class AuthMeVelocityPlugin extends JavaPlugin {
             final @NotNull String playerName
     ) {
         final ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        
+        // Send the secret to the proxy to verify the message
+        out.writeUTF(config.get().secret());
         out.writeUTF(type.toString());
         out.writeUTF(playerName);
 

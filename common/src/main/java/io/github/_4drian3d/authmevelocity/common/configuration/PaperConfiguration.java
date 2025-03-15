@@ -19,6 +19,7 @@ package io.github._4drian3d.authmevelocity.common.configuration;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
+import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 @ConfigSerializable
 public class PaperConfiguration {
@@ -26,5 +27,12 @@ public class PaperConfiguration {
     private boolean debug = false;
     public boolean debug() {
         return this.debug;
+    }
+
+    @Comment("A secret key to encrypt channel messages. Must be the same on either Paper and Velocity side. The proxy will not start if this key is not set just to be safe.")
+    @Setting("secret")
+    private String secret = "changeme";
+    public String secret() {
+        return this.secret;
     }
 }

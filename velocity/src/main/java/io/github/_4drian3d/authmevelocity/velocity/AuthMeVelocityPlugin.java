@@ -127,6 +127,13 @@ public final class AuthMeVelocityPlugin implements AuthMeVelocityAPI {
             return;
         }
 
+        // Check if the secret is still the default one, if not shutdown the proxy to prevent security issues
+        if(config.get().secret().equals("changeme")) {
+            logger.error("Please change the secret in the config file! Shutting down proxy...");
+            proxy.shutdown();
+            return;
+        }
+
         logDebug("Loaded plugin libraries");
 
         final int pluginId = 16128;

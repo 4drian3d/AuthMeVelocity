@@ -21,6 +21,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 import io.github._4drian3d.authmevelocity.common.enums.SendMode;
+import org.spongepowered.configurate.objectmapping.meta.Setting;
 
 import java.util.List;
 
@@ -32,7 +33,14 @@ public class ProxyConfiguration {
     public List<String> authServers() {
         return this.authServers;
     }
-    
+
+    @Comment("A secret key to encrypt channel messages. Must be the same on either Paper and Velocity side. The proxy will not start if this key is not set just to be safe.")
+    @Setting("secret")
+    private String secret = "changeme";
+    public String secret() {
+        return this.secret;
+    }
+
     private SendOnLogin sendOnLogin = new SendOnLogin();
     public SendOnLogin sendOnLogin() {
         return this.sendOnLogin;
