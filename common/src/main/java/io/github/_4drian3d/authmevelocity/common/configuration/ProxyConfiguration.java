@@ -38,6 +38,11 @@ public class ProxyConfiguration {
         return this.sendOnLogin;
     }
 
+    private Chat chat = new Chat();
+    public Chat chat() {
+        return this.chat;
+    }
+
     private Commands commands = new Commands();
     public Commands commands() {
         return this.commands;
@@ -102,6 +107,21 @@ public class ProxyConfiguration {
         private SendMode sendMode = SendMode.RANDOM;
         public SendMode sendMode() {
             return this.sendMode;
+        }
+    }
+
+    @ConfigSerializable
+    public static class Chat {
+        @Comment("Set up users who haven't signed in to send chat that start with the following")
+        private List<String> allowedChatPrefixes = List.of(".l ", ".reg ", ".email ");
+        public List<String> allowedChatPrefixes() {
+            return this.allowedChatPrefixes;
+        }
+
+        @Comment("Just blocked chat message tip")
+        private String blockedChatMessage = "<red>You cannot send this message if you are not logged in yet";
+        public String blockedChatMessage() {
+            return this.blockedChatMessage;
         }
     }
 

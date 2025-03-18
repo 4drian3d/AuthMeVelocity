@@ -22,8 +22,10 @@ import com.velocitypowered.api.event.EventManager;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
+import com.velocitypowered.api.proxy.Player;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
 import io.github._4drian3d.authmevelocity.velocity.listener.Listener;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 public final class ChatListener implements Listener<PlayerChatEvent> {
     @Inject
@@ -39,6 +41,7 @@ public final class ChatListener implements Listener<PlayerChatEvent> {
     @Override
     public EventTask executeAsync(final PlayerChatEvent event) {
         return EventTask.withContinuation(continuation -> {
+            String message = event.getMessage();
             if (plugin.isLogged(event.getPlayer())) {
                 plugin.logDebug(() -> "PlayerChatEvent | Player " + event.getPlayer().getUsername() + " is already logged");
                 continuation.resume();
@@ -47,8 +50,23 @@ public final class ChatListener implements Listener<PlayerChatEvent> {
 
             plugin.logDebug(() -> "PlayerChatEvent | Player " + event.getPlayer().getUsername() + " is not logged");
 
+            if (plugin.config().get().chat().allowedChatPrefixes().stream().anyMatch(message::startsWith)) {
+                plugin.logDebug(() -> "PlayerChatEvent | Message \"" + message + "\" is allowed by prefix rule.");
+                continuation.resume();
+                return;
+            }
+
+            plugin.logDebug(() -> "PlayerChatEvent | Message \"" + message + "\" is blocked.");
+            sendBlockedChatMessage(event.getPlayer());
             event.setResult(PlayerChatEvent.ChatResult.denied());
             continuation.resume();
         });
+    }
+
+    private void sendBlockedChatMessage(final Player player){
+        final String blockedChatMessage = plugin.config().get().chat().blockedChatMessage();
+        if (!blockedChatMessage.isBlank()){
+            player.sendMessage(MiniMessage.miniMessage().deserialize(blockedChatMessage));
+        }
     }
 }
