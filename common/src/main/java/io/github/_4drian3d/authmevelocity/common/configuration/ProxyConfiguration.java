@@ -112,13 +112,20 @@ public class ProxyConfiguration {
 
     @ConfigSerializable
     public static class Chat {
-        @Comment("Set up users who haven't signed in to send chat that start with the following")
+
+        @Comment("Enable chat filter")
+        private boolean enableAllowedChatPrefixes = false;
+        public boolean enableAllowedChatPrefixes() {
+            return this.enableAllowedChatPrefixes;
+        }
+
+        @Comment("Sets which messages players can send before they have logged in")
         private List<String> allowedChatPrefixes = List.of(".l ", ".reg ", ".email ");
         public List<String> allowedChatPrefixes() {
             return this.allowedChatPrefixes;
         }
 
-        @Comment("Just blocked chat message tip")
+        @Comment("Sets the message to send to players who use messages that are not allowed. \\nLeave this option blank if you do not want the message to be sent.")
         private String blockedChatMessage = "<red>You cannot send this message if you are not logged in yet";
         public String blockedChatMessage() {
             return this.blockedChatMessage;
