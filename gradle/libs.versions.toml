@@ -21,7 +21,7 @@ vpacketevents = "1.1.0"
 luckperms = "5.4"
 
 # Test versions
-assertj = "3.27.2"
+assertj = "3.27.3"
 
 [libraries]
 
