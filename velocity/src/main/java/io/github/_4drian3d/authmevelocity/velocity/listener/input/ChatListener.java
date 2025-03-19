@@ -22,8 +22,12 @@ import com.velocitypowered.api.event.EventManager;
 import com.velocitypowered.api.event.EventTask;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
+import com.velocitypowered.api.proxy.Player;
 import io.github._4drian3d.authmevelocity.velocity.AuthMeVelocityPlugin;
 import io.github._4drian3d.authmevelocity.velocity.listener.Listener;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+
+import java.util.List;
 
 public final class ChatListener implements Listener<PlayerChatEvent> {
     @Inject
@@ -47,8 +51,26 @@ public final class ChatListener implements Listener<PlayerChatEvent> {
 
             plugin.logDebug(() -> "PlayerChatEvent | Player " + event.getPlayer().getUsername() + " is not logged");
 
+            if (plugin.config().get().chat().enableAllowedChatPrefixes()
+                    && !plugin.config().get().chat().allowedChatPrefixes().isEmpty()
+                    && isMessageAllowed(event.getMessage(), plugin.config().get().chat().allowedChatPrefixes())) {
+                plugin.logDebug(() -> "PlayerChatEvent | Allowed message: " + event.getMessage());
+                continuation.resume();
+                return;
+            }
+
+            plugin.logDebug(() -> "PlayerChatEvent | Blocked message: " + event.getMessage());
             event.setResult(PlayerChatEvent.ChatResult.denied());
             continuation.resume();
         });
+    }
+
+    private boolean isMessageAllowed(String message, List<String> allowedPrefixes) {
+        for (String prefix : allowedPrefixes) {
+            if (message.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
