@@ -52,8 +52,9 @@ public final class ChatListener implements Listener<PlayerChatEvent> {
             plugin.logDebug(() -> "PlayerChatEvent | Player " + event.getPlayer().getUsername() + " is not logged");
 
             final List<String> allowedServers = plugin.config().get().chat().serversThatDontRequireAuthForChat();
-            if (!allowedServers.isEmpty() && player.getCurrentServer().map(server -> 
-                    allowedServers.contains(server.getServerInfo().getName())).orElse(false)) {
+            if (!allowedServers.isEmpty() && player.getCurrentServer()
+                    .map(server -> allowedServers.contains(server.getServerInfo().getName()))
+                    .orElse(false)) {
                 plugin.logDebug(() -> "PlayerChatEvent | Player " + event.getPlayer().getUsername() + " is on allowed server for chat");
                 continuation.resume();
                 return;
