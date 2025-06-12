@@ -112,7 +112,6 @@ public class ProxyConfiguration {
 
     @ConfigSerializable
     public static class Chat {
-
         @Comment("Enable chat filter")
         private boolean enableAllowedChatPrefixes = false;
         public boolean enableAllowedChatPrefixes() {
@@ -129,6 +128,12 @@ public class ProxyConfiguration {
         private String blockedChatMessage = "<red>You cannot send this message if you are not logged in yet";
         public String blockedChatMessage() {
             return this.blockedChatMessage;
+        }
+
+        @Comment("Allows player to chat if present on any of defined servers")
+        private List<String> serversThatDontRequireAuthForChat = List.of("prehub", "hub");
+        public List<String> serversThatDontRequireAuthForChat() {
+            return this.serversThatDontRequireAuthForChat;
         }
     }
 
