@@ -14,7 +14,7 @@ tasks {
             links(
                 "https://jd.advntr.dev/api/${libs.versions.adventure.get()}/",
                 "https://jd.advntr.dev/text-minimessage/${libs.versions.adventure.get()}/",
-                "https://jd.papermc.io/paper/1.20/"
+                "https://jd.papermc.io/paper/${libs.versions.paper.get().replace("-R0.1-SNAPSHOT", "")}/"
             )
         }
     }  
