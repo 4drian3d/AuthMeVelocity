@@ -10,7 +10,9 @@ dependencies {
     annotationProcessor(libs.velocity.api)
 
     compileOnly(libs.miniplaceholders)
-    compileOnly(libs.fastlogin.velocity)
+    compileOnly(libs.fastlogin.velocity) {
+        isTransitive = false
+    }
     compileOnly(libs.vpacketevents)
     compileOnly(libs.luckperms)
 
