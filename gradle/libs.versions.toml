@@ -2,26 +2,26 @@ metadata.format.version = "1.1"
 
 [versions]
 
-velocity = "3.3.0-SNAPSHOT"
-paper = "1.20.4-R0.1-SNAPSHOT"
-miniplaceholders = "2.2.3"
+velocity = "3.4.0-SNAPSHOT"
+paper = "1.21.8-R0.1-SNAPSHOT"
+miniplaceholders = "3.1.0"
 fastlogin = "1.12-SNAPSHOT"
 authme = "5.6.0"
 libby = "1.3.1"
 pluginyml = "0.6.0"
 bstats = "3.1.0"
-shadow = "8.1.1"
-configurate = "4.2.0"
-adventure = "4.21.0"
-blossom = "2.1.0"
+shadow = "9.2.2"
+configurate = "4.1.2"
+adventure = "4.25.0"
+blossom = "2.2.0"
 geantyref = "1.3.13"
-indra = "3.1.3"
-runtask = "2.3.1"
+indra = "4.0.0"
+runtask = "3.0.2"
 vpacketevents = "1.1.0"
-luckperms = "5.4"
+luckperms = "5.5"
 
 # Test versions
-assertj = "3.27.3"
+assertj = "3.27.6"
 
 [libraries]
 
@@ -48,18 +48,18 @@ configurate-hocon = { group = "org.spongepowered", name = "configurate-hocon", v
 
 build-indra-common = { module = "net.kyori:indra-common", version.ref = "indra" }
 build-indra-spotless = { module = "net.kyori:indra-licenser-spotless", version.ref = "indra" }
-plugin-shadow = { group = "com.github.johnrengelman", name = "shadow", version.ref = "shadow" }
+plugin-shadow = { group = "com.gradleup.shadow", name = "com.gradleup.shadow.gradle.plugin", version.ref = "shadow" }
 
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 
 [plugins]
 
 pluginyml-bukkit = { id = "net.minecrell.plugin-yml.bukkit", version.ref = "pluginyml" }
-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 
 blossom = { id = "net.kyori.blossom", version.ref = "blossom" }
 indra = { id = "net.kyori.indra.publishing", version.ref = "indra" }
 
 runvelocity = { id = "xyz.jpenilla.run-velocity", version.ref = "runtask" }
 runpaper = { id = "xyz.jpenilla.run-paper", version.ref = "runtask" }
-ideaext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.9" }
+ideaext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.3" }

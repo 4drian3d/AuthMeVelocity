@@ -35,10 +35,9 @@ public final class AuthMePlaceholders {
 
     public Expansion getExpansion() {
         return Expansion.builder("authme")
-                .filter(Player.class)
                 // Logged Placeholders
-                .audiencePlaceholder("is_logged", (aud, queue, ctx) ->
-                        Tag.selfClosingInserting(plugin.isLogged((Player) aud) ? TRUE_COMPONENT : FALSE_COMPONENT))
+                .audiencePlaceholder(Player.class, "is_logged", (player, queue, ctx) ->
+                        Tag.selfClosingInserting(plugin.isLogged(player) ? TRUE_COMPONENT : FALSE_COMPONENT))
                 .globalPlaceholder("is_player_logged", (queue, ctx) -> {
                     final String playerName = queue.popOr(() -> "you need to provide a player").value();
                     return Tag.selfClosingInserting(
@@ -48,8 +47,8 @@ public final class AuthMePlaceholders {
                     );
                 })
                 // In Auth Server placeholders
-                .audiencePlaceholder("in_auth_server", (aud, queue, ctx) ->
-                        Tag.selfClosingInserting(plugin.isInAuthServer((Player) aud) ? TRUE_COMPONENT : FALSE_COMPONENT))
+                .audiencePlaceholder(Player.class,"in_auth_server", (player, queue, ctx) ->
+                        Tag.selfClosingInserting(plugin.isInAuthServer(player) ? TRUE_COMPONENT : FALSE_COMPONENT))
                 .globalPlaceholder("player_in_auth_server", (queue, ctx) -> {
                     String playerName = queue.popOr(() -> "you need to provide a player").value();
                     return Tag.selfClosingInserting(

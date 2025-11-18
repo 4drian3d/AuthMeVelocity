@@ -31,15 +31,14 @@ final class AuthMePlaceholders {
 
     static Expansion getExpansion() {
         return Expansion.builder("authme")
-            .filter(Player.class)
-            .audiencePlaceholder("is_logged", (aud, queue, ctx) -> 
-                Tag.selfClosingInserting(AuthMeApi.getInstance().isAuthenticated((Player)aud)
+            .audiencePlaceholder(Player.class, "is_logged", (player, queue, ctx) ->
+                Tag.selfClosingInserting(AuthMeApi.getInstance().isAuthenticated(player)
                     ? TRUE_COMPONENT
                     : FALSE_COMPONENT)
             )
             .globalPlaceholder("is_player_logged", (queue, ctx) -> {
-                String playerName = queue.popOr("you need to provide a player name").value();
-                Player player = Bukkit.getPlayer(playerName);
+                final String playerName = queue.popOr("you need to provide a player name").value();
+                final Player player = Bukkit.getPlayer(playerName);
                 if (player == null) return Tag.selfClosingInserting(FALSE_COMPONENT);
                 return Tag.selfClosingInserting(AuthMeApi.getInstance().isAuthenticated(player)
                     ? TRUE_COMPONENT

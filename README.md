@@ -8,9 +8,9 @@
 This plugin adds the support for [Velocity](https://velocitypowered.com/) to [AuthMeReloaded](https://github.com/AuthMe/AuthMeReloaded)
 
 ## Requirements
-- Paper or Folia 1.20+
-- Velocity 3.3.0+
-- Java 17+
+- Paper or Folia 1.21.5+
+- Velocity 3.4.0+
+- Java 21+
 
 ## Features
 - Prevent your players from executing commands or typing in the chat before they are logged in
