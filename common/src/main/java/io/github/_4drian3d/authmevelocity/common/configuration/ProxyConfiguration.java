@@ -130,8 +130,11 @@ public class ProxyConfiguration {
             return this.blockedChatMessage;
         }
 
-        @Comment("Allows player to chat if present on any of defined servers")
-        private List<String> serversThatDontRequireAuthForChat = List.of("prehub", "hub");
+        @Comment("""
+            Allows unauthenticated players to send chat messages when present on specified auth servers.
+            Use cases: Captcha code verification, Discord linking, or other pre-authentication interactions.
+            SECURITY WARNING: Only add auth or pre-hub servers here, NOT main lobby servers.""")
+        private List<String> serversThatDontRequireAuthForChat = List.of("prehub");
         public List<String> serversThatDontRequireAuthForChat() {
             return this.serversThatDontRequireAuthForChat;
         }

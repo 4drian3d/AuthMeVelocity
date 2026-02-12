@@ -51,10 +51,7 @@ public final class ChatListener implements Listener<PlayerChatEvent> {
 
             plugin.logDebug(() -> "PlayerChatEvent | Player " + event.getPlayer().getUsername() + " is not logged");
 
-            final List<String> allowedServers = plugin.config().get().chat().serversThatDontRequireAuthForChat();
-            if (!allowedServers.isEmpty() && event.getPlayer().getCurrentServer()
-                    .map(server -> allowedServers.contains(server.getServerInfo().getName()))
-                    .orElse(false)) {
+            if (isPlayerOnAllowedChatServer(event.getPlayer())) {
                 plugin.logDebug(() -> "PlayerChatEvent | Player " + event.getPlayer().getUsername() + " is on allowed server for chat");
                 continuation.resume();
                 return;
@@ -72,6 +69,13 @@ public final class ChatListener implements Listener<PlayerChatEvent> {
             event.setResult(PlayerChatEvent.ChatResult.denied());
             continuation.resume();
         });
+    }
+
+    private boolean isPlayerOnAllowedChatServer(Player player) {
+        final List<String> allowedServers = plugin.config().get().chat().serversThatDontRequireAuthForChat();
+        return !allowedServers.isEmpty() && player.getCurrentServer()
+                .map(server -> allowedServers.contains(server.getServerInfo().getName()))
+                .orElse(false);
     }
 
     private boolean isMessageAllowed(String message, List<String> allowedPrefixes) {
