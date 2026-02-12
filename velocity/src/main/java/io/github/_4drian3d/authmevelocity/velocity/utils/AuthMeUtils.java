@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 AuthMeVelocity Contributors
+ * Copyright (C) 2026 AuthMeVelocity Contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ public class AuthMeUtils {
             case RANDOM -> {
                 Optional<RegisteredServer> server;
                 if (servers.size() == 1) {
-                    server = proxy.getServer(servers.get(0));
+                    server = proxy.getServer(servers.getFirst());
                     // It is nonsense to make so many attempts if there are a single server
                     yield Pair.of(
                         server.map(sv -> sv.getServerInfo().getName()).orElse(null),
