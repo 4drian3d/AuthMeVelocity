@@ -112,7 +112,6 @@ public class ProxyConfiguration {
 
     @ConfigSerializable
     public static class Chat {
-
         @Comment("Enable chat filter")
         private boolean enableAllowedChatPrefixes = false;
         public boolean enableAllowedChatPrefixes() {
@@ -129,6 +128,15 @@ public class ProxyConfiguration {
         private String blockedChatMessage = "<red>You cannot send this message if you are not logged in yet";
         public String blockedChatMessage() {
             return this.blockedChatMessage;
+        }
+
+        @Comment("""
+            Allows unauthenticated players to send chat messages when present on specified auth servers.
+            Use cases: Captcha code verification, Discord linking, or other pre-authentication interactions.
+            SECURITY WARNING: Only add auth or pre-hub servers here, NOT main lobby servers.""")
+        private List<String> serversThatDontRequireAuthForChat = List.of("prehub");
+        public List<String> serversThatDontRequireAuthForChat() {
+            return this.serversThatDontRequireAuthForChat;
         }
     }
 
