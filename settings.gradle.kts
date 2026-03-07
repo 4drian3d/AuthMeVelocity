@@ -26,7 +26,7 @@ dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         maven("https://repo.papermc.io/repository/maven-public/")
-        maven("https://repo.william278.net/velocity/")
+        maven("https://repo.opencollab.dev/maven-snapshots")
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
         maven("https://repo.codemc.org/repository/maven-public/") {
             mavenContent {
