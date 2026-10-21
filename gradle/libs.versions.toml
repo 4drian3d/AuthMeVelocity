@@ -2,7 +2,7 @@ metadata.format.version = "1.1"
 
 [versions]
 
-velocity = "3.5.0-SNAPSHOT"
+velocity = "4.3.0"
 paper = "26.3.build.209-stable"
 miniplaceholders = "3.2.0"
 fastlogin = "1.12-SNAPSHOT"
